@@ -51,9 +51,9 @@ def ratio_random():
     return ratio_random ; print "Ratio (Random):", ratio_random
 
 # function to select kernel size
-def kernel_selection_R(ratio_random):
+def kernel_selection(ratio_random):
     kernel_size = 0
-    return [int(k) for ((lo,hi),k) in MATRIX_PROPERTIES if lo <= ratio_random < hi]
+    return [k for ((lo,hi),k) in MATRIX_PROPERTIES if lo <= ratio_random < hi]
     print "Kernel size set to", str(kernel_size)
 
 

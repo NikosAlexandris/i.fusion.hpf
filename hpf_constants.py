@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
 # ratio ranges
 RATIO_RANGES = (
     (1, 2.5),\
@@ -5,7 +8,7 @@ RATIO_RANGES = (
     (3.5, 5.5),\
     (5.5, 7.5),\
     (7.5, 9.5),\
-    (9.5)
+    (9.5, float('inf'))
     )
 
 # kernel sizes
@@ -29,3 +32,11 @@ MODULATOR = {
     'Max': [ 0.30, 0.65, 0.65, 1.00, 1.40, 2.00], \
     'Max 2': '0.50'
     }
+
+#def main():
+    #pass
+
+
+# make script reusable and stand-alone utility
+if __name__ == "__main__":
+    main()
