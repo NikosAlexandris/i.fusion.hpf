@@ -31,16 +31,20 @@ class Kernel:
             # fill rows
             if row != self.size/2:
                 self.kernel += "-1 " * self.size + "\n"
+
             # fill mid row
             else:
+
                 # single-digit center?
                 if len(str(self.center)) == 1:
                     self.center = " " + str(self.center)
+
                 # prettier output for double-digit or larger center
                 self.kernel += "-1 " * midrow + str(self.center) + \
                     " " + "-1 " * midrow + "\n"
-
-        self.kernel = os.linesep.join([s.rstrip()  # remove trailing spaces
+        
+        # remove trailing spaces
+        self.kernel = os.linesep.join([s.rstrip()
                                        for s in self.kernel.splitlines()
                                        if s])
 
