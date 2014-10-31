@@ -1,17 +1,18 @@
 # required librairies
 import random
-from kernel_size import kernel_size
+import kernel
 
-# Globals --- --- --- --- --- --- --- --- --- ---
+# Globals --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 from constants import RATIO_RANGES, KERNEL_SIZES, CENTER_CELL, CENTER_CELL_2
 
 # Combine -- What for?
 MATRIX_PROPERTIES = zip ( RATIO_RANGES, KERNEL_SIZES )
 
 print
-print "--- --- - Simulate User Input - --- ---"
+print "--- -- User Independent Variables - ---"
 print
 
+# 1. Ratio ------------------------------------------------------------------
 
 ### Simulate user input
 ratio_low = min(RATIO_RANGES[0]) #; print ratio_low
@@ -19,6 +20,20 @@ ratio_high = min(RATIO_RANGES[-1]) + 0.5 #; print ratio_high
 ratio_width = ratio_high - ratio_low #; print ratio_width
 ratio_random = round ( random.random() * ratio_width + ratio_low, 1)
 print "Ratio (Random):", ratio_random
+
+
+# 2. Kernel size ------------------------------------------------------------
+
+hpfk1 = Kernel(5,33)
+kernel_size = hpfk1.size
+print "Kernel Size: ", kernel_size
+
+print
+print "--- --- - Simulate User Input - --- ---"
+print
+
+
+# 3. Center Cell Level ------------------------------------------------------
 
 # center cell level
 center_cell_level = random.choice(CENTER_CELL.keys())
@@ -58,7 +73,7 @@ second_hpf_matrix(ratio_random, second_pass)
 
 
 ## function to select kernel size
-kernel_size = kernel_size(ratio_random)
+#kernel_size = kernel_size(ratio_random)
 
 # position -- use to retrieve center cell value
 kernel_index = KERNEL_SIZES.index(kernel_size)

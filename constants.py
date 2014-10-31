@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-"""Constants for HPFA Image Fusion Technique:
-Kernel Size, Center Value, Modulation Factor
-(all depend on Resolution Ratio)"""
+# Nikos Alexandris | October 2014
+"""Constants for HPFA Image Fusion Technique: Kernel Size, Center Value,
+Modulation Factor (all depend on Resolution Ratio).
+Source: "Optimizing the High-Pass Filter Addition Technique for Image Fusion",
+Ute G. Gangkofner, Pushkar S. Pradhan, and Derrold W. Holcomb (2008)."""
 
 RATIO_RANGES = (
     (1, 2.5),

@@ -1,234 +1,156 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Oct 31 20:03:06 2014
 
-# Converting i.fusion.hpf.sh into Python
+@author: nik
+"""
 
-### Notes:
-
-  # Everythin between ### and ### is bash code!
-  # Take a good look at: <http://stackoverflow.com/a/2840338/1172302>
-
-
-# Required Librairies
-
-import random
-
-
-# Globals --- --- --- --- --- --- --- --- --- ---
-
-# Kernel Size, Center Value & Modulation Factor,
-  # depend on Resolution Ratio
-RATIO_RANGES = ((1, 2.5),\
-          (2.5, 3.5),\
-          (3.5, 5.5),\
-          (5.5, 7.5),\
-          (7.5, 9.5),\
-          (9.5, 'inf')) # tuple? maybe list?
-
-
-
-KERNEL_SIZES = (5, 7, 9, 11, 13, 15) # tuple?
-## KERNEL_SIZES
-#print "loop over KERNEL_SIZES"
-#for size in KERNEL_SIZES:
-#    print size
-#print
-
-
-CENTER_CELL = {
-    'Default' : [24, 48, 80, 120, 168, 336 ], \
-    'Default 2':'24', \
-    'Mid' : [ 28, 56, 96, 150, 210, 392 ], \
-    'Mid 2':'28', \
-    'High' : [ 32, 64, 106, 180, 252, 448 ], \
-    'High 2':'32'
-    } # dictionary?
-#print center_cell_level, "Center cell values:", CENTER_CELL[center_cell_level]
-#print
-
-
-# combine!
-MATRIX_PROPERTIES = zip ( RATIO_RANGES, KERNEL_SIZES )
-#print "Matrix Properties:", MATRIX_PROPERTIES
-#print
-
-
-## print-out:
-#for ratio, kernel in MATRIX_PROPERTIES:
-#    print "Ratio:", ratio, "Kernel Size: ", kernel
-
-
-print
-print "--- --- --- --- --- --- --- --- --- ---"
-print
-
-
-
-# Helper functions -----------------------------------------------------------
-
-# required librairies
-import random
-
-# Some user input
-center_cell_level = "Default"
-
-
-
-
-
-# Example output
-
-#   HPF_MATRIX=\
-# "MATRIX    5
-# -1 -1 -1 -1 -1
-# -1 -1 -1 -1 -1
-# -1 -1 $(echo ${!Center_Cell}) -1 -1
-# -1 -1 -1 -1 -1
-# -1 -1 -1 -1 -1
-# DIVISOR   1
-# TYPE      P"
-
-ratio_low = min(RATIO_RANGES[0]) #; print ratio_low
-ratio_high = min(RATIO_RANGES[-1]) + 0.5 #; print ratio_high
-ratio_width = ratio_high - ratio_low
-ratio_random = round ( random.random() * ratio_width + ratio_low, 1)
-print "Ratio (Random):", ratio_random
-
-
-# select kernel size & co
-kernel_index = 0
-if 1 <= ratio_random < 2.5:
-#    global kernel_index
-    kernel_size = 5    
-elif 2.5 <= ratio_random < 3.5:
-    kernel_size = 7
-elif 3.5 <= ratio_random < 5.5:
-    kernel_size = 9
-elif 5.5 <= ratio_random < 7.5:
-    kernel_size = 11
-elif 7.5 <= ratio_random < 9.5:
-    kernel_size = 13
-elif 9.5 <= ratio_random:
-    kernel_size = 15
-
-print "Kernel size:", kernel_size
-kernel_index = KERNEL_SIZES.index(kernel_size)
-
-print "Index", kernel_index
-
-# center cell value
-center_cell_level = random.choice(CENTER_CELL.keys())
-print "Center cell level:", center_cell_level
-
-center_cell = CENTER_CELL[center_cell_level][kernel_index]
-print "Center cell value: ", center_cell
-
-## desired output
-#print "Desired output (following is hard-coded):"
-#print
-#print "MATRIX    5"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "-1 -1 ", center_cell, "-1 -1"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "DIVISOR   1"
-#print "TYPE      P"
-
-print
-print "--- --- --- --- --- --- --- --- --- ---"
-print
-
-def hpf_row(kernel_size):
-    
-    # loop over columns and return row,col value
-    for column in range(kernel_size):
-        central_row = kernel_size/2
-        #pseudo-code:
-        # if the number of column is half of the matrix' dimension,
-        ## then return the center cell value!
-        if column == kernel_size/2:
-            print "-1 " * central_row, center_cell, "-1 " * central_row
-        else:
-            print "-1 " * kernel_size
-    
-print "Example of hpf_row() function"
-print
-
-print hpf_row(kernel_size)
-
-
-#==============================================================================
-# # clean up Temporary files ###################################################
-# function cleantemp {
-# \rm -f i.fusion.hpf.tmp.*
-# g.mremove rast=i.fusion.hpf.tmp* -f
-# }
-# ##############################################################################
-#==============================================================================
-
-
-#==============================================================================
-# # what to do in case of user break: ##########################################
-# function exitprocedure {
-#   g.message -e message='User break!'
-#   cleanup
-#   exit 1
-# }
-# ##############################################################################
-#==============================================================================
-
-
-#==============================================================================
-# # a High Pass Filter Matrix (of Matrix_Dimension^2) Constructor ##############
-# function hpf_matrix {
-# 
-#   # Positional Parameters
-#   eval Matrix_Dimension="${1}"
-#   eval Center_Cell_Value="${2}"
-# 
-#   # Define the cell value(s)
-#   function hpf_cell_value {
-#     if (( ${Row} == ${Column} )) && (( ${Column} == `echo "( ${Matrix_Dimension} + 1 ) / 2" | bc` ))
-#       then echo "${Center_Cell_Value} "
-#       else echo "-1 "
+############################################################################
 #
-#   fi
-#  }
-#==============================================================================
+# MODULE:       i.fusion.hpf
+#
+# AUTHOR(S):    Nikos Alexandris <nik@nikosalexandris.net>
+#               Based on the bash shell script i.fusion.hpf
+#
+#
+# PURPOSE:      HPF Resolution Merge -- Algorithm Replication in GRASS GIS
+#
+#               Module to combine high-resolution panchromatic data with
+#               lower resolution multispectral data, resulting in an output
+#               with both excellent detail and a realistic representation of
+#               original multispectral scene colors.
+#
+# 				 The process involves a convolution using a High Pass Filter
+# 				 (HPF) on the high resolution data, then combining this with
+# 				 the lower resolution multispectral data.
+#
+#               Optionally, a linear histogram matching technique is performed
+#               in a  way that matches the resulting Pan-Sharpened imaged to
+#               them statistical mean and standard deviation of the original
+#               multi-spectral image. Credits for how to implement this
+#               technique go to GRASS-GIS developer Moritz Lennert.
+#
+#               Source: "Optimizing the High-Pass Filter Addition Technique for
+#               Image Fusion", Ute G. Gangkofner, Pushkar S. Pradhan,
+#               and Derrold W. Holcomb (2008)
+#
+# COPYRIGHT:    (C) 2013 by the GRASS Development Team
+#
+#               This program is free software under the GNU General Public
+#               License (>=v2). Read the file COPYING that comes with GRASS
+#               for details.
+#
+#############################################################################
 
-#  # Construct the Row for Cols 1 to "Matrix_Dimension"
-#  function hpf_row {
-#    for Column in `seq $Matrix_Dimension`
-#      do echo -n "$(hpf_cell_value)"
-#    done
-#  }
+#%Module
+#%  description: Fuses a High-Resolution Panchromatic with its corresponding Low Resolution Multi-Spectral image based on the High-Pass Filter Addition technique
+#%  keywords: imagery, fusion, HPF, HPFA
+#%End
+#%flag
+#%  key: l
+#%  description: Linearly match histograms of the HPF Pan-sharpened output(s) to the Multi-Spectral input(s)
+#%end
+#%flag
+#%  key: 2
+#%  description: 2-Pass Processing (recommended) for large Resolution Ratio (>=5.5)
+#%end
+#%option
+#% key: pan
+#% type: string
+#% gisprompt: old,double,raster
+#% description: High resolution panchromatic image
+#% required : yes
+#%end
+#%option
+#% key: msx
+#% type: string
+#% gisprompt: old,double,raster
+#% description: Low resolution multi-spectral image(s)
+#% required: yes
+#% multiple: yes
+#%end
+#%option
+#% key: outputprefix
+#% type: string
+#% gisprompt: old,double,raster
+#% description: Prefix for the Pan-Sharpened Multi-Spectral image(s)
+#% required: yes
+#% answer: hpf
+#%end
+#%option
+#% key: ratio
+#% type: double
+#% description: Custom defined ratio to override standard calculation 
+#% options: 1-10
+#% guisection: High Pass Filter Options
+#% required: no
+#%end
+#%option
+#% key: center
+#% type: string
+#% description: Center cell value of the High-Pass-Filter 
+#% descriptions: Level of center value (low, mid, high)
+#% options: low,mid,high
+#% required: no
+#% answer: low
+#% guisection: High Pass Filter Options
+#% multiple : no
+#%end
+#%option
+#% key: center2
+#% type: string
+#% description: Center cell value for the second pass of the High-Pass-Filter 
+#% descriptions: Level of center value for second pass
+#% options: low,mid,high
+#% required: no
+#% answer: low
+#% guisection: High Pass Filter Options
+#% multiple : no
+#%end
+#%option
+#% key: modulator
+#% type: string
+#% description: Level of modulating factor weighting the HPF image to determine crispness
+#% descriptions: Levels of modulating factors
+#% options: min,mid,max
+#% required: no
+#% answer: mid
+#% guisection: High Pass Filter Options
+#% multiple : no
+#%end
+#%option
+#% key: modulator2
+#% type: string
+#% description: Level of modulating factor weighting the HPF image in the second pass to determine crispness
+#% descriptions: mid;Mid modulating factor (0.35) for the 2nd pass;min;Minimum modulating factor (0.25) for the 2nd pass;max;Maximum modulating factor (0.5) for 2nd pass;
+#% options: min,mid,max
+#% required: no
+#% answer: mid
+#% guisection: High Pass Filter Options
+#% multiple : no
+#%end
 
-#  # Construct the Matrix
-#  echo "MATRIX    $Matrix_Dimension"
-#  for Row in `seq $Matrix_Dimension`
-#    do echo "$(hpf_row)"
-#  done
-#  echo "DIVISOR   1"
-#  echo "TYPE      P"
-#}
-###############################################################################
+from grass.pygrass.modules.shortcuts import raster as r, vector as v, general as g, display as d
+from grass.pygrass.modules import Module
+from grass.script import core as grass
 
 
-### Example output for the above *should* be like: ###########################
-  # Default will be:
-                      #   HPF_MATRIX=\
-                      # "MATRIX    5
-                      # -1 -1 -1 -1 -1
-                      # -1 -1 -1 -1 -1
-                      # -1 -1 $(echo ${!Center_Cell}) -1 -1
-                      # -1 -1 -1 -1 -1
-                      # -1 -1 -1 -1 -1
-                      # DIVISOR   1
-                      # TYPE      P"
-##############################################################################
-
-
-# Event handlers
-
-# Frame creation
-
-# Launch
+# get resolution first
+def main():
+    pan = options['pan']
+    msx = options['msx']
+    outputprefix = options['outputprefix']
+    center = options['center']
+    center2 = options['center2']
+    modulator = options['modulator']
+    modulator2 = options['modulator2']
+    full = flags['l']
+    preserve = flags['2']
+    
+# resolution of msx
+    msxinfo = r.info(msx, quiet = True)
+#    print msxinfo
+    
+if __name__ == "__main__":
+    options, flags = grass.parser()
+    main()

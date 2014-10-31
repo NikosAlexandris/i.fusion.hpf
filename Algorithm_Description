@@ -54,6 +54,19 @@ Trying to design the code-flow
     
         >> Raster Image (from User Input), ASCII file from function
         
+            ## desired output
+            #print
+            #print "Desired output (following is hard-coded):"
+            #print
+            #print "MATRIX    5"
+            #print "-1 " * 5 #print "-1 -1 -1 -1 -1"
+            #print "-1 " * 5 #print "-1 -1 -1 -1 -1"
+            #print "-1 -1 ", center_cell, "-1 -1"
+            #print "-1 " * 5 #print "-1 -1 -1 -1 -1"
+            #print "-1 " * 5 #print "-1 -1 -1 -1 -1"
+            #print "DIVISOR   1"
+            #print "TYPE      P"
+        
     > Out: HPFi
     
         >> Raster Image (intermediate product)
