@@ -1,0 +1,79 @@
+`i.fusion.hpf` is a GRASS-GIS module to combine high-resolution 
+panchromatic data with lower resolution multispectral data, resulting in an 
+output with both excellent detail and a realistic representation of original 
+multispectral scene colors.
+
+The process involves a convolution using a High Pass Filter (HPF) on the high 
+resolution data, then combining this with the lower resolution multispectral 
+data.
+
+Optionally, a linear histogram matching technique is performed in a way that 
+matches the resulting Pan-Sharpened image to the statistical mean and standard 
+deviation of the original multi-spectral image.
+
+Source: Gangkofner, 2008
+
+Algorithm description
+=====================
+
+1.  Computing ratio of low (Multi-Spectral) to high (Panchromatic) resolutions
+
+2.  High Pass Filtering the Panchromatic Image
+
+3.  Resampling MSx image to the higher resolution
+
+4.  Adding weighted High-Pass-Filtered image (HPFi) to the upsampled MSx image
+
+5.  Optionally, matching histogram of Pansharpened image to the one of the 
+original MSx image
+
+
+
+Trying to design the code-flow
+==============================
+
+1. Ratio:
+
+    > In: Resolution of MSx, Pan
+    
+        >> Raster Images as User Input Parameters
+        >> read resolution using r.info, grass module \
+            (r.info -s in G64, r.info -g in G7x)
+        >> math in Python, function in Python
+        
+    > Intermediate Product: Ratio
+        
+    > Out: High Pass Filter Matrix, Modulator Factor
+    
+        >> CONSTANTS, ASCII file
+        >> function in Python
+
+2. High Pass Filtering
+
+    > In: Panchromatic, HPF Matrix
+    
+        >> Raster Image (from User Input), ASCII file from function
+        
+    > Out: HPFi
+    
+        >> Raster Image (intermediate product)
+
+3. Resampling
+
+    > In: MSx
+
+        >> Raster Image (User Input)
+        
+    > Out: Upscaled MSx
+    
+        >> 
+
+4. Weighting and Adding HPF to MSx
+
+    > In: HPFi * Weighting Factor, MSx
+    > Out: Sharpened Image
+
+5. Optionally, histogram matching
+
+    > In: Sharpened Image, Mean & StdDev of input MSx
+    > Out: Histogram Matched Sharpened Image

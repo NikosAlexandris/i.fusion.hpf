@@ -21,7 +21,7 @@ RATIO_RANGES = ((1, 2.5),\
           (3.5, 5.5),\
           (5.5, 7.5),\
           (7.5, 9.5),\
-          (9.5)) # tuple? maybe list?
+          (9.5, 'inf')) # tuple? maybe list?
 
 
 
@@ -87,7 +87,7 @@ center_cell_level = "Default"
 # TYPE      P"
 
 ratio_low = min(RATIO_RANGES[0]) #; print ratio_low
-ratio_high = RATIO_RANGES[-1] + 0.5 #; print ratio_high
+ratio_high = min(RATIO_RANGES[-1]) + 0.5 #; print ratio_high
 ratio_width = ratio_high - ratio_low
 ratio_random = round ( random.random() * ratio_width + ratio_low, 1)
 print "Ratio (Random):", ratio_random
@@ -108,8 +108,10 @@ elif 7.5 <= ratio_random < 9.5:
     kernel_size = 13
 elif 9.5 <= ratio_random:
     kernel_size = 15
+
 print "Kernel size:", kernel_size
 kernel_index = KERNEL_SIZES.index(kernel_size)
+
 print "Index", kernel_index
 
 # center cell value
@@ -139,7 +141,7 @@ def hpf_row(kernel_size):
     
     # loop over columns and return row,col value
     for column in range(kernel_size):
-        central_row = (kernel_size/2)
+        central_row = kernel_size/2
         #pseudo-code:
         # if the number of column is half of the matrix' dimension,
         ## then return the center cell value!
@@ -154,54 +156,61 @@ print
 print hpf_row(kernel_size)
 
 
-# clean up Temporary files ###################################################
-function cleantemp {
-\rm -f i.fusion.hpf.tmp.*
-g.mremove rast=i.fusion.hpf.tmp* -f
-}
-##############################################################################
+#==============================================================================
+# # clean up Temporary files ###################################################
+# function cleantemp {
+# \rm -f i.fusion.hpf.tmp.*
+# g.mremove rast=i.fusion.hpf.tmp* -f
+# }
+# ##############################################################################
+#==============================================================================
 
 
-# what to do in case of user break: ##########################################
-function exitprocedure {
-  g.message -e message='User break!'
-  cleanup
-  exit 1
-}
-##############################################################################
+#==============================================================================
+# # what to do in case of user break: ##########################################
+# function exitprocedure {
+#   g.message -e message='User break!'
+#   cleanup
+#   exit 1
+# }
+# ##############################################################################
+#==============================================================================
 
 
-# a High Pass Filter Matrix (of Matrix_Dimension^2) Constructor ##############
-function hpf_matrix {
+#==============================================================================
+# # a High Pass Filter Matrix (of Matrix_Dimension^2) Constructor ##############
+# function hpf_matrix {
+# 
+#   # Positional Parameters
+#   eval Matrix_Dimension="${1}"
+#   eval Center_Cell_Value="${2}"
+# 
+#   # Define the cell value(s)
+#   function hpf_cell_value {
+#     if (( ${Row} == ${Column} )) && (( ${Column} == `echo "( ${Matrix_Dimension} + 1 ) / 2" | bc` ))
+#       then echo "${Center_Cell_Value} "
+#       else echo "-1 "
+#
+#   fi
+#  }
+#==============================================================================
 
-  # Positional Parameters
-  eval Matrix_Dimension="${1}"
-  eval Center_Cell_Value="${2}"
+#  # Construct the Row for Cols 1 to "Matrix_Dimension"
+#  function hpf_row {
+#    for Column in `seq $Matrix_Dimension`
+#      do echo -n "$(hpf_cell_value)"
+#    done
+#  }
 
-  # Define the cell value(s)
-  function hpf_cell_value {
-    if (( ${Row} == ${Column} )) && (( ${Column} == `echo "( ${Matrix_Dimension} + 1 ) / 2" | bc` ))
-      then echo "${Center_Cell_Value} "
-      else echo "-1 "
-    fi
-  }
-
-  # Construct the Row for Cols 1 to "Matrix_Dimension"
-  function hpf_row {
-    for Column in `seq $Matrix_Dimension`
-      do echo -n "$(hpf_cell_value)"
-    done
-  }
-
-  # Construct the Matrix
-  echo "MATRIX    $Matrix_Dimension"
-  for Row in `seq $Matrix_Dimension`
-    do echo "$(hpf_row)"
-  done
-  echo "DIVISOR   1"
-  echo "TYPE      P"
-}
-##############################################################################
+#  # Construct the Matrix
+#  echo "MATRIX    $Matrix_Dimension"
+#  for Row in `seq $Matrix_Dimension`
+#    do echo "$(hpf_row)"
+#  done
+#  echo "DIVISOR   1"
+#  echo "TYPE      P"
+#}
+###############################################################################
 
 
 ### Example output for the above *should* be like: ###########################

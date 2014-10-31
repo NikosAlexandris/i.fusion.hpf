@@ -1,0 +1,10 @@
+methods for pan:
+- hpfa
+
+methods for msx:
+- resample
+
+functions:
+- resolution ratio
+- hpf matrix
+- histogram matching

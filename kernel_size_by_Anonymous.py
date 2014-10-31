@@ -19,8 +19,8 @@ RATIO_RANGES = ((1, 2.5),\
 # Kernel Size, depends on Resolution Ratio
 KERNEL_SIZES = (5, 7, 9, 11, 13, 15)
 
-# zip'em
-MATRIX_PROPERTIES = zip ( RATIO_RANGES, KERNEL_SIZES )
+## zip'em
+#MATRIX_PROPERTIES = zip ( RATIO_RANGES, KERNEL_SIZES )
 
 ### Simulate user input ###
 ratio_low = min(RATIO_RANGES[0]) #; print ratio_low
@@ -34,9 +34,11 @@ ratios = list(RATIO_RANGES)
 
 # binary search function, by Anonymous
 def kernel_selection(ratio_random):
+    """ """
     
     # Set two integer indices to zero and the length of the list.
-    i = 0 ; j = len(ratios) #; print i, j
+    i = 0
+    j = len(ratios)  # ; print i, j
 
     # zero the variable of interest
     kernel_size = 0

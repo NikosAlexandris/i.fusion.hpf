@@ -1,61 +1,21 @@
 # required librairies
 import random
-
+from kernel_size import kernel_size
 
 # Globals --- --- --- --- --- --- --- --- --- ---
-
-# Resolution Ratio
-RATIO_RANGES = ((1, 2.5),\
-          (2.5, 3.5),\
-          (3.5, 5.5),\
-          (5.5, 7.5),\
-          (7.5, 9.5),\
-          (9.5)) # tuple? maybe list?
-
-# Kernel Size, depends on Resolution Ratio
-KERNEL_SIZES = (5, 7, 9, 11, 13, 15) # tuple or list?
-
-
-# Center Value, , depends on Resolution Ratio
-CENTER_CELL = {
-    'Default' : [ 24, 48, 80, 120, 168, 336 ], \
-    'Mid' : [ 28, 56, 96, 150, 210, 392 ], \
-    'High' : [ 32, 64, 106, 180, 252, 448 ], \
-    }
-
-CENTER_CELL_2 = { # values for 2nd pass
-    'Default': 24, \
-    'Mid': 28, \
-    'High': 32 
-    }
-
-# Modulation Factor, depends on Resolution Ratio
-MODULATOR = {
-    'Min': [ 0.20, 0.35, 0.35, 0.50, 0.65, 1.00], \
-    'Default': [ 0.25, 0.50, 0.50, 0.65, 1.00, 1.35], \
-    'Max': [ 0.30, 0.65, 0.65, 1.00, 1.40, 2.00]
-    }
-
-MODULATOR_2 = {
-    'Min 2': 0.25, \
-    'Default 2': 0.35, \
-    'Max 2': 0.50
-    }
-
+from constants import RATIO_RANGES, KERNEL_SIZES, CENTER_CELL, CENTER_CELL_2
 
 # Combine -- What for?
 MATRIX_PROPERTIES = zip ( RATIO_RANGES, KERNEL_SIZES )
-#print "Matrix Properties:", MATRIX_PROPERTIES
-#print
 
 print
 print "--- --- - Simulate User Input - --- ---"
 print
 
 
-### Simulate user input ###
+### Simulate user input
 ratio_low = min(RATIO_RANGES[0]) #; print ratio_low
-ratio_high = RATIO_RANGES[-1] + 0.5 #; print ratio_high
+ratio_high = min(RATIO_RANGES[-1]) + 0.5 #; print ratio_high
 ratio_width = ratio_high - ratio_low #; print ratio_width
 ratio_random = round ( random.random() * ratio_width + ratio_low, 1)
 print "Ratio (Random):", ratio_random
@@ -94,23 +54,11 @@ def second_hpf_matrix(ratio_random, second_pass):
 # center cell level for 2nd pass
 second_hpf_matrix(ratio_random, second_pass)
 
+## select kernel size & co
 
-# select kernel size & co
-kernel_index = 0
-if 1 <= ratio_random < 2.5:
-    kernel_size = 5    
-elif 2.5 <= ratio_random < 3.5:
-    kernel_size = 7
-elif 3.5 <= ratio_random < 5.5:
-    kernel_size = 9
-elif 5.5 <= ratio_random < 7.5:
-    kernel_size = 11
-elif 7.5 <= ratio_random < 9.5:
-    kernel_size = 13
-elif 9.5 <= ratio_random:
-    kernel_size = 15
-print "Kernel size:", kernel_size#, "[ Type:", type(kernel_size), "]"
 
+## function to select kernel size
+kernel_size = kernel_size(ratio_random)
 
 # position -- use to retrieve center cell value
 kernel_index = KERNEL_SIZES.index(kernel_size)
@@ -123,18 +71,7 @@ center_cell_2 = (CENTER_CELL_2[center_cell_level_2])
 print "Center cell value 2: ", center_cell_2
 
 
-## desired output
-#print
-#print "Desired output (following is hard-coded):"
-#print
-#print "MATRIX    5"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "-1 -1 ", center_cell, "-1 -1"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "-1 " * 5 #print "-1 -1 -1 -1 -1"
-#print "DIVISOR   1"
-#print "TYPE      P"
+
 
 print
 print "--- --- --- --- --- --- --- --- --- ---"

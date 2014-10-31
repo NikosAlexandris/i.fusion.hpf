@@ -15,14 +15,12 @@ RATIO_RANGES = ((1, 2.5),\
 # Kernel Size, depends on Resolution Ratio
 KERNEL_SIZES = (5, 7, 9, 11, 13, 15) # tuple or list?
 
-
 # Center Value, , depends on Resolution Ratio
 CENTER_CELL = {
     'Default' : [ 24, 48, 80, 120, 168, 336 ], \
     'Mid' : [ 28, 56, 96, 150, 210, 392 ], \
     'High' : [ 32, 64, 106, 180, 252, 448 ], \
     }
-
 CENTER_CELL_2 = { # values for 2nd pass
     'Default': 24, \
     'Mid': 28, \
@@ -35,7 +33,6 @@ MODULATOR = {
     'Default': [ 0.25, 0.50, 0.50, 0.65, 1.00, 1.35], \
     'Max': [ 0.30, 0.65, 0.65, 1.00, 1.40, 2.00]
     }
-
 MODULATOR_2 = {
     'Min 2': 0.25, \
     'Default 2': 0.35, \
