@@ -90,3 +90,24 @@ Trying to design the code-flow
 
     > In: Sharpened Image, Mean & StdDev of input MSx
     > Out: Histogram Matched Sharpened Image
+
+
+Methods for Objects
+===================
+
+Methods required for potential Classes:
+    
+methods for pan:
+- hpfa
+
+methods for msx:
+- resample
+
+
+Functions
+=========
+
+functions:
+- resolution ratio
+- hpf matrix
+- histogram matching
