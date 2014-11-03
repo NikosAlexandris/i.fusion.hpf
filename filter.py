@@ -14,8 +14,10 @@ class Filter:
     format of this file is described in r.mfilter's manual."""
     def __init__(self, kernel, divisor=1, type='P'):
         self.header = 'MATRIX    ' + str(kernel.size)
+
         self.kernel = kernel.kernel
         self.size = kernel.size
+
         self.divisor = 'DIVISOR   ' + str(divisor)
         self.type = 'TYPE      ' + str(type)
         self.footer = str(self.divisor) + '\n' + self.type

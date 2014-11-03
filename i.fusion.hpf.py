@@ -242,56 +242,63 @@ def main():
 
     # 2. construct filter!
     g.message("2.  High Pass Filtering the Panchromatic Image", flags='v')
-    
-    # Respect current region -- Change the resolution
-    run('g.region', res = panres)
-    g.message("> Region's resolution set to %f" % panres, flags='v')
-    
-    # High Pass Filter
-    hpf = High_Pass_Filter(ratio, center, modulation)
-    hpf_matrix = hpf.filter
-    modulator = hpf.modulator
-    print "Matrix: ", hpf_matrix
-    print "Modulating Factor: ", modulator
-    print
 
-#    grass.try_remove(tmp_hpf_matrix)
-    tmp_hpf_matrix = grass.tempfile()
-    print "--- --- ---"
-    print "Temp file: ", tmp_hpf_matrix
-    print "--- --- ---"
-    print
-    
-    outf = open(tmp_hpf_matrix, 'w')
-    outf.write(hpf_matrix)
-    outf.close()
-    
+    # Respect current region -- Change the resolution
+    run('g.region', res=panres)
+    g.message("> Region's resolution set to %f" % panres, flags='v')
 
     # temporary files
     tmp = grass.tempfile()
     tmpname = grass.basename(tmp)
     print tmpname
     print
-    
+
     tmp_pan_hpf = "%s_%s" % (outputprefix, tmpname)
     tmp_msx_blnr = "msx_%s" % tmpname
     tmp_msx_hpf = "msx_hpf_%s" % tmpname
-    
-    # 2nd pass
-    if second_pass and ratio > 5.5:
-        tmp_pan_hpf_2 = "%s_2_%s" % (outputprefix, tmpname)
-    
+
     print tmp_pan_hpf
     print tmp_msx_blnr
     print
     
     print "Pan: ", pan
     print
-    
+
+    # High Pass Filter
+    hpf = High_Pass_Filter(ratio, center, modulation, False, None)
+    hpf_matrix = hpf.filter
+    modulator = hpf.modulator
+    print "Matrix: ", hpf_matrix
+    print "Modulating Factor: ", modulator
+    print
+
+    #    grass.try_remove(tmp_hpf_matrix)
+    tmp_hpf_matrix = grass.tempfile()
+
+    outf = open(tmp_hpf_matrix, 'w')
+    outf.write(hpf_matrix)
+    outf.close()
+
+    # 2nd pass?
+    if second_pass and ratio > 5.5:
+
+        hpf_2 = High_Pass_Filter(ratio, center, None, True, modulation2)
+        hpf_matrix_2 = hpf_2.filter
+        modulator_2 = hpf_2.modulator_2
+
+#        grass.try_remove(tmp_hpf_matrix)
+        tmp_hpf_matrix_2 = grass.tempfile()
+
+        outf = open(tmp_hpf_matrix_2, 'w')
+        outf.write(hpf_matrix_2)
+        outf.close()
+
+        tmp_pan_hpf_2 = "%s_2_%s" % (outputprefix, tmpname)
+
     print "Run r.mfilter"
     print
-    
-    # apply filter
+
+    # Apply High Pass Filter
     run('r.mfilter',
         input=pan,
         filter=tmp_hpf_matrix,
@@ -299,23 +306,18 @@ def main():
         title="High Pass Filtered Panchromatic image",
         overwrite=True)
 
-#    # 2nd pass
-#    if second_pass and ratio > 5.5:
-##        Temporary_HPF_2="i.fusion.hpf.tmp.HPF.2" # I don't understand g.tempfile!
-##        if [ $? -ne 0 ] || [ -z "$Temporary_HPF_2" ]
-##            g.message -e "unable to create 2nd-pass temporary HPF files"
-##        exit 1        
-#
-#        run('r.mfilter',
-#            input=tmp_pan_hpf,
-#            filter=tmp_hpf_matrix_2,
-#            output='tmp_pan_hpf_2',
-#            title="2-High-Pass Filtered Panchromatic Image",
-#            overwrite=True)
+    # 2nd Pass
+    if second_pass and ratio > 5.5:
+        run('r.mfilter',
+            input=tmp_pan_hpf,
+            filter=tmp_hpf_matrix_2,
+            output=tmp_pan_hpf_2,
+            title="2-High-Pass Filtered Panchromatic Image",
+            overwrite=True)
 
 
     #
-    g.message("3.  Resampling MSx image to the higher resolution")
+    g.message("3. Resampling MSx image to the higher resolution")
 
     g.message("3 Upsampling the low resolution image ($MSX) to the higher"
               "resolution ($PAN_RESOLUTION)",
@@ -372,6 +374,7 @@ def main():
 
 #    # 2nd pass
     if second_pass and ratio > 5.5:
+        print "Second Pass..."
 	
         # StdDev of HPF Image #2
         hpf_2_uni = run("r.univar", map=tmp_pan_hpf_2, flags='g')
@@ -410,16 +413,17 @@ def main():
               flags='v')
 
 #    # check if 2nd pass applies
-#    if second_pass and ratio > 5.5:
-#        g.message("2nd Pass: adding-back to the fused image"
-#                  "a small-kernel-based HPF weighted image",
-#                  flags='i')
-#               
-#    add_back = "%s = %s + %s * %f" % (tmp_msx_hpf, tmp_msx_hpf, tmp_pan_hpf_2,weighting_2)
-#    grass.mapcalc(add_back)
-#    g.message("2nd pass performed successfuly!", flags='v')
-	
-#	run("g.copy", rast=$Temporary_MSHPF, ${GIS_OPT_OUTPUTPREFIX}_${MSX})
+    if second_pass and ratio > 5.5:
+        g.message("2nd Pass: adding-back to the fused image"
+                  "a small-kernel-based HPF weighted image",
+                  flags='i')
+
+        add_back = "%s = %s + %s * %f" \
+            % (tmp_msx_hpf, tmp_msx_hpf, tmp_pan_hpf_2, weighting_2)
+        grass.mapcalc(add_back)
+        g.message("2nd pass performed successfuly!", flags='v')
+        
+#        run("g.copy", rast=$Temporary_MSHPF, ${GIS_OPT_OUTPUTPREFIX}_${MSX})
 
 
 #  # write cmd history

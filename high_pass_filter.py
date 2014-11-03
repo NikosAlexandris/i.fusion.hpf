@@ -6,7 +6,7 @@
 """
 
 import os
-from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR
+from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2
 
 
 def kernel_size(ratio):
@@ -16,6 +16,7 @@ def kernel_size(ratio):
     ks = [k for ((lo, hi), k) in MATRIX_PROPERTIES if lo <= ratio < hi]
     return ks[0]  # ks: kernel size, as integer?
 
+
 def center_cell(level, ks):
     """ """
     level = level.capitalize()
@@ -23,14 +24,19 @@ def center_cell(level, ks):
     center = [cc for cc in CENTER_CELL[level]][ks_idx]
     return center
 
-def modulator(modulation, ks):
+
+def modulator(modulation, modulation2, ks, second_pass):
     """ """
-    modulation = modulation.capitalize()
     ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
-    modfac = [mf for mf in MODULATOR[modulation]][ks_idx]
+    if second_pass:
+        modulation2 = modulation2.capitalize()
+        modfac = MODULATOR_2[modulation2]
+    else:
+        modulation = modulation.capitalize()
+        modfac = [mf for mf in MODULATOR[modulation]][ks_idx]
     return modfac
-    
-    
+
+
 class Kernel:
     """HPF compatible Kernel (size),
     where size is odd | Returns multi-line string"""
@@ -82,14 +88,23 @@ class High_Pass_Filter:
     a matrix defining the way in which raster data will be filtered
     by r.mfilter. The format of this file is described in r.mfilter's
     manual."""
-    def __init__(self, ratio, level, modulation='Mid', divisor=1, type='P'):
+    def __init__(self,
+                 ratio,
+                 level='Low',
+                 modulation='Mid',
+                 second_pass=False,
+                 modulation2='Min',
+                 divisor=1,
+                 type='P'):
 
         # parameters
         self.ratio = ratio
         self.size = kernel_size(self.ratio)
-#        self.level = level.capitalize()  # level strings: capitalised constants
-#        self.modulation = modulation.capitalize()  # same
-        self.modulator = modulator(modulation, self.size)
+
+        if second_pass:
+            self.modulator_2 = modulator(None, modulation2, self.size, True)
+        else:
+            self.modulator = modulator(modulation, None, self.size, False)
 
         # build kernel
         self.kernel = Kernel(self.size, level).kernel
