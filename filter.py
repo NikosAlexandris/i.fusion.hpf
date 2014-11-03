@@ -6,7 +6,6 @@ Created on Fri Oct 31 16:35:35 2014
 """
 
 
-
 class Filter:
     """Based on a suitable Kernel string, this class creates a
     filter suitable for GRASS-GIS' r.mfilter module.

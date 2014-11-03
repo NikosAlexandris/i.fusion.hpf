@@ -20,26 +20,22 @@ KERNEL_SIZES = (5, 7, 9, 11, 13, 15)
 
 MATRIX_PROPERTIES = zip(RATIO_RANGES, KERNEL_SIZES)
 
+# Low level center cell values are: (kernel size)^2 - 1
+# What about the rest?
 CENTER_CELL = {
-    'Default': [24, 48, 80, 120, 168, 336],
+    'Low': [24, 48, 80, 120, 168, 336],
     'Mid': [28, 56, 96, 150, 210, 392],
     'High': [32, 64, 106, 180, 252, 448],
     }
 
-CENTER_CELL_2 = {  # values for 2nd pass
-    'Default': 24,
-    'Mid': 28,
-    'High': 32
-    }
-
 MODULATOR = {
     'Min': [0.20, 0.35, 0.35, 0.50, 0.65, 1.00],
-    'Default': [0.25, 0.50, 0.50, 0.65, 1.00, 1.35],
+    'Mid': [0.25, 0.50, 0.50, 0.65, 1.00, 1.35],
     'Max': [0.30, 0.65, 0.65, 1.00, 1.40, 2.00]
     }
 
 MODULATOR_2 = {
     'Min 2': 0.25,
-    'Default 2': 0.35,
+    'Mid 2': 0.35,
     'Max 2': 0.50
     }

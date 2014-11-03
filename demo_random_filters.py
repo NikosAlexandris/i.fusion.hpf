@@ -6,7 +6,7 @@ from kernel import Kernel
 from filter import Filter
 
 # Globals --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-from constants import RATIO_RANGES, KERNEL_SIZES, CENTER_CELL, CENTER_CELL_2
+from constants import RATIO_RANGES, KERNEL_SIZES, CENTER_CELL
 
 
 # Helper functions
@@ -14,10 +14,10 @@ from constants import RATIO_RANGES, KERNEL_SIZES, CENTER_CELL, CENTER_CELL_2
 # simulate request or recommendation for 2nd pass
 def second_hpf_matrix(ratio_random, second_pass):
     """Simulate request or recommended application of 2nd High Pass Filter""" 
-    
+
     # global
     global center_cell_level_2
-    
+
     # if ratio > 6
     if ratio_random > 6:
         print "Resolution Ratio > 6 | 2nd pass recommended"
@@ -25,7 +25,7 @@ def second_hpf_matrix(ratio_random, second_pass):
     # 2nd pass requested?
     if ratio_random < 6 and second_pass:
         print "Second Pass Requested:", second_pass
-    center_cell_level_2 = random.choice(CENTER_CELL_2.keys())
+    center_cell_level_2 = random.choice(CENTER_CELL.keys())
 
     # inform
     print "Center cell level 2:", center_cell_level_2
@@ -66,7 +66,7 @@ print
 second_pass = random.choice([bool(0), bool(1)])
 #print "Second Pass: ", second_pass
 second_hpf_matrix(ratio_random, second_pass)
-center_cell_2 = (CENTER_CELL_2[center_cell_level_2])
+center_cell_2 = (CENTER_CELL[center_cell_level_2][0])
 print "Center cell value 2: ", center_cell_2
 
 
