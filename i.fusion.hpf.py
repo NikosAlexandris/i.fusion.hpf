@@ -172,16 +172,8 @@ tmp = ''
 
 
 def cleanup():
-#    grass.run_command('g.mremove',
-#                      flags='f',
-#                      type="rast",
-#                      pattern='tmp.%s*' % os.getpid(),
-#                      quiet=True)
-    pass
-
-##    for x in tmplst:
-#        grass.run_command("g.remove", rast = x, quiet = True)
-#    grass.run_command('g.mremove', type='rast', pattern='%s*hpf' % tmp)
+    grass.run_command('g.mremove', flags='f', type="rast",
+                      pattern='tmp.%s*' % os.getpid(), quiet=True)
 
 
 def run(cmd, **kwargs):
@@ -230,15 +222,11 @@ def export_hpf(center, filter, tmpfile, pss):
     if pss == 1:
         global modulator
         modulator = filter.modulator
-#        msg = "   > Filter Properties: size: %s, center: %s" % \
-#            (filter.size, center)
         msg_ps2 = ''
 
     elif pss == 2:
         global modulator_2
         modulator_2 = filter.modulator_2
-#        msg = "   > 2nd Pass Filter Properties: size: %s, center: %s" % \
-#            (filter.size, center)
         msg_ps2 = '2nd Pass '
 
     # structure informative message
@@ -341,21 +329,18 @@ def main():
         g.message('\n|2 High Pass Filtering the Panchromatic Image')
 
         # ========================================== end of Temporary files #
-        tmpfile = grass.tempfile()  # a Temporary file
-        tmplst.append(tmpfile)
-        tmp = "tmp." + grass.basename(tmpfile)  # use its basename
-
+        tmpfile = grass.tempfile()  # Temporary file - replace with os.getpid?
+        tmp = "tmp." + grass.basename(tmpfile)  # use its basenam
         tmp_pan_hpf = "%s_pan_hpf" % tmp  # HPF image
         tmp_msx_blnr = "%s_msx_blnr" % tmp  # Upsampled MSx
         tmp_msx_hpf = "%s_msx_hpf" % tmp  # Fused image
 
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
-        tmplst.append(tmp_hpf_matrix)
 
         if second_pass and ratio > 5.5:  # 2nd Pass?
             tmp_pan_hpf_2 = "%s_pan_hpf_2" % tmp  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
-            tmplst.append(tmp_hpf_matrix_2)
+
         # Temporary files ===================================================
 
         # Construct Filter
@@ -372,7 +357,6 @@ def main():
             output=tmp_pan_hpf,
             title="High Pass Filtered Panchromatic image",
             overwrite=True)
-        tmplst.append(tmp_pan_hpf)
 
         # 2nd Filtering
         if second_pass and ratio > 5.5:
@@ -380,7 +364,6 @@ def main():
                 output=tmp_pan_hpf_2,
                 title="2-High-Pass Filtered Panchromatic Image",
                 overwrite=True)
-            tmplst.append(tmp_pan_hpf_2)
 
         # -------------------------------------------------------------------
         # 3. Upsampling low resolution image
@@ -391,7 +374,6 @@ def main():
         # resample -- named "linear" in G7
         run('r.resamp.interp',
             method='bilinear', input=msx, output=tmp_msx_blnr, overwrite=True)
-        tmplst.append(tmp_msx_blnr)
 
         # -------------------------------------------------------------------
         # 4. Weighting the High Pass Filtered image(s)
@@ -427,9 +409,7 @@ def main():
 
         fusion = "%s = %s + %s * %f" \
             % (tmp_msx_hpf, tmp_msx_blnr, tmp_pan_hpf, weighting)
-
         grass.mapcalc(fusion)
-        tmplst.append(tmp_msx_hpf)
 
         # history ***********************************************************
         cmd_history += "Weigthing applied: %.3f / %.3f * %.3f | " \
@@ -463,7 +443,6 @@ def main():
 
             add_back = "%s = %s + %s * %f" \
                 % (tmp_msx_hpf, tmp_msx_hpf, tmp_pan_hpf_2, weighting_2)
-
             grass.mapcalc(add_back)
 
             # 2nd Pass history entry ****************************************
