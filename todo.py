@@ -19,3 +19,5 @@ ToDo
 - Deduplicate code where applicable
 
 - Implement function to clean temporary files
+
+- Test. Will it compile in other systems?
