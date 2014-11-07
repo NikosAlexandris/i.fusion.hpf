@@ -20,4 +20,6 @@ ToDo
 
 - Implement function to clean temporary files
 
+- Make the -v messages shorter, yet more informative (ie report center cell)
+
 - Test. Will it compile in other systems?
