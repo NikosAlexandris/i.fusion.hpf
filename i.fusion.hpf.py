@@ -128,6 +128,9 @@
 #% multiple : no
 #%end
 
+
+# required librairies -------------------------------------------------------
+
 import os
 import sys
 #import atexit
@@ -148,13 +151,67 @@ if "GISBASE" not in os.environ:
     sys.exit(1)
 
 
+# helper functions ----------------------------------------------------------
+
 def run(cmd, **kwargs):
+    """ """
     grass.run_command(cmd, quiet=True, **kwargs)
+
+
+def hpf_weight(lo_sd, hpf_sd, mod, pss):
+    """Function returning an appropriate weighting value for the
+    High Pass Filtered image. The required inputs are:
+    - StdDev of Low resolution image
+    - StdDev of High Pass Filtered image
+    - Appropriate Modulating Factor determining image crispness
+    - Number of Pass (1st or 2nd)"""
+    if pss == 1:
+        wgt = lo_sd / hpf_sd * mod  # mod: modulator
+        msg = "   >> Weighting = %.2f / %.2f * %.2f = %.2f" % \
+            (lo_sd, hpf_sd, mod, wgt)
+        g.message(msg, flags='v')
+
+    if pss == 2:
+        wgt = lo_sd / hpf_sd * mod  # mod: modulator
+        msg = "   >> 2nd Pass Weighting = %.3f / %.3f * %.3f = %.3f" % \
+            (lo_sd, hpf_sd, mod, wgt)
+        g.message(msg, flags='v')
+
+    return wgt
+
+
+def export_hpf(center, filter, tmpfile, pss):
+    """Function exporting High Pass Filter as a temporary ASCII file"""
+    if pss == 1:
+        global modulator
+        modulator = filter.modulator
+#        msg = "   > Filter Properties: size: %s, center: %s" % \
+#            (filter.size, center)
+        msg_ps2 = ''
+
+    elif pss == 2:
+        global modulator_2
+        modulator_2 = filter.modulator_2
+#        msg = "   > 2nd Pass Filter Properties: size: %s, center: %s" % \
+#            (filter.size, center)
+        msg_ps2 = '2nd Pass '
+
+    # structure informative message
+    msg = "   > %sFilter Properties: size: %s, center: %s" % \
+        (msg_ps2, filter.size, center)
+    g.message(msg, flags='v')
+
+    # open, write and close file
+    asciif = open(tmpfile, 'w')
+    asciif.write(filter.filter)
+    asciif.close()
 
 
 #def cleanup():
 #   grass.try_remove(tmp_hpf_matrix)
 
+
+# main program --------------------------------------------------------------
 
 def main():
     global tmp_hpf_matrix
@@ -164,7 +221,7 @@ def main():
     outputprefix = options['outputprefix']
     custom_ratio = options['ratio']
     center = options['center']
-    # center2 = options['center2']
+    center2 = options['center2']
     modulation = options['modulation']
     modulation2 = options['modulation2']
     histogram_match = flags['l']
@@ -176,15 +233,13 @@ def main():
     ewr = region['ewres']
 
     if nsr != ewr:
-        g.message("Region's North:South (%s) and East:West (%s)"
+        g.message(">>> Region's North:South (%s) and East:West (%s)"
                   "resolutions do not match!" % (nsr, ewr), flags='w')
 
-    # Current Mapset?
-    mapset = grass.gisenv()['MAPSET']
+    mapset = grass.gisenv()['MAPSET']  # Current Mapset?
 
-    # List of input imagery
     imglst = [pan]
-    imglst.extend(msxlst)
+    imglst.extend(msxlst)  # List of input imagery
 
     # Retrieving Image Info
     images = {}
@@ -192,48 +247,57 @@ def main():
         images[img] = Info(img, mapset)
         images[img].read()
 
-    # Panchromatic resolution
-    panres = images[pan].nsres
+    panres = images[pan].nsres  # Panchromatic resolution
 
-    # Respect current region -- Change the resolution
+    # Respect region extent -- Change region resolution
     run('g.region', res=panres)
-    g.message("> Region's resolution set to %f" % panres, flags='v')
+    g.message("|  Region's resolution set to %f" % panres, flags='v')
 
     # Loop over Multi-Spectral images
     for msx in msxlst:
 
-        # Variable tracking command history - why don't do this all r modules?
+        # Inform
+        g.message("\nProcessing image: %s" % msx, flags='v')
+
+        # Tracking command history -- Why don't do this all r.* modules?
         cmd_history = ''
 
-        # 1. Compute Ratio --------------------------------------------------
-        g.message("|1 Determining ratio of low (Multi-Spectral)"
-                  "to high (Panchromatic) resolution", flags='v')
+        # -------------------------------------------------------------------
+        # 1. Compute Ratio
+        # -------------------------------------------------------------------
+
+        g.message("\n|1 Determining ratio of low to high resolution",
+                  flags='v')
 
         # Custom Ratio? Skip standard computation method.
         if custom_ratio:
             global ratio
             ratio = float(custom_ratio)
-            g.message('> Using a custom ratio, overriding standard method!',
+            g.message('Using custom ratio, overriding standard method!',
                       flags='w')
 
         # Multi-Spectral resolution(s), multiple
         else:
             # Image resolutions
-            g.message("> Retrieving image resolutions", flags='v')
+            g.message("   > Retrieving image resolutions", flags='v')
 
             msxres = images[msx].nsres
             ratio = msxres / panres
-            msg_ratio = '>> Low (%.3f) to high resolution (%.3f) ratio: %.1f'\
+            msg_ratio = '   >> Low (%.3f) to high resolution (%.3f) ratio: %.1f'\
                 % (msxres, panres, ratio)
             g.message(msg_ratio, flags='v')
 
         # 2nd Pass requested, yet Ratio < 5.5
         if second_pass and ratio < 5.5:
-            g.message("> Ratio < 5.5 -- Won't perform 2nd pass!", flags='i')
+            g.message("   >>> Ratio < 5.5 -- WON'T perform 2nd pass! <<<",
+                      flags='i')
             second_pass = bool(0)
 
-        # 2. High Pass Filtering --------------------------------------------
-        g.message('|2 High Pass Filtering the Panchromatic Image', flags='v')
+        # -------------------------------------------------------------------
+        # 2. High Pass Filtering
+        # -------------------------------------------------------------------
+
+        g.message('\n|2 High Pass Filtering the Panchromatic Image', flags='v')
 
         # Temporary files ===================================================
         tmpfile = grass.tempfile()  # a Temporary file
@@ -252,25 +316,28 @@ def main():
 
         # Construct Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
-        g.message("Filter Properties: size: %s, center: %s"
-                  % (hpf.size, center), flags='v')
-        modulator = hpf.modulator
-    #    grass.try_remove(tmp_hpf_matrix)
-        asciif = open(tmp_hpf_matrix, 'w')
-        asciif.write(hpf.filter)
-        asciif.close()
+# ---------------------------------------------------------------------------
+#        g.message("   > Filter Properties: size: %s, center: %s"
+#                  % (hpf.size, center), flags='v')
+#        modulator = hpf.modulator
+#        asciif = open(tmp_hpf_matrix, 'w')
+#        asciif.write(hpf.filter)
+#        asciif.close()
+# ------------------------------------------------ replaced by export_hpf() -
+        export_hpf(center, hpf, tmp_hpf_matrix, 1)
 
-        # 2nd Pass?
+        # Construct 2nd Filter
         if second_pass and ratio > 5.5:
-            hpf_2 = High_Pass_Filter(ratio, center, None, True, modulation2)
-            g.message("Filter Properties: size: %s, center: %s"
-                      % (hpf.size, center), flags='v')
-            modulator_2 = hpf_2.modulator_2
-
-    #        grass.try_remove(tmp_hpf_matrix)
-            asciif = open(tmp_hpf_matrix_2, 'w')
-            asciif.write(hpf_2.filter)
-            asciif.close()
+            hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
+# ---------------------------------------------------------------------------
+#            g.message("   > 2nd Pass Filter Properties: size: %s, center: %s"
+#                      % (hpf.size, center2), flags='v')
+#            modulator_2 = hpf_2.modulator_2
+#            asciif = open(tmp_hpf_matrix_2, 'w')
+#            asciif.write(hpf_2.filter)
+#            asciif.close()
+# ------------------------------------------------ replaced by export_hpf() -
+            export_hpf(center2, hpf_2, tmp_hpf_matrix_2, 2)
 
         # Filtering
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
@@ -278,31 +345,32 @@ def main():
             title="High Pass Filtered Panchromatic image",
             overwrite=True)
 
-        # 2nd Pass
+        # 2nd Filtering
         if second_pass and ratio > 5.5:
-            run('r.mfilter', input=tmp_pan_hpf, filter=tmp_hpf_matrix_2,
+            run('r.mfilter', input=pan, filter=tmp_hpf_matrix_2,
                 output=tmp_pan_hpf_2,
                 title="2-High-Pass Filtered Panchromatic Image",
                 overwrite=True)
 
-        # 3. Upsampling low resolution image --------------------------------
+        # -------------------------------------------------------------------
+        # 3. Upsampling low resolution image
+        # -------------------------------------------------------------------
 
-        g.message("3. Resampling MSx image to the higher resolution")
-        g.message("3 Upsampling the low resolution image ($MSX) to the higher"
-                  "resolution ($PAN_RESOLUTION)",
+        g.message("\n|3 Upsampling (bilinearly) low resolution image",
                   flags='v')
 
         # resample -- named "linear" in G7
         run('r.resamp.interp',
             method='bilinear', input=msx, output=tmp_msx_blnr, overwrite=True)
 
-        # 4. Check Terminology again! ---------------------------------------
+        # -------------------------------------------------------------------        
+        # 4. Weighting the High Pass Filtered image(s)
+        # -------------------------------------------------------------------
 
-        g.message("4. Adding weighted High-Pass-Filtered image (HPFi) to the"
-                  "upsampled MSx image")
+        g.message("\n|4 Weighting the High-Pass-Filtered image (HPFi)")
 
         # Compute Weighting(s)
-        msg_w = 'Weighting = StdDev(MSx) / StdDev(HPF) * Modulating Factor'
+        msg_w = '   > Weighting = StdDev(MSx) / StdDev(HPFi) * Modulating Factor'
         g.message(msg_w, flags='v')
 
         # StdDev of Multi-Spectral Image(s)
@@ -310,27 +378,28 @@ def main():
         msx_avg = float(msx_uni['mean'])
         msx_sd = float(msx_uni['stddev'])
 
-        g.message("* StdDev of Multi-Spectral input: %s" % msx_sd,
-                  flags='v')
+        g.message("   >> StdDev of <%s>: %s" % (msx, msx_sd), flags='v')
 
         # StdDev of HPF Image
         hpf_uni = grass.parse_command("r.univar", map=tmp_pan_hpf, flags='g')
         hpf_sd = float(hpf_uni['stddev'])
 
-        g.message("* StdDev of Multi-Spectral input: %s" % hpf_sd,
-                  flags='v')
+        g.message("   >> StdDev of HPFi: %s"
+                  % (hpf_sd), flags='v')
 
         # Modulating factor
-        g.message("* Modulating Factor set to: %f" % modulator,
+        g.message("   >> Modulating Factor: %f" % modulator,
                   flags='v')
 
-        weighting = msx_sd / hpf_sd * modulator
-        msg_w1 = "%f = %f / %f * %f" % (weighting, msx_sd, hpf_sd, modulator)
-        g.message(msg_w1, flags='v')
-        g.message("* Weighting = %s" % weighting, flags='v')
 
-        # Add weighted HPF image to upsampled Multi-Spectral band
-        g.message("4 Adding weighted HPF image to the upsampled image",
+        # weighting HPFi
+        weighting = hpf_weight(msx_sd, hpf_sd, modulator, 1)
+
+        # -------------------------------------------------------------------
+        # 5. Adding weighted HPF image to upsampled Multi-Spectral band
+        # -------------------------------------------------------------------
+
+        g.message("\n|5 Adding weighted HPFi to upsampled image",
                   flags='v')
 
         fusion = "%s = %s + %s * %f" \
@@ -338,16 +407,14 @@ def main():
 
         grass.mapcalc(fusion)
 
-        g.message("HPF image added to the bilinearly upsampled MSX image.",
-                  flags='v')
-
         # history
         cmd_history += "Weigthing applied: %s / %s * %s | " \
             % (msx_sd, hpf_sd, modulator)
 
         # 2nd Pass
         if second_pass and ratio > 5.5:
-            print "Second Pass..."
+            
+            g.message("\n|4+ Weighting 2nd HPFi")
 
             # StdDev of HPF Image #2
             hpf_2_uni = grass.parse_command("r.univar", map=tmp_pan_hpf_2,
@@ -355,29 +422,23 @@ def main():
             hpf_2_sd = float(hpf_2_uni['stddev'])
 #            hpf_avg = float(hpf_uni['mean'])
 
-            g.message("* StdDev of 2nd HPF image: $HPF_StdDev_2",
+            g.message("   >> StdDev of 2nd HPFi: %.3f" % hpf_2_sd,
                       flags='v')
 
             # Modulating factor #2
-            g.message("* 2nd Pass Modulating Factor set to: %f" % modulator_2,
-                      flags='v')
+            g.message("   >> 2nd Pass Modulating Factor: %f"
+                      % modulator_2, flags='v')
 
-            weighting_2 = msx_sd / hpf_2_sd * modulator_2
-            g.message("%f = %f / %f * %f" % (weighting_2, msx_sd, hpf_2_sd,
-                                             modulator_2),
-                      flags='v')
-            g.message("* 2nd Pass Weighting = %s" % weighting_2,
-                      flags='v')
+            # 2nd Pass, weighting already weighted HPFi
+            weighting_2 = hpf_weight(msx_sd, hpf_2_sd, modulator_2, 2)
 
-            g.message("2nd Pass: adding small-kernel-based weighted HPF image"
-                      "back to fused image", flags='i')
+            g.message("\n|5+ Adding small-kernel-based weighted 2nd HPFi "
+                      "back to fused image", flags='v')
 
             add_back = "%s = %s + %s * %f" \
                 % (tmp_msx_hpf, tmp_msx_hpf, tmp_pan_hpf_2, weighting_2)
 
             grass.mapcalc(add_back)
-
-            g.message("2nd pass performed successfuly!", flags='v')
 
     #        run("g.rename",
     #            rast=(tmp_msx_hpf,("%s_%s" % msx)))
@@ -386,18 +447,17 @@ def main():
             cmd_history += "2nd Pass Weighting: %s / %s * %s | " \
                 % (msx_sd, hpf_2_sd, modulator_2)
 
-        # -----------------------------------------------------------------------
-        # 5. Stretching linearly the HPF-Sharpened image(s) to match the Mean
+        # -------------------------------------------------------------------
+        # 6. Stretching linearly the HPF-Sharpened image(s) to match the Mean
         #     and Standard Deviation of the input Multi-Sectral image(s)
-        # -----------------------------------------------------------------------
+        # -------------------------------------------------------------------
 
         if histogram_match:
 
             # adapt output StdDev and Mean to the input(ted) ones
-            g.message("Linear Histogram Matching", flags='i')
-            g.message("Linearly matching histogram of Pansharpened image (%s)"
-                      "to the one of the original MSx image (%s)"
-                      "[Not Implemented!]" % (tmp_msx_hpf, msx), flags='v')
+            g.message("\n|  Matching histogram of Pansharpened image"
+                      "to %s"
+                      % (msx), flags='v')
 
             # Collect stats for linear histogram matching
             msx_hpf_uni = grass.parse_command("r.univar", map=tmp_msx_hpf,
@@ -415,7 +475,7 @@ def main():
                 % (tmp_msx_hpf,
                    tmp_msx_hpf, msx_hpf_avg,
                    msx_hpf_sd, msx_sd, msx_avg)
-            grass.mapcalc(lhm, overwrite=True)
+            grass.mapcalc(lhm, quiet=True, overwrite=True)
             cmd_history += "Linear Histogram Matching: %s |" % lhm 
         else:
             pass
@@ -427,8 +487,8 @@ def main():
     # Need to clean up!
 
     # visualising output
-    g.message("Note, It is probably required to rebalance colors "
-              "(using i.colors.enhance) before working on RGB composites.",
+    g.message("\n>>> Note, It is probably required to rebalance colors "
+              "(e.g. via i.colors.enhance) before working on RGB composites.",
               flags='i')
 
 if __name__ == "__main__":

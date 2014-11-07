@@ -18,7 +18,8 @@ def kernel_size(ratio):
 
 
 def center_cell(level, ks):
-    """ """
+    """High Pass Filter Additive image fusion compatible kernel center
+    cell value."""
     level = level.capitalize()
     ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
     center = [cc for cc in CENTER_CELL[level]][ks_idx]
