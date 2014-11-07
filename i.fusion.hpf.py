@@ -219,7 +219,7 @@ def hpf_weight(lo_sd, hpf_sd, mod, pss):
     return wgt
 
 
-def export_hpf(center, filter, tmpfile, pss):
+def hpf_ascii(center, filter, tmpfile, pss):
     """Exporting a High Pass Filter in a temporary ASCII file"""
     if pss == 1:
         global modulator
@@ -347,12 +347,12 @@ def main():
 
         # Construct Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
-        export_hpf(center, hpf, tmp_hpf_matrix, 1)
+        hpf_ascii(center, hpf, tmp_hpf_matrix, 1)
 
         # Construct 2nd Filter
         if second_pass and ratio > 5.5:
             hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
-            export_hpf(center2, hpf_2, tmp_hpf_matrix_2, 2)
+            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, 2)
 
         # Filtering
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
