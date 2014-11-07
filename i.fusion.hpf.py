@@ -8,7 +8,7 @@
 # MODULE:       i.fusion.hpf
 #
 # AUTHOR(S):    Nikos Alexandris <nik@nikosalexandris.net>
-#               Based on the bash shell script i.fusion.hpf
+#               Converted from a bash shell script
 #
 #
 # PURPOSE:      HPF Resolution Merge -- Algorithm Replication in GRASS GIS
@@ -28,9 +28,22 @@
 #               multi-spectral image. Credits for how to implement this
 #               technique go to GRASS-GIS developer Moritz Lennert.
 #
+#
 #               Source: "Optimizing the High-Pass Filter Addition Technique for
 #               Image Fusion", Ute G. Gangkofner, Pushkar S. Pradhan,
 #               and Derrold W. Holcomb (2008)
+#
+#               Figure 1:
+#____________________________________________________________________________
+#                                                                            +
+# Pan Img ->  High Pass Filter  ->  HP Img                                   |
+#                                      |                                     |
+#                                      v                                     |
+# MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
+#       |                              |                                     |
+#       |                              v                                     |
+#       +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
+#____________________________________________________________________________+
 #
 # COPYRIGHT:    (C) 2013 by the GRASS Development Team
 #
@@ -41,16 +54,16 @@
 #############################################################################
 
 #%Module
-#%  description: Fuses a High-Resolution Panchromatic with its corresponding Low Resolution Multi-Spectral image based on the High-Pass Filter Addition technique
+#%  description: Fusing high resolution Panchromatic and low resolution Multi-Spectral data based on the High-Pass Filter Addition technique (Gangkofner, 2008)
 #%  keywords: imagery, fusion, HPF, HPFA
 #%End
 #%flag
 #%  key: l
-#%  description: Linearly match histograms of the HPF Pan-sharpened output(s) to the Multi-Spectral input(s)
+#%  description: Linearly match histogram of Pan-sharpened output to Multi-Spectral input
 #%end
 #%flag
 #%  key: 2
-#%  description: 2-Pass Processing (recommended) for large Resolution Ratio (>=5.5)
+#%  description: 2-Pass Processing (recommended) for large resolution ratio (>=5.5)
 #%end
 #%option
 #% key: pan
@@ -78,7 +91,7 @@
 #%option
 #% key: ratio
 #% type: double
-#% description: Custom defined ratio to override standard calculation 
+#% description: Custom ratio overriding standard calculation 
 #% options: 1.0-10.0
 #% guisection: High Pass Filter Options
 #% required: no
@@ -97,7 +110,7 @@
 #%option
 #% key: center2
 #% type: string
-#% description: Center cell value for the second High-Pass-Filter 
+#% description: Center cell value for the second High-Pass-Filter (use -2 flag)
 #% descriptions: Level of center value for second pass
 #% options: low,mid,high
 #% required: no
@@ -119,7 +132,7 @@
 #%option
 #% key: modulation2
 #% type: string
-#% description: Level of modulating factor weighting the second HPF image to determine crispness
+#% description: Level of modulating factor weighting the second HPF image to determine crispness (use -2 flag)
 #% descriptions: mid;Mid: 0.35;min;Minimum: 0.25;max;Maximum: 0.5;
 #% options: min,mid,max
 #% required: no
@@ -156,10 +169,21 @@ if "GISBASE" not in os.environ:
 def run(cmd, **kwargs):
     """ """
     grass.run_command(cmd, quiet=True, **kwargs)
+    
+def avg(img):
+    """Retrieving Average (or name it: Mean) of input image"""
+    uni = grass.parse_command("r.univar", map=img, flags='g')
+    avg = float(uni['mean'])
+    return avg
 
-
+def stddev(img):
+    """Retrieving Standard Deviation of input image"""
+    uni = grass.parse_command("r.univar", map=img, flags='g')
+    sd = float(uni['stddev'])
+    return sd
+            
 def hpf_weight(lo_sd, hpf_sd, mod, pss):
-    """Function returning an appropriate weighting value for the
+    """Returning an appropriate weighting value for the
     High Pass Filtered image. The required inputs are:
     - StdDev of Low resolution image
     - StdDev of High Pass Filtered image
@@ -181,7 +205,7 @@ def hpf_weight(lo_sd, hpf_sd, mod, pss):
 
 
 def export_hpf(center, filter, tmpfile, pss):
-    """Function exporting High Pass Filter as a temporary ASCII file"""
+    """Exporting a High Pass Filter in a temporary ASCII file"""
     if pss == 1:
         global modulator
         modulator = filter.modulator
@@ -227,7 +251,7 @@ def main():
     histogram_match = flags['l']
     second_pass = flags['2']
 
-    # Check & warn user about "ns == ew" resolution of current region
+    # Check & warn user about "ns == ew" resolution of current region ======
     region = grass.region()
     nsr = region['nsres']
     ewr = region['ewres']
@@ -235,29 +259,28 @@ def main():
     if nsr != ewr:
         g.message(">>> Region's North:South (%s) and East:West (%s)"
                   "resolutions do not match!" % (nsr, ewr), flags='w')
+    # ======================================================================
 
     mapset = grass.gisenv()['MAPSET']  # Current Mapset?
 
     imglst = [pan]
     imglst.extend(msxlst)  # List of input imagery
 
-    # Retrieving Image Info
     images = {}
-    for img in imglst:
+    for img in imglst:  # Retrieving Image Info
         images[img] = Info(img, mapset)
         images[img].read()
 
     panres = images[pan].nsres  # Panchromatic resolution
 
-    # Respect region extent -- Change region resolution
-    run('g.region', res=panres)
-    g.message("|  Region's resolution set to %f" % panres, flags='v')
+    run('g.region', res=panres)  # Respect extent, change resolution
+    g.message("|  Region's resolution set to %f" % panres)
 
-    # Loop over Multi-Spectral images
-    for msx in msxlst:
+
+    for msx in msxlst:  # Loop over Multi-Spectral images |||||||||||||||||||
 
         # Inform
-        g.message("\nProcessing image: %s" % msx, flags='v')
+        g.message("\nProcessing image: %s" % msx)
 
         # Tracking command history -- Why don't do this all r.* modules?
         cmd_history = ''
@@ -266,8 +289,7 @@ def main():
         # 1. Compute Ratio
         # -------------------------------------------------------------------
 
-        g.message("\n|1 Determining ratio of low to high resolution",
-                  flags='v')
+        g.message("\n|1 Determining ratio of low to high resolution")
 
         # Custom Ratio? Skip standard computation method.
         if custom_ratio:
@@ -279,17 +301,17 @@ def main():
         # Multi-Spectral resolution(s), multiple
         else:
             # Image resolutions
-            g.message("   > Retrieving image resolutions", flags='v')
+            g.message("   > Retrieving image resolutions")
 
             msxres = images[msx].nsres
             ratio = msxres / panres
             msg_ratio = '   >> Low (%.3f) to high resolution (%.3f) ratio: %.1f'\
                 % (msxres, panres, ratio)
-            g.message(msg_ratio, flags='v')
+            g.message(msg_ratio)
 
         # 2nd Pass requested, yet Ratio < 5.5
         if second_pass and ratio < 5.5:
-            g.message("   >>> Ratio < 5.5 -- WON'T perform 2nd pass! <<<",
+            g.message("   >>> Ratio < 5.5 -- WON'T perform 2nd pass! Use <ratio> option to override.",
                       flags='i')
             second_pass = bool(0)
 
@@ -297,46 +319,30 @@ def main():
         # 2. High Pass Filtering
         # -------------------------------------------------------------------
 
-        g.message('\n|2 High Pass Filtering the Panchromatic Image', flags='v')
+        g.message('\n|2 High Pass Filtering the Panchromatic Image')
 
-        # Temporary files ===================================================
+        # ========================================== end of Temporary files #
         tmpfile = grass.tempfile()  # a Temporary file
         tmp = grass.basename(tmpfile)  # use its basename
 
         tmp_pan_hpf = "%s_pan_hpf" % tmp  # HPF image
-        tmp_msx_blnr = "%s_msx_blnr" % tmp  # Upsamples MSx
+        tmp_msx_blnr = "%s_msx_blnr" % tmp  # Upsampled MSx
         tmp_msx_hpf = "%s_msx_hpf" % tmp  # Fused image
 
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
 
         if second_pass and ratio > 5.5:  # 2nd Pass?
+            tmp_pan_hpf_2 = "%s_pan_hpf_2" % tmp  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
-            tmp_pan_hpf_2 = "%s_pan_hpf_2" % tmp
-        # ========================================== end of Temporary files #
+        # Temporary files ===================================================
 
         # Construct Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
-# ---------------------------------------------------------------------------
-#        g.message("   > Filter Properties: size: %s, center: %s"
-#                  % (hpf.size, center), flags='v')
-#        modulator = hpf.modulator
-#        asciif = open(tmp_hpf_matrix, 'w')
-#        asciif.write(hpf.filter)
-#        asciif.close()
-# ------------------------------------------------ replaced by export_hpf() -
         export_hpf(center, hpf, tmp_hpf_matrix, 1)
 
         # Construct 2nd Filter
         if second_pass and ratio > 5.5:
             hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
-# ---------------------------------------------------------------------------
-#            g.message("   > 2nd Pass Filter Properties: size: %s, center: %s"
-#                      % (hpf.size, center2), flags='v')
-#            modulator_2 = hpf_2.modulator_2
-#            asciif = open(tmp_hpf_matrix_2, 'w')
-#            asciif.write(hpf_2.filter)
-#            asciif.close()
-# ------------------------------------------------ replaced by export_hpf() -
             export_hpf(center2, hpf_2, tmp_hpf_matrix_2, 2)
 
         # Filtering
@@ -356,41 +362,34 @@ def main():
         # 3. Upsampling low resolution image
         # -------------------------------------------------------------------
 
-        g.message("\n|3 Upsampling (bilinearly) low resolution image",
-                  flags='v')
+        g.message("\n|3 Upsampling (bilinearly) low resolution image")
 
         # resample -- named "linear" in G7
         run('r.resamp.interp',
             method='bilinear', input=msx, output=tmp_msx_blnr, overwrite=True)
 
-        # -------------------------------------------------------------------        
+        # -------------------------------------------------------------------
         # 4. Weighting the High Pass Filtered image(s)
         # -------------------------------------------------------------------
 
         g.message("\n|4 Weighting the High-Pass-Filtered image (HPFi)")
 
-        # Compute Weighting(s)
-        msg_w = '   > Weighting = StdDev(MSx) / StdDev(HPFi) * Modulating Factor'
-        g.message(msg_w, flags='v')
+        # Compute (1st Pass) Weighting
+        msg_w = "   > Weighting = StdDev(MSx) / StdDev(HPFi) * "
+        "Modulating Factor"
+        g.message(msg_w)
 
         # StdDev of Multi-Spectral Image(s)
-        msx_uni = grass.parse_command("r.univar", map=msx, flags='g')
-        msx_avg = float(msx_uni['mean'])
-        msx_sd = float(msx_uni['stddev'])
-
-        g.message("   >> StdDev of <%s>: %s" % (msx, msx_sd), flags='v')
+        msx_avg = avg(msx)
+        msx_sd = stddev(msx)
+        g.message("   >> StdDev of <%s>: %.3f" % (msx, msx_sd))
 
         # StdDev of HPF Image
-        hpf_uni = grass.parse_command("r.univar", map=tmp_pan_hpf, flags='g')
-        hpf_sd = float(hpf_uni['stddev'])
-
-        g.message("   >> StdDev of HPFi: %s"
-                  % (hpf_sd), flags='v')
+        hpf_sd = stddev(tmp_pan_hpf)
+        g.message("   >> StdDev of HPFi: %.3f" % hpf_sd)
 
         # Modulating factor
-        g.message("   >> Modulating Factor: %f" % modulator,
-                  flags='v')
-
+        g.message("   >> Modulating Factor: %.2f" % modulator)
 
         # weighting HPFi
         weighting = hpf_weight(msx_sd, hpf_sd, modulator, 1)
@@ -399,51 +398,49 @@ def main():
         # 5. Adding weighted HPF image to upsampled Multi-Spectral band
         # -------------------------------------------------------------------
 
-        g.message("\n|5 Adding weighted HPFi to upsampled image",
-                  flags='v')
+        g.message("\n|5 Adding weighted HPFi to upsampled image")
 
         fusion = "%s = %s + %s * %f" \
             % (tmp_msx_hpf, tmp_msx_blnr, tmp_pan_hpf, weighting)
 
         grass.mapcalc(fusion)
 
-        # history
-        cmd_history += "Weigthing applied: %s / %s * %s | " \
+        # history ***********************************************************
+        cmd_history += "Weigthing applied: %.3f / %.3f * %.3f | " \
             % (msx_sd, hpf_sd, modulator)
 
-        # 2nd Pass
         if second_pass and ratio > 5.5:
-            
-            g.message("\n|4+ Weighting 2nd HPFi")
+            # ---------------------------------------------------------------
+            # 4+ 2nd Pass Weighting the High Pass Filtered image
+            # ---------------------------------------------------------------
+            g.message("\n|4+ 2nd Pass Weighting the HPFi")
+
+            # Compute 2nd Pass Weighting
+            # Formula? Don't inform again...
 
             # StdDev of HPF Image #2
-            hpf_2_uni = grass.parse_command("r.univar", map=tmp_pan_hpf_2,
-                                            flags='g')
-            hpf_2_sd = float(hpf_2_uni['stddev'])
-#            hpf_avg = float(hpf_uni['mean'])
-
-            g.message("   >> StdDev of 2nd HPFi: %.3f" % hpf_2_sd,
-                      flags='v')
+            hpf_2_sd = stddev(tmp_pan_hpf_2)
+            g.message("   >> StdDev of 2nd HPFi: %.3f" % hpf_2_sd)
 
             # Modulating factor #2
-            g.message("   >> 2nd Pass Modulating Factor: %f"
-                      % modulator_2, flags='v')
+            g.message("   >> 2nd Pass Modulating Factor: %.2f" % modulator_2)
 
-            # 2nd Pass, weighting already weighted HPFi
+            # 2nd Pass weighting
             weighting_2 = hpf_weight(msx_sd, hpf_2_sd, modulator_2, 2)
 
+            # ---------------------------------------------------------------
+            # 5+ Adding weighted HPF image to upsampled Multi-Spectral band
+            # ---------------------------------------------------------------
+
             g.message("\n|5+ Adding small-kernel-based weighted 2nd HPFi "
-                      "back to fused image", flags='v')
+                      "back to fused image")
 
             add_back = "%s = %s + %s * %f" \
                 % (tmp_msx_hpf, tmp_msx_hpf, tmp_pan_hpf_2, weighting_2)
 
             grass.mapcalc(add_back)
 
-    #        run("g.rename",
-    #            rast=(tmp_msx_hpf,("%s_%s" % msx)))
-
-            # 2nd Pass history entry
+            # 2nd Pass history entry ****************************************
             cmd_history += "2nd Pass Weighting: %s / %s * %s | " \
                 % (msx_sd, hpf_2_sd, modulator_2)
 
@@ -456,39 +453,36 @@ def main():
 
             # adapt output StdDev and Mean to the input(ted) ones
             g.message("\n|  Matching histogram of Pansharpened image"
-                      "to %s"
-                      % (msx), flags='v')
+                      "to %s" % (msx), flags='v')
 
             # Collect stats for linear histogram matching
-            msx_hpf_uni = grass.parse_command("r.univar", map=tmp_msx_hpf,
-                                              flags='g')
-            msx_hpf_avg = float(msx_hpf_uni['mean'])
-            msx_hpf_sd = float(msx_hpf_uni['stddev'])
+            msx_hpf_avg = avg(tmp_msx_hpf)
+            msx_hpf_sd = stddev(tmp_msx_hpf)
 
-
-#            tmp_msx_lhm = "%s_msx_lhm" % tmp
-
-            #    input=${Temporary_MSHPF} \
-            #    output=${GIS_OPT_MSX}_${GIS_OPT_OUTPUTPREFIX} \
-
+            # expression for mapcalc
             lhm = "%s = (%s - %f) / %f * %f + %f" \
                 % (tmp_msx_hpf,
                    tmp_msx_hpf, msx_hpf_avg,
                    msx_hpf_sd, msx_sd, msx_avg)
+
+            # compute
             grass.mapcalc(lhm, quiet=True, overwrite=True)
-            cmd_history += "Linear Histogram Matching: %s |" % lhm 
-        else:
-            pass
+            
+            # update history string *****************************************
+            cmd_history += "Linear Histogram Matching: %s |" % lhm
+
+        # histogram matching - history entry ********************************
+        run("r.support", map=tmp_msx_hpf, history=cmd_history)
 
         # Rename end product
-        run("r.support", map=tmp_msx_hpf, history=cmd_history)
         run("g.rename", rast=(tmp_msx_hpf, "%s_%s" % (msx, outputprefix)))
 
     # Need to clean up!
+#    Implement Me!
 
     # visualising output
-    g.message("\n>>> Note, It is probably required to rebalance colors "
-              "(e.g. via i.colors.enhance) before working on RGB composites.",
+    g.message("\n>>> Rebalance colors "
+              "(e.g. via i.colors.enhance) before working on RGB composites!",
               flags='i')
 
 if __name__ == "__main__":

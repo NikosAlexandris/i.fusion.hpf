@@ -13,6 +13,7 @@ deviation of the original multi-spectral image.
 
 Source: Gangkofner, 2008
 
+
 Algorithm description
 =====================
 
@@ -28,7 +29,31 @@ Algorithm description
 original MSx image
 
 
+From the original paper
+-----------------------
 
+Step 1: HP Filtering of the High-resolution Image to Extract the Structural
+Detail
+
+Step 2: Adding the HP Filtered Image to Each Band of the Multispectral Image
+Using a Standard Deviation-based Injection Model
+
+Step 3: Linear Histogram Match to Adapt SD and Mean of the Merged Image Bands
+to Those of the Original MS Image Bands
+
+Figure 1:
+____________________________________________________________________________
+                                                                            +
+ Pan Img ->  High Pass Filter  ->  HP Img                                   |
+                                      |                                     |
+                                      v                                     |
+ MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
+       |                              |                                     |
+       |                              v                                     |
+       +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
+____________________________________________________________________________+
+        
+        
 Trying to design the code-flow
 ==============================
 
@@ -92,8 +117,8 @@ Trying to design the code-flow
     > Out: Histogram Matched Sharpened Image
 
 
-Methods for Objects
-===================
+Methods for Objects?
+====================
 
 Methods required for potential Classes:
     
@@ -104,8 +129,8 @@ methods for msx:
 - resample
 
 
-Functions
-=========
+Helper Functions?
+=================
 
 functions:
 - resolution ratio

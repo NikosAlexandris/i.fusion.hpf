@@ -12,8 +12,10 @@ ToDo
   - <http://chimera.labs.oreilly.com/books/1230000000393/ch02.html#_solution_33>
   - <https://docs.python.org/3/library/string.html#formatspec>
   
-- Proper command history tracking. Not all "r" modules keep track.
+- Proper command history tracking. Not all "r" modules keep track. ?
 
 - Add timestamps (r.timestamp)
 
 - Deduplicate code where applicable
+
+- Implement function to clean temporary files
