@@ -24,7 +24,9 @@ elif 9.5 <= ratio_random:
 to
 
 --%<---
-
+for l in t:
+    if l[0][0] <= ratio_random < l[0][1]:
+        kernel_size = l[1]
 --->%--
  
  on 26 Oct. 2014

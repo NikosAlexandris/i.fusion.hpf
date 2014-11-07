@@ -132,7 +132,7 @@ methods for msx:
 Helper Functions?
 =================
 
-functions:
 - resolution ratio
 - hpf matrix
+- stddev and avg
 - histogram matching
