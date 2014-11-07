@@ -20,9 +20,9 @@
 #               with both excellent detail and a realistic representation of
 #               original multispectral scene colors.
 #
-# 				 The process involves a convolution using a High Pass Filter
-# 				 (HPF) on the high resolution data, then combining this with
-# 				 the lower resolution multispectral data.
+#		The process involves a convolution using a High Pass Filter
+# 		(HPF) on the high resolution data, then combining this with
+# 		the lower resolution multispectral data.
 #
 #               Optionally, a linear histogram matching technique is performed
 #               in a  way that matches the resulting Pan-Sharpened imaged to
@@ -174,7 +174,7 @@ tmp = ''
 
 
 def cleanup():
-    grass.run_command('g.mremove', flags='f', type="rast",
+    grass.run_command('g.remove', flags='f', type="rast",
                       pattern='tmp.%s*' % os.getpid(), quiet=True)
 
 
