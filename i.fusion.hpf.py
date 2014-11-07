@@ -146,7 +146,7 @@
 
 import os
 import sys
-#import atexit
+import atexit
 
 import grass.script as grass
 #from grass.pygrass.gis import Mapset
@@ -163,25 +163,46 @@ if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
+tmplst = []
+
 
 # helper functions ----------------------------------------------------------
+
+tmp = ''
+
+
+def cleanup():
+#    grass.run_command('g.mremove',
+#                      flags='f',
+#                      type="rast",
+#                      pattern='tmp.%s*' % os.getpid(),
+#                      quiet=True)
+    pass
+
+##    for x in tmplst:
+#        grass.run_command("g.remove", rast = x, quiet = True)
+#    grass.run_command('g.mremove', type='rast', pattern='%s*hpf' % tmp)
+
 
 def run(cmd, **kwargs):
     """ """
     grass.run_command(cmd, quiet=True, **kwargs)
-    
+
+
 def avg(img):
     """Retrieving Average (or name it: Mean) of input image"""
     uni = grass.parse_command("r.univar", map=img, flags='g')
     avg = float(uni['mean'])
     return avg
 
+
 def stddev(img):
     """Retrieving Standard Deviation of input image"""
     uni = grass.parse_command("r.univar", map=img, flags='g')
     sd = float(uni['stddev'])
     return sd
-            
+
+
 def hpf_weight(lo_sd, hpf_sd, mod, pss):
     """Returning an appropriate weighting value for the
     High Pass Filtered image. The required inputs are:
@@ -231,10 +252,6 @@ def export_hpf(center, filter, tmpfile, pss):
     asciif.close()
 
 
-#def cleanup():
-#   grass.try_remove(tmp_hpf_matrix)
-
-
 # main program --------------------------------------------------------------
 
 def main():
@@ -278,6 +295,8 @@ def main():
 
 
     for msx in msxlst:  # Loop over Multi-Spectral images |||||||||||||||||||
+
+        global tmp
 
         # Inform
         g.message("\nProcessing image: %s" % msx)
@@ -323,17 +342,20 @@ def main():
 
         # ========================================== end of Temporary files #
         tmpfile = grass.tempfile()  # a Temporary file
-        tmp = grass.basename(tmpfile)  # use its basename
+        tmplst.append(tmpfile)
+        tmp = "tmp." + grass.basename(tmpfile)  # use its basename
 
         tmp_pan_hpf = "%s_pan_hpf" % tmp  # HPF image
         tmp_msx_blnr = "%s_msx_blnr" % tmp  # Upsampled MSx
         tmp_msx_hpf = "%s_msx_hpf" % tmp  # Fused image
 
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
+        tmplst.append(tmp_hpf_matrix)
 
         if second_pass and ratio > 5.5:  # 2nd Pass?
             tmp_pan_hpf_2 = "%s_pan_hpf_2" % tmp  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
+            tmplst.append(tmp_hpf_matrix_2)
         # Temporary files ===================================================
 
         # Construct Filter
@@ -350,6 +372,7 @@ def main():
             output=tmp_pan_hpf,
             title="High Pass Filtered Panchromatic image",
             overwrite=True)
+        tmplst.append(tmp_pan_hpf)
 
         # 2nd Filtering
         if second_pass and ratio > 5.5:
@@ -357,6 +380,7 @@ def main():
                 output=tmp_pan_hpf_2,
                 title="2-High-Pass Filtered Panchromatic Image",
                 overwrite=True)
+            tmplst.append(tmp_pan_hpf_2)
 
         # -------------------------------------------------------------------
         # 3. Upsampling low resolution image
@@ -367,6 +391,7 @@ def main():
         # resample -- named "linear" in G7
         run('r.resamp.interp',
             method='bilinear', input=msx, output=tmp_msx_blnr, overwrite=True)
+        tmplst.append(tmp_msx_blnr)
 
         # -------------------------------------------------------------------
         # 4. Weighting the High Pass Filtered image(s)
@@ -404,6 +429,7 @@ def main():
             % (tmp_msx_hpf, tmp_msx_blnr, tmp_pan_hpf, weighting)
 
         grass.mapcalc(fusion)
+        tmplst.append(tmp_msx_hpf)
 
         # history ***********************************************************
         cmd_history += "Weigthing applied: %.3f / %.3f * %.3f | " \
@@ -477,9 +503,6 @@ def main():
         # Rename end product
         run("g.rename", rast=(tmp_msx_hpf, "%s_%s" % (msx, outputprefix)))
 
-    # Need to clean up!
-#    Implement Me!
-
     # visualising output
     g.message("\n>>> Rebalance colors "
               "(e.g. via i.colors.enhance) before working on RGB composites!",
@@ -487,5 +510,5 @@ def main():
 
 if __name__ == "__main__":
     options, flags = grass.parser()
-#    atexit.register(cleanup)
-    main()
+    atexit.register(cleanup)
+    sys.exit(main())
