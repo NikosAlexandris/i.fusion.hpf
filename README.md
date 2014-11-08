@@ -40,16 +40,16 @@ original MSX image
 > to Those of the Original MS Image Bands
 
 > Figure 1:
- ____________________________________________________________________________
-+                                                                            +
-| Pan Img ->  High Pass Filter  ->  HP Img                                   |
-|                                      |                                     |
-|                                      v                                     |
-| MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
-|       |                              |                                     |
-|       |                              v                                     |
-|       +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
-+____________________________________________________________________________+
+     ____________________________________________________________________________
+    +                                                                            +
+    | Pan Img ->  High Pass Filter  ->  HP Img                                   |
+    |                                      |                                     |
+    |                                      v                                     |
+    | MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
+    |       |                              |                                     |
+    |       |                              v                                     |
+    |       +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
+    +____________________________________________________________________________+
 
 
 Installation
