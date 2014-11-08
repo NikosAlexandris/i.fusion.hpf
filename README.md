@@ -40,6 +40,7 @@ original MSX image
 > to Those of the Original MS Image Bands
 
 > Figure 1:
+
      ____________________________________________________________________________
     +                                                                            +
     | Pan Img ->  High Pass Filter  ->  HP Img                                   |
