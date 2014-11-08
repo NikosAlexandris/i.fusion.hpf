@@ -330,7 +330,7 @@ def main():
 
         g.message('\n|2 High Pass Filtering the Panchromatic Image')
 
-        # ========================================== end of Temporary files #
+        # ========================================== Temporary files #########
         tmpfile = grass.tempfile()  # Temporary file - replace with os.getpid?
         tmp = "tmp." + grass.basename(tmpfile)  # use its basenam
         tmp_pan_hpf = "%s_pan_hpf" % tmp  # HPF image
@@ -343,7 +343,7 @@ def main():
             tmp_pan_hpf_2 = "%s_pan_hpf_2" % tmp  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
 
-        # Temporary files ===================================================
+        # end of Temporary files =============================================
 
         # Construct Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
