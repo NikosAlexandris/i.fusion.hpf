@@ -64,7 +64,7 @@ see [GRASS Addons SVN repository, README file, Installation - Code Compilation](
 Steps
 =====
 
-Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 6.4 session, may be done via the following steps:
+Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 7.x session, may be done via the following steps:
 
 1.  launch a GRASS-GIS’ ver. 7.x session
 
@@ -147,7 +147,7 @@ To Do
 
 - Go through <http://trac.osgeo.org/grass/wiki/Submitting/Python>
 
-- Use format() instead of the % operator
+- Use format() instead of the % operator (?)
 
   Sources:
   - <http://chimera.labs.oreilly.com/books/1230000000393/ch02.html#_solution_33>
