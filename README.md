@@ -27,7 +27,7 @@ Algorithm description
 5.  Optionally, matching histogram of Pansharpened image to the one of the 
 original MSX image
 
-# From the original paper
+## From the original paper
 -----------------------
 
 > Step 1: HP Filtering of the High-resolution Image to Extract the Structural
@@ -40,6 +40,7 @@ original MSX image
 > to Those of the Original MS Image Bands
 
 > Figure 1:
+
      ____________________________________________________________________________
     +                                                                            +
     | Pan Img ->  High Pass Filter  ->  HP Img                                   |
@@ -55,15 +56,14 @@ original MSX image
 Installation
 ============
 
-Requirements
+##Requirements
 ------------
 
 see [GRASS Addons SVN repository, README file, Installation - Code Compilation](https://svn.osgeo.org/grass/grass-addons/README)
 
-Steps
-=====
+## Steps
 
-Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 6.4 session, may be done via the following steps:
+Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 7.x session, may be done via the following steps:
 
 1.  launch a GRASS-GIS’ ver. 7.x session
 
@@ -71,8 +71,7 @@ Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 6.4 se
 
 3.  execute `make MODULE_TOPDIR=$GISBASE`
 
-Usage
-=====
+## Usage
 
 After installation, from within a GRASS-GIS session, see help details via `i.fusion.hpf --help` -- also provided here:
 
@@ -119,8 +118,7 @@ Parameters:
                   mid: Mid: 0.35
                   max: Maximum: 0.5
 ```
-Remarks
--------
+## Remarks
 
 -   requires (currently) manual color rebalancing (e.g. by using i.colors.enhance)
 
@@ -141,12 +139,11 @@ Implementation notes
 -   Working state reached on Tue Nov 4 09:28:25 2014 +0200
 
 
-To Do
------
+## To Do
 
 - Go through <http://trac.osgeo.org/grass/wiki/Submitting/Python>
 
-- Use format() instead of the % operator
+- Use format() instead of the % operator (?)
 
   Sources:
   - <http://chimera.labs.oreilly.com/books/1230000000393/ch02.html#_solution_33>
@@ -165,10 +162,9 @@ To Do
 - Checking options to integrate in `i.pansharpen`. Think of FFM methods vs. 
 Others? 
 
-Questions
----------
+## Questions
 
-- To ask.
+- To Ask!
 
 References
 ==========
