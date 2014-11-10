@@ -1,32 +1,26 @@
-# ToDo
+#`i.fusion.hpf` is a GRASS-GIS module to combine high-resolution 
+#panchromatic data with lower resolution multispectral data, resulting in an 
+#output with both excellent detail and a realistic representation of original 
+#multispectral scene colors.
 
-# HPF Resolution Merge  --- Attempt to replicate in GRASS GIS
+#The process involves a convolution using a High Pass Filter (HPF) on the high 
+#resolution data, then combining this with the lower resolution multispectral 
+#data.
 
-  # Function to combine high-resolution panchromatic data with lower resolution
-  # multispectral data, resulting in an output with both excellent detail and
-  # a realistic representation of original multispectral scene colors.
-  
-  # The process involves a convolution using a High Pass Filter (HPF) on the
-  # high resolution data, then combining this with the lower resolution
-  # multispectral data. Read the description of the Algorithm below.
-  
-  # Source: "Optimizing the High-Pass Filter Addition Technique for Image Fusion"
-  # Ute G. Gangkofner, Pushkar S. Pradhan, and Derrold W. Holcomb (2008)
+#Optionally, a linear histogram matching technique is performed in a way that 
+#matches the resulting Pan-Sharpened imaged to them statistical mean and standard 
+#deviation of the original multi-spectral image.
 
+#Figure:
+ #____________________________________________________________________________
+#+                                                                            +
+#| Pan Img ->  High Pass Filter  ->  HP Img                                   |
+#|                                      |                                     |
+#|                                      v                                     |
+#| MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
+#|       |                              |                                     |
+#|       |                              v                                     |
+#|       +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
+#+____________________________________________________________________________+
 
-
-# The general algorithm is:
-
-  # 1. Read pixel sizes from Image files and calculate R, the ratio of
-  # multispectral cell size to high-resolution cell size
-  
-  # 2. Apply the High-pass filter to the high spatial resolution image.
-  
-  # 3. Resample the Multi-Spectral image to the pixel size of the high-pass image.
-  # Note, bilinear resampling required (4 nearest neighbours)!
-  
-  # 4. Add the HPF image weighted relative to the global standard deviation of
-  # the Multi-Spectral band.
-  
-  # 5. Optionally, stretch linearly the new HPF-Sharpened image to match the mean and
-  # standard deviation of the input Multi-Sectral image.
+#Source: Gangkofner, 2008

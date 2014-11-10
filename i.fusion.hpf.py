@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-@author: Nikos Alexandris | Created on Fri Oct 31 20:03:06 2014
-"""
-
 ############################################################################
 #
 # MODULE:       i.fusion.hpf
@@ -20,9 +16,9 @@
 #               with both excellent detail and a realistic representation of
 #               original multispectral scene colors.
 #
-#		The process involves a convolution using a High Pass Filter
-# 		(HPF) on the high resolution data, then combining this with
-# 		the lower resolution multispectral data.
+#               The process involves a convolution using a High Pass Filter
+#               (HPF) on the high resolution data, then combining this with
+#               the lower resolution multispectral data.
 #
 #               Optionally, a linear histogram matching technique is performed
 #               in a  way that matches the resulting Pan-Sharpened imaged to
@@ -148,16 +144,12 @@
 
 import os
 import sys
-sys.path.insert(1, os.path.join(os.path.dirname(sys.path[0]), 'etc', 'r.in.wms'))
+sys.path.insert(1, os.path.join(os.path.dirname(sys.path[0]),
+                                'etc', 'i.fusion.hpf'))
 import atexit
 
 import grass.script as grass
-#from grass.pygrass.gis import Mapset
 from grass.pygrass.modules.shortcuts import general as g
-#from grass.pygrass.modules.shortcuts import raster as r
-#from grass.pygrass.modules.shortcuts import vector as v
-#from grass.pygrass.modules.shortcuts import display as d
-#from grass.pygrass.modules import Module
 from grass.pygrass.raster.abstract import Info
 
 from high_pass_filter import High_Pass_Filter
@@ -284,7 +276,6 @@ def main():
     run('g.region', res=panres)  # Respect extent, change resolution
     g.message("|  Region's resolution set to %f" % panres)
 
-
     for msx in msxlst:  # Loop over Multi-Spectral images |||||||||||||||||||
 
         global tmp
@@ -321,7 +312,8 @@ def main():
 
         # 2nd Pass requested, yet Ratio < 5.5
         if second_pass and ratio < 5.5:
-            g.message("   >>> Ratio < 5.5 -- WON'T perform 2nd pass! Use <ratio> option to override.",
+            g.message("   >>> Ratio < 5.5 -- WON'T perform 2nd pass! "
+                      "Use <ratio> option to override.",
                       flags='i')
             second_pass = bool(0)
 
@@ -475,7 +467,7 @@ def main():
 
             # compute
             grass.mapcalc(lhm, quiet=True, overwrite=True)
-            
+
             # update history string *****************************************
             cmd_history += "Linear Histogram Matching: %s |" % lhm
 
