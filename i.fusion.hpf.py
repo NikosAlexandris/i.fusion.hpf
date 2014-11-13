@@ -1,68 +1,69 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-############################################################################
-#
-# MODULE:       i.fusion.hpf
-#
-# AUTHOR(S):    Nikos Alexandris <nik@nikosalexandris.net>
-#               Converted from a bash shell script
-#
-#
-# PURPOSE:      HPF Resolution Merge -- Algorithm Replication in GRASS GIS
-#
-#               Module to combine high-resolution panchromatic data with
-#               lower resolution multispectral data, resulting in an output
-#               with both excellent detail and a realistic representation of
-#               original multispectral scene colors.
-#
-#               The process involves a convolution using a High Pass Filter
-#               (HPF) on the high resolution data, then combining this with
-#               the lower resolution multispectral data.
-#
-#               Optionally, a linear histogram matching technique is performed
-#               in a  way that matches the resulting Pan-Sharpened imaged to
-#               them statistical mean and standard deviation of the original
-#               multi-spectral image. Credits for how to implement this
-#               technique go to GRASS-GIS developer Moritz Lennert.
-#
-#
-#               Source: "Optimizing the High-Pass Filter Addition Technique for
-#               Image Fusion", Ute G. Gangkofner, Pushkar S. Pradhan,
-#               and Derrold W. Holcomb (2008)
-#
-#               Figure 1:
-#____________________________________________________________________________
-#                                                                            +
-# Pan Img ->  High Pass Filter  ->  HP Img                                   |
-#                                      |                                     |
-#                                      v                                     |
-# MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
-#       |                              |                                     |
-#       |                              v                                     |
-#       +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
-#____________________________________________________________________________+
-#
-# COPYRIGHT:    (C) 2013 by the GRASS Development Team
-#
-#               This program is free software under the GNU General Public
-#               License (>=v2). Read the file COPYING that comes with GRASS
-#               for details.
-#
-#############################################################################
+"""
+ MODULE:       i.fusion.hpf
+
+ AUTHOR(S):    Nikos Alexandris <nik@nikosalexandris.net>
+               Converted from a bash shell script | Trikala, Nov. 2014
+
+
+ PURPOSE:      HPF Resolution Merge -- Algorithm Replication in GRASS GIS
+
+               Module to combine high-resolution panchromatic data with
+               lower resolution multispectral data, resulting in an output
+               with both excellent detail and a realistic representation of
+               original multispectral scene colors.
+
+               The process involves a convolution using a High Pass Filter
+               (HPF) on the high resolution data, then combining this with
+               the lower resolution multispectral data.
+
+               Optionally, a linear histogram matching technique is performed
+               in a  way that matches the resulting Pan-Sharpened imaged to
+               them statistical mean and standard deviation of the original
+               multi-spectral image. Credits for how to implement this
+               technique go to GRASS-GIS developer Moritz Lennert.
+
+
+               Source: "Optimizing the High-Pass Filter Addition Technique for
+               Image Fusion", Ute G. Gangkofner, Pushkar S. Pradhan,
+               and Derrold W. Holcomb (2008)
+
+               Figure 1:
+
++-----------------------------------------------------------------------------+
+|  Pan Img ->  High Pass Filter  ->  HP Img                                   |
+|                                       |                                     |
+|                                       v                                     |
+|  MSx Img ->  Weighting Factors ->  Weighted HP Img                          |
+|        |                              |                                     |
+|        |                              v                                     |
+|        +------------------------>  Addition to MSx Img  =>  Fused MSx Image |
++-----------------------------------------------------------------------------+
+
+ COPYRIGHT:    (C) 2013 by the GRASS Development Team
+
+               This program is free software under the GNU General Public
+               License (>=v2). Read the file COPYING that comes with GRASS
+               for details.
+"""
 
 #%Module
 #%  description: Fusing high resolution Panchromatic and low resolution Multi-Spectral data based on the High-Pass Filter Addition technique (Gangkofner, 2008)
 #%  keywords: imagery, fusion, HPF, HPFA
 #%End
+
 #%flag
 #%  key: l
 #%  description: Linearly match histogram of Pan-sharpened output to Multi-Spectral input
 #%end
+
 #%flag
 #%  key: 2
 #%  description: 2-Pass Processing (recommended) for large resolution ratio (>=5.5)
 #%end
+
 #%option
 #% key: pan
 #% type: string
@@ -70,6 +71,7 @@
 #% description: High resolution panchromatic image
 #% required : yes
 #%end
+
 #%option
 #% key: msx
 #% type: string
@@ -78,6 +80,7 @@
 #% required: yes
 #% multiple: yes
 #%end
+
 #%option
 #% key: outputprefix
 #% type: string
@@ -86,6 +89,7 @@
 #% required: yes
 #% answer: hpf
 #%end
+
 #%option
 #% key: ratio
 #% type: double
@@ -94,6 +98,7 @@
 #% guisection: High Pass Filter Options
 #% required: no
 #%end
+
 #%option
 #% key: center
 #% type: string
@@ -105,6 +110,7 @@
 #% guisection: High Pass Filter Options
 #% multiple : no
 #%end
+
 #%option
 #% key: center2
 #% type: string
@@ -116,6 +122,7 @@
 #% guisection: High Pass Filter Options
 #% multiple : no
 #%end
+
 #%option
 #% key: modulation
 #% type: string
@@ -127,6 +134,7 @@
 #% guisection: High Pass Filter Options
 #% multiple : no
 #%end
+
 #%option
 #% key: modulation2
 #% type: string
