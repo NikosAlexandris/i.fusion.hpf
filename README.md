@@ -185,3 +185,4 @@ PHOTOGRAMMETRIC ENGINEERING & REMOTE SENSING,
 - StackExchange contributors
   - <http://stackoverflow.com/a/1140966/1172302>
   - <http://stackoverflow.com/a/275025/1172302>
+- Yann Chemin
