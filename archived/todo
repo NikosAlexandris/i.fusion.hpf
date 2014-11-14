@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author: nik | Created on Wed Nov  5 00:00:53 2014
-"""
-
 ToDo
 ====
 
@@ -18,7 +13,7 @@ ToDo
 
 - Deduplicate code where applicable
 
-- Implement function to clean temporary files
+- ~~Implement function to clean temporary files~~
 
 - Make the -v messages shorter, yet more informative (ie report center cell)
 
