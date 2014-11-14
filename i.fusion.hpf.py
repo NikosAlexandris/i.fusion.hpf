@@ -64,6 +64,11 @@
 #%  description: 2-Pass Processing (recommended) for large resolution ratio (>=5.5)
 #%end
 
+#%flag
+#%  key: c
+#%  description: Match color table of Pan-Sharpened output to Multi-Spectral input
+#%end
+
 #%option
 #% key: pan
 #% type: string
@@ -82,7 +87,7 @@
 #%end
 
 #%option
-#% key: outputprefix
+#% key: outputsuffix
 #% type: string
 #% gisprompt: old,double,raster
 #% description: Prefix for the Pan-Sharpened Multi-Spectral image(s)
@@ -250,7 +255,7 @@ def main():
 
     pan = options['pan']
     msxlst = options['msx'].split(',')
-    outputprefix = options['outputprefix']
+    outputsuffix = options['outputsuffix']
     custom_ratio = options['ratio']
     center = options['center']
     center2 = options['center2']
@@ -258,6 +263,7 @@ def main():
     modulation2 = options['modulation2']
     histogram_match = flags['l']
     second_pass = flags['2']
+    color_match = flags['c']
 
 #    # Check & warn user about "ns == ew" resolution of current region ======
 #    region = grass.region()
@@ -375,7 +381,6 @@ def main():
 
         g.message("\n|3 Upsampling (bilinearly) low resolution image")
 
-        # resample -- named "linear" in G7
         run('r.resamp.interp',
             method='bilinear', input=msx, output=tmp_msx_blnr, overwrite=True)
 
@@ -453,6 +458,12 @@ def main():
             cmd_history += "2nd Pass Weighting: %s / %s * %s | " \
                 % (msx_sd, hpf_2_sd, modulator_2)
 
+        if color_match:
+            g.message("\n|*  Matching output's color table to original image")
+
+            run('r.colors',
+                map=tmp_msx_hpf, rast=msx)
+
         # -------------------------------------------------------------------
         # 6. Stretching linearly the HPF-Sharpened image(s) to match the Mean
         #     and Standard Deviation of the input Multi-Sectral image(s)
@@ -484,11 +495,11 @@ def main():
         run("r.support", map=tmp_msx_hpf, history=cmd_history)
 
         # Rename end product
-        run("g.rename", rast=(tmp_msx_hpf, "%s_%s" % (msx, outputprefix)))
+        run("g.rename", rast=(tmp_msx_hpf, "%s.%s" % (msx, outputsuffix)))
 
     # visualising output
     grass.del_temp_region()  # restoring previous region settings
-    g.message("|  Region's resolution restored!")
+    g.message("\n|  Region's resolution restored!")
     g.message("\n>>> Rebalance colors "
               "(e.g. via i.colors.enhance) before working on RGB composites!",
               flags='i')
