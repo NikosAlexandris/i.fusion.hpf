@@ -171,14 +171,13 @@ if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
-tmplst = []
+
+# globals -------------------------------------------------------------------
+modulator = float()
+modulator_2 = float()
 
 
 # helper functions ----------------------------------------------------------
-
-tmp = ''
-
-
 def cleanup():
     grass.run_command('g.remove', flags='f', type="rast",
                       pattern='tmp.%s*' % os.getpid(), quiet=True)
