@@ -259,15 +259,15 @@ def main():
     histogram_match = flags['l']
     second_pass = flags['2']
 
-    # Check & warn user about "ns == ew" resolution of current region ======
-    region = grass.region()
-    nsr = region['nsres']
-    ewr = region['ewres']
-
-    if nsr != ewr:
-        g.message(">>> Region's North:South (%s) and East:West (%s)"
-                  "resolutions do not match!" % (nsr, ewr), flags='w')
-    # ======================================================================
+#    # Check & warn user about "ns == ew" resolution of current region ======
+#    region = grass.region()
+#    nsr = region['nsres']
+#    ewr = region['ewres']
+#
+#    if nsr != ewr:
+#        g.message(">>> Region's North:South (%s) and East:West (%s)"
+#                  "resolutions do not match!" % (nsr, ewr), flags='w')
+#    # ======================================================================
 
     mapset = grass.gisenv()['MAPSET']  # Current Mapset?
 
@@ -281,8 +281,9 @@ def main():
 
     panres = images[pan].nsres  # Panchromatic resolution
 
+    grass.use_temp_region()  # to safely modify the region
     run('g.region', res=panres)  # Respect extent, change resolution
-    g.message("|  Region's resolution set to %f" % panres)
+    g.message("|  Region's resolution matched to Pan's (%f)" % panres)
 
     for msx in msxlst:  # Loop over Multi-Spectral images |||||||||||||||||||
 
@@ -486,6 +487,8 @@ def main():
         run("g.rename", rast=(tmp_msx_hpf, "%s_%s" % (msx, outputprefix)))
 
     # visualising output
+    grass.del_temp_region()  # restoring previous region settings
+    g.message("|  Region's resolution restored!")
     g.message("\n>>> Rebalance colors "
               "(e.g. via i.colors.enhance) before working on RGB composites!",
               flags='i')
