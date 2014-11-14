@@ -459,7 +459,7 @@ def main():
                 % (msx_sd, hpf_2_sd, modulator_2)
 
         if color_match:
-            g.message("\n|*  Matching output's color table to original image")
+            g.message("\n|* Matching output's to input's color table")
 
             run('r.colors',
                 map=tmp_msx_hpf, rast=msx)
@@ -501,7 +501,7 @@ def main():
     grass.del_temp_region()  # restoring previous region settings
     g.message("\n|  Region's resolution restored!")
     g.message("\n>>> Rebalance colors "
-              "(e.g. via i.colors.enhance) before working on RGB composites!",
+              "(i.colors.enhance) may improve appearance of RGB composites!",
               flags='i')
 
 if __name__ == "__main__":
