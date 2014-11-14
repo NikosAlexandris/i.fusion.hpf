@@ -69,19 +69,15 @@
 #%  description: Match color table of Pan-Sharpened output to Multi-Spectral input
 #%end
 
-#%option
+#%option G_OPT_R_INPUT
 #% key: pan
-#% type: string
-#% gisprompt: old,double,raster
-#% description: High resolution panchromatic image
+#% description: High resolution Panchromatic image
 #% required : yes
 #%end
 
-#%option
+#%option G_OPT_R_INPUT
 #% key: msx
-#% type: string
-#% gisprompt: old,double,raster
-#% description: Low resolution multi-spectral image(s)
+#% description: Low resolution Multi-Spectral image(s)
 #% required: yes
 #% multiple: yes
 #%end
@@ -89,8 +85,7 @@
 #%option
 #% key: outputsuffix
 #% type: string
-#% gisprompt: old,double,raster
-#% description: Prefix for the Pan-Sharpened Multi-Spectral image(s)
+#% description: Suffix for the Pan-Sharpened image(s)
 #% required: yes
 #% answer: hpf
 #%end
@@ -100,7 +95,7 @@
 #% type: double
 #% description: Custom ratio overriding standard calculation 
 #% options: 1.0-10.0
-#% guisection: High Pass Filter Options
+#% guisection: High Pass Filter
 #% required: no
 #%end
 
@@ -112,7 +107,7 @@
 #% options: low,mid,high
 #% required: no
 #% answer: low
-#% guisection: High Pass Filter Options
+#% guisection: High Pass Filter
 #% multiple : no
 #%end
 
@@ -124,31 +119,31 @@
 #% options: low,mid,high
 #% required: no
 #% answer: low
-#% guisection: High Pass Filter Options
+#% guisection: High Pass Filter
 #% multiple : no
 #%end
 
 #%option
 #% key: modulation
 #% type: string
-#% description: Level of modulating factor weighting the HPF image to determine crispness
+#% description: Modulation level weighting the HPF image to determine crispness
 #% descriptions: Levels of modulating factors
 #% options: min,mid,max
 #% required: no
 #% answer: mid
-#% guisection: High Pass Filter Options
+#% guisection: Crispness
 #% multiple : no
 #%end
 
 #%option
 #% key: modulation2
 #% type: string
-#% description: Level of modulating factor weighting the second HPF image to determine crispness (use -2 flag)
+#% description: Modulation level weighting the second HPF image to determine crispness (use -2 flag)
 #% descriptions: mid;Mid: 0.35;min;Minimum: 0.25;max;Maximum: 0.5;
 #% options: min,mid,max
 #% required: no
 #% answer: mid
-#% guisection: High Pass Filter Options
+#% guisection: Crispness
 #% multiple : no
 #%end
 
