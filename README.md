@@ -169,10 +169,9 @@ Others?
 References
 ==========
 
-- Gangkofner, U. G., Pradhan, P. S., and Holcomb, D. W. (2008). Op-
-timizing the high-pass filter addition technique for image fusion.
-PHOTOGRAMMETRIC ENGINEERING & REMOTE SENSING,
-74(9):1107–1118.
+- Gangkofner, U. G., Pradhan, P. S., and Holcomb, D. W. (2008). Optimizing
+the high-pass filter addition technique for image fusion.
+PHOTOGRAMMETRIC ENGINEERING & REMOTE SENSING, 74(9):1107–1118.
 
 - To Add: replication of ERDAS Imagine's parameters.
 
