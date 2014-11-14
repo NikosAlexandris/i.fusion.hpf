@@ -71,28 +71,34 @@
 
 #%option G_OPT_R_INPUT
 #% key: pan
+#% key_desc: filename
 #% description: High resolution Panchromatic image
 #% required : yes
 #%end
 
-#%option G_OPT_R_INPUT
+#%option G_OPT_R_INPUTS
 #% key: msx
+#% key_desc: filename(s)
 #% description: Low resolution Multi-Spectral image(s)
 #% required: yes
 #% multiple: yes
 #%end
 
-#%option
+#%option G_OPT_R_BASENAME_OUTPUT
 #% key: outputsuffix
+#% key_desc: suffix string
 #% type: string
-#% description: Suffix for the Pan-Sharpened image(s)
+#% label: Suffix for output image(s)
+#% description: Names of Pan-Sharpened image(s) will end with this suffix
 #% required: yes
 #% answer: hpf
 #%end
 
 #%option
 #% key: ratio
+#% key_desc: rational number
 #% type: double
+#% label: Custom ratio
 #% description: Custom ratio overriding standard calculation 
 #% options: 1.0-10.0
 #% guisection: High Pass Filter
@@ -101,7 +107,9 @@
 
 #%option
 #% key: center
+#% key_desc: string
 #% type: string
+#% label: Center cell value
 #% description: Center cell value of the High-Pass-Filter 
 #% descriptions: Level of center value (low, mid, high)
 #% options: low,mid,high
@@ -113,7 +121,9 @@
 
 #%option
 #% key: center2
+#% key_desc: string
 #% type: string
+#% label: 2nd Pass center cell value
 #% description: Center cell value for the second High-Pass-Filter (use -2 flag)
 #% descriptions: Level of center value for second pass
 #% options: low,mid,high
@@ -125,8 +135,10 @@
 
 #%option
 #% key: modulation
+#% key_desc: string
 #% type: string
-#% description: Modulation level weighting the HPF image to determine crispness
+#% label: Modulation level
+#% description: Modulation level weighting the HPF image determining crispness
 #% descriptions: Levels of modulating factors
 #% options: min,mid,max
 #% required: no
@@ -137,8 +149,10 @@
 
 #%option
 #% key: modulation2
+#% key_desc: string
 #% type: string
-#% description: Modulation level weighting the second HPF image to determine crispness (use -2 flag)
+#% label: 2nd Pass modulation level (use -2 flag)
+#% description: Modulation level weighting the second HPF image determining crispness (use -2 flag)
 #% descriptions: mid;Mid: 0.35;min;Minimum: 0.25;max;Maximum: 0.5;
 #% options: min,mid,max
 #% required: no
@@ -283,7 +297,7 @@ def main():
 
     grass.use_temp_region()  # to safely modify the region
     run('g.region', res=panres)  # Respect extent, change resolution
-    g.message("|  Region's resolution matched to Pan's (%f)" % panres)
+    g.message("|! Region's resolution matched to Pan's (%f)" % panres)
 
     for msx in msxlst:  # Loop over Multi-Spectral images |||||||||||||||||||
 
@@ -466,7 +480,7 @@ def main():
         if histogram_match:
 
             # adapt output StdDev and Mean to the input(ted) ones
-            g.message("\n|  Matching histogram of Pansharpened image"
+            g.message("\n|+ Matching histogram of Pansharpened image "
                       "to %s" % (msx), flags='v')
 
             # Collect stats for linear histogram matching
@@ -485,16 +499,19 @@ def main():
             # update history string *****************************************
             cmd_history += "Linear Histogram Matching: %s |" % lhm
 
-        # histogram matching - history entry ********************************
+        # End of Algorithm ==================================================
+
+        # history entry
         run("r.support", map=tmp_msx_hpf, history=cmd_history)
 
-        # Rename end product
-        run("g.rename", rast=(tmp_msx_hpf, "%s.%s" % (msx, outputsuffix)))
+        # add suffix to basename & rename end product
+        msx_nam = ("%s.%s" % (msx.split('@')[0], outputsuffix))
+        run("g.rename", rast=(tmp_msx_hpf, msx_nam))
 
-    # visualising output
+    # visualising-related information
     grass.del_temp_region()  # restoring previous region settings
-    g.message("\n|  Region's resolution restored!")
-    g.message("\n>>> Rebalance colors "
+    g.message("\n|! Region's resolution restored!")
+    g.message("\n>>> Rebalancing colors "
               "(i.colors.enhance) may improve appearance of RGB composites!",
               flags='i')
 
