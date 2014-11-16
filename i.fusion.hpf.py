@@ -99,7 +99,7 @@
 #% key_desc: rational number
 #% type: double
 #% label: Custom ratio
-#% description: Custom ratio overriding standard calculation 
+#% description: Custom ratio overriding standard calculation
 #% options: 1.0-10.0
 #% guisection: High Pass Filter
 #% required: no
@@ -110,7 +110,7 @@
 #% key_desc: string
 #% type: string
 #% label: Center cell value
-#% description: Center cell value of the High-Pass-Filter 
+#% description: Center cell value of the High-Pass-Filter
 #% descriptions: Level of center value (low, mid, high)
 #% options: low,mid,high
 #% required: no
@@ -182,18 +182,22 @@ if "GISBASE" not in os.environ:
 
 
 # globals -------------------------------------------------------------------
+ratio = float()
+tmp = ''
+tmp_hpf_matrix = ''
 modulator = float()
 modulator_2 = float()
 
 
 # helper functions ----------------------------------------------------------
 def cleanup():
+    """Clean up temporary maps"""
     grass.run_command('g.remove', flags='f', type="rast",
                       pattern='tmp.%s*' % os.getpid(), quiet=True)
 
 
 def run(cmd, **kwargs):
-    """ """
+    """Pass quiet flag to grass commands"""
     grass.run_command(cmd, quiet=True, **kwargs)
 
 
@@ -256,9 +260,10 @@ def hpf_ascii(center, filter, tmpfile, pss):
     asciif.close()
 
 
-# main program --------------------------------------------------------------
+# main program
 
 def main():
+
     global tmp_hpf_matrix
 
     pan = options['pan']
@@ -299,7 +304,11 @@ def main():
     run('g.region', res=panres)  # Respect extent, change resolution
     g.message("|! Region's resolution matched to Pan's (%f)" % panres)
 
-    for msx in msxlst:  # Loop over Multi-Spectral images |||||||||||||||||||
+    # -----------------------------------------------------------------------
+    # Loop Algorithm over Multi-Spectral images ////////////////////////////
+    # -----------------------------------------------------------------------
+    
+    for msx in msxlst:
 
         global tmp
 
@@ -328,6 +337,12 @@ def main():
             g.message("   > Retrieving image resolutions")
 
             msxres = images[msx].nsres
+            if panres == msxres:
+                grass.fatal(_("The Panchromatic's image resolution (%s) "
+                              "equals to the Multi-Spectral's one (%s). "
+                              "Obviously, something isn't right! "
+                              "Please check your input images."
+                              % (panres, msxres)))
             ratio = msxres / panres
             msg_ratio = '   >> Low (%.3f) to high resolution (%.3f) ratio: %.1f'\
                 % (msxres, panres, ratio)
@@ -346,7 +361,7 @@ def main():
 
         g.message('\n|2 High Pass Filtering the Panchromatic Image')
 
-        # ========================================== Temporary files #########
+        # ========================================== Temporary files ========
         tmpfile = grass.tempfile()  # Temporary file - replace with os.getpid?
         tmp = "tmp." + grass.basename(tmpfile)  # use its basenam
         tmp_pan_hpf = "%s_pan_hpf" % tmp  # HPF image
@@ -359,7 +374,7 @@ def main():
             tmp_pan_hpf_2 = "%s_pan_hpf_2" % tmp  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
 
-        # end of Temporary files =============================================
+        # Temporary files ===================================================
 
         # Construct Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
@@ -399,8 +414,8 @@ def main():
         g.message("\n|4 Weighting the High-Pass-Filtered image (HPFi)")
 
         # Compute (1st Pass) Weighting
-        msg_w = "   > Weighting = StdDev(MSx) / StdDev(HPFi) * "
-        "Modulating Factor"
+        msg_w = "   > Weighting = StdDev(MSx) / StdDev(HPFi) * " \
+            "Modulating Factor"
         g.message(msg_w)
 
         # StdDev of Multi-Spectral Image(s)
@@ -499,7 +514,9 @@ def main():
             # update history string *****************************************
             cmd_history += "Linear Histogram Matching: %s |" % lhm
 
-        # End of Algorithm ==================================================
+        # -------------------------------------------------------------------
+        # End of Algorithm \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        # -------------------------------------------------------------------
 
         # history entry
         run("r.support", map=tmp_msx_hpf, history=cmd_history)
