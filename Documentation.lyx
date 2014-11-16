@@ -1,0 +1,2420 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass tufte-handout
+\begin_preamble
+% Colors
+\usepackage{color}
+
+% gray
+\definecolor{lightgray3}{gray}{0.95}
+
+% red
+\definecolor{darkred}{rgb}{0.5,0.3,0.3}
+
+% green
+\definecolor{darkgreen}{rgb}{0.3,0.5,0.3}
+\definecolor{grassy}{RGB}{0, 130, 0}
+
+% blue
+\definecolor{darkblue}{rgb}{0.3,0.3,0.5}
+\definecolor{marineblue}{RGB}{0,73,117}%old definition: {rgb}{0.05,0.1,0.4}
+\definecolor{oceanblue}{RGB}{0,58,93}% old definition: {rgb}{0.05,0.1,0.5}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{darkcyan}{rgb}{0.3,0.5,0.5}
+
+
+% Listings
+\usepackage{listings}
+
+\AtBeginDocument{% Beginning of AtBegin --->
+
+% "define" grassgis
+\lstdefinelanguage{grassgis}{
+alsoletter=-.,
+alsoother={\{\=\}},
+morekeywords=[1]{db.columns,db.connect,db.copy,db.createdb,db.databases,db.describe,db.drivers,db.dropcolumn,db.dropdb,db.droptable,db.execute,db.in.ogr,db.login,db.out.ogr,db.select,db.tables,db.test,db.univar,d.barscale,d.colorlist,d.colortable,d.correlate,d.erase,d.font,d.fontlist,d.geodesic,d.graph,d.grid,d.his,d.histogram,d.info,d.labels,d.legend,d.linegraph,d.mon,d.northarrow,d.out.file,d.path,d.polar,d.profile,d.rast.arrow,d.rast.edit,d.rast,d.rast.leg,d.rast.num,d.redraw,d.rgb,d.rhumbline,d.shadedmap,d.text,d.thematic.area,d.title,d.to.rast,d.vect.chart,d.vect,d.vect.thematic,d.what.rast,d.what.vect,d.where,db.columns,db.connect,db.copy,db.createdb,db.databases,db.describe,db.drivers,db.dropcolumn,db.dropdb,db.droptable,db.execute,db.in.ogr,db.login,db.out.ogr,db.select,db.tables,db.test,db.univar,g.access,g.cairocomp,g.copy,g.dirseps,g.extension.all,g.extension,g.filename,g.findetc,g.findfile,g.gisenv,g.gui.animation,g.gui.dbmgr,g.gui.gcp,g.gui.gmodeler,g.gui,g.gui.iclass,g.gui.mapswipe,g.gui.psmap,g.gui.rlisetup,g.gui.timeline,g.gui.vdigit,g.list,g.manual,g.mapset,g.mapsets,g.message,g.mkfontcap,g.parser,g.pnmcomp,g.ppmtopng,g.proj,g.region,g.remove,g.rename,g.tempfile,g.version,i.albedo,i.aster.toar,i.atcorr,i.biomass,i.cca,i.cluster,i.colors.enhance,i.eb.eta,i.eb.evapfr,i.eb.hsebal01,i.eb.netrad,i.eb.soilheatflux,i.emissivity,i.evapo.mh,i.evapo.pm,i.evapo.pt,i.evapo.time,i.fft,i.gensig,i.gensigset,i.group,i.his.rgb,i.ifft,i.image.mosaic,i.in.spotvgt,i.landsat.acca,i.landsat.toar,i.maxlik,i.modis.qc,i.oif,i.ortho.camera,i.ortho.elev,i.ortho.rectify,i.pansharpen,i.pca,i.rectify,i.rgb.his,i.segment,i.smap,i.spectral,i.target,i.tasscap,i.topo.corr,i.vi,i.zc,m.cogo,m.measure,m.nviz.image,m.nviz.script,m.proj,m.transform,ps.map,r.basins.fill,r.blend,r.buffer,r.buffer.lowmem,r.carve,r.category,r.circle,r.clump,r.coin,r.colors,r.colors.out,r.colors.stddev,r.composite,r.compress,r.contour,r.cost,r.covar,r.cross,r.describe,r.distance,r.drain,r.external,r.external.out,r.fill.dir,r.fillnulls,r.flow,r.grow.distance,r.grow,r.gwflow,r.his,r.horizon,r.in.ascii,r.in.aster,r.in.bin,r.in.gdal,r.in.gridatb,r.in.lidar,r.in.mat,r.in.png,r.in.poly,r.in.srtm,r.in.wms,r.in.xyz,r.info,r.kappa,r.lake,r.latlong,r.li.cwed,r.li.daemon,r.li.dominance,r.li.edgedensity,r.li,r.li.mpa,r.li.mps,r.li.padcv,r.li.padrange,r.li.padsd,r.li.patchdensity,r.li.patchnum,r.li.pielou,r.li.renyi,r.li.richness,r.li.shannon,r.li.shape,r.li.simpson,r.mapcalc,r.mask,r.mfilter,r.mode,r.neighbors,r.null,r.out.ascii,r.out.bin,r.out.gdal,r.out.gridatb,r.out.mat,r.out.mpeg,r.out.png,r.out.pov,r.out.ppm,r.out.ppm3,r.out.vrml,r.out.vtk,r.out.xyz,r.pack,r.param.scale,r.patch,r.plane,r.profile,r.proj,r.quant,r.quantile,r.random.cells,r.random,r.random.surface,r.reclass.area,r.reclass,r.recode,r.region,r.regression.line,r.regression.multi,r.report,r.resamp.bspline,r.resamp.filter,r.resamp.interp,r.resamp.rst,r.resamp.stats,r.resample,r.rescale.eq,r.rescale,r.rgb,r.ros,r.series.accumulate,r.series,r.series.interp,r.shaded.relief,r.sim.sediment,r.sim.water,r.slope.aspect,r.solute.transport,r.spread,r.spreadpath,r.statistics,r.stats,r.stats.quantile,r.stats.zonal,r.stream.extract,r.sun,r.sunhours,r.sunmask,r.support,r.support.stats,r.surf.area,r.surf.contour,r.surf.fractal,r.surf.gauss,r.surf.idw,r.surf.idw2,r.surf.random,r.terraflow,r.texture,r.thin,r.tile,r.tileset,r.timestamp,r.to.rast3,r.to.rast3elev,r.to.vect,r.topidx,r.topmodel,r.transect,r.univar,r.unpack,r.uslek,r.usler,r.viewshed,r.volume,r.walk,r.water.outlet,r.watershed,r.what.color,r.what,r3.colors,r3.colors.out,r3.cross.rast,r3.gwflow,r3.in.ascii,r3.in.bin,r3.in.v5d,r3.in.xyz,r3.info,r3.mapcalc,r3.mask,r3.mkdspf,r3.neighbors,r3.null,r3.out.ascii,r3.out.bin,r3.out.netcdf,r3.out.v5d,r3.out.vtk,r3.retile,r3.stats,r3.support,r3.timestamp,r3.to.rast,r3.univar,r3.colors,r3.colors.out,r3.cross.rast,r3.gwflow,r3.in.ascii,r3.in.bin,r3.in.v5d,r3.in.xyz,r3.info,r3.mapcalc,r3.mask,r3.mkdspf,r3.neighbors,r3.null,r3.out.ascii,r3.out.bin,r3.out.netcdf,r3.out.v5d,r3.out.vtk,r3.retile,r3.stats,r3.support,r3.timestamp,r3.to.rast,r3.univar,t.connect,t.create,t.info,t.list,t.merge,t.rast.accdetect,t.rast.accumulate,t.rast.aggregate.ds,t.rast.aggregate,t.rast.colors,t.rast.export,t.rast.extract,t.rast.gapfill,t.rast.import,t.rast.list,t.rast.mapcalc,t.rast.neighbors,t.rast.out.vtk,t.rast.series,t.rast.to.rast3,t.rast.univar,t.rast3d.extract,t.rast3d.list,t.rast3d.mapcalc,t.rast3d.univar,t.register,t.remove,t.rename,t.sample,t.shift,t.snap,t.support,t.topology,t.unregister,t.vect.db.select,t.vect.export,t.vect.extract,t.vect.import,t.vect.list,t.vect.observe.strds,t.vect.univar,t.vect.what.strds,v.buffer,v.build.all,v.build,v.build.polylines,v.category,v.centroids,v.class,v.clean,v.colors,v.colors.out,v.convert.all,v.convert,v.db.addcolumn,v.db.addtable,v.db.connect,v.db.dropcolumn,v.db.droprow,v.db.droptable,v.db.join,v.db.reconnect.all,v.db.renamecolumn,v.db.select,v.db.univar,v.db.update,v.delaunay,v.dissolve,v.distance,v.drape,v.edit,v.external,v.external.out,v.extract,v.extrude,v.generalize,v.hull,v.in.ascii,v.in.db,v.in.dxf,v.in.e00,v.in.geonames,v.in.gns,v.in.lidar,v.in.lines,v.in.mapgen,v.in.ogr,v.in.region,v.in.wfs,v.info,v.kcv,v.kernel,v.krige,v.label,v.lidar.correction,v.lidar.edgedetection,v.lidar.growing,v.lrs.create,v.lrs.label,v.lrs.segment,v.lrs.where,v.mkgrid,v.neighbors,v.net.alloc,v.net.allpairs,v.net.bridge,v.net.centrality,v.net.components,v.net.connectivity,v.net.distance,v.net.flow,v.net,v.net.iso,v.net.path,v.net.salesman,v.net.spanningtree,v.net.steiner,v.net.timetable,v.net.visibility,v.normal,v.out.ascii,v.out.dxf,v.out.gps,v.out.ogr,v.out.postgis,v.out.pov,v.out.svg,v.out.vtk,v.outlier,v.overlay,v.pack,v.parallel,v.patch,v.perturb,v.proj,v.qcount,v.random,v.rast.stats,v.reclass,v.rectify,v.report,v.sample,v.segment,v.select,v.split,v.support,v.surf.bspline,v.surf.idw,v.surf.rst,v.timestamp,v.to.3d,v.to.db,v.to.lines,v.to.points,v.to.rast,v.to.rast3,v.transform,v.type,v.univar,v.unpack,v.vect.stats,v.vol.rst,v.voronoi,v.what,v.what.rast,v.what.rast3,v.what.vect},
+morekeywords=[2]{v.db.addcol,v.db.dropcol,v.db.renamecol,v.db.update},
+morekeywords=[3]{region=, zoom=, nsres=, ewres=, MASK=, input=, in=, dsn=, rast=, map=, output=, out=, type=, use=, attrcolumn=, rgbcolumn=, labelcolumn=, method=, size=, title=, color=, null()=, S=, N=, W=, E=, -f, -g, n=, s=, w=, e=, --o, -c, -e, -s, -ca,-h,--help},
+morekeywords=[4]{APPDATA,ASCII,CELL,DCELL,DEBUG,FCELL,GISBASE,GISDBASE,GISRC,GIS_ERROR_LOG,GIS_LOCK,GRASS,GRASS_ADDON_BASE,GRASS_ADDON_ETC,GRASS_ADDON_PATH,GRASS_BATCH_JOB,GRASS_DB_ENCODING,GRASS_ENCODING,GRASS_ERROR_MAIL,GRASS_FONT,GRASS_FONT_CAP,GRASS_GNUPLOT,GRASS_GUI,GRASS_HTML_BROWSER,GRASS_INT_ZLIB,GRASS_MESSAGE_FORMAT,GRASS_MOUSE_BUTTON,GRASS_NO_GLX_PBUFFERS,GRASS_NO_GLX_PIXMAPS,GRASS_OVERWRITE,GRASS_PAGER,GRASS_PERL,GRASS_PYTHON,GRASS_REGION,GRASS_RENDER_FRAME,GRASS_RENDER_HEIGHT,GRASS_RENDER_IMMEDIATE,GRASS_RENDER_LINE_WIDTH,GRASS_RENDER_TEXT_SIZE,GRASS_RENDER_WIDTH,GRASS_SH,GRASS_SIGSEGV_ON_ERROR,GRASS_SKIP_MAPSET_OWNER_CHECK,GRASS_UI_TERM,GRASS_VECTOR_EXTERNAL_IGNORE,GRASS_VECTOR_EXTERNAL_IMMEDIATE,GRASS_VECTOR_LOWMEM,GRASS_VECTOR_OGR,GRASS_VECTOR_TEMPORARY,GRASS_VERBOSE,GRASS_VERSION,GRASS_WXBUNDLED,GRASS_XTERM,GRASS_ZLIB_LEVEL,GUI,LOCATION,LOCATION_NAME,MAPSET,OMP_NUM_THREADS,OVERWRITE,SIGSEGV,TEMP,TMP,TMPDIR,WIND_OVERRIDE,WX_DEBUG,wxGUI},
+sensitive=true,
+morestring=[b]"}
+
+% Default settings for code listings
+%  morecomment={[n][\keywordstyle]{{}{}}},
+\lstset{
+language=Python
+}
+\lstset{
+aboveskip=3mm,
+belowskip=3mm,%
+backgroundcolor={\color{lightgray3}},
+basicstyle={\small\ttfamily},%
+breaklines=true,
+prebreak={\textbackslash},%
+columns=fullflexible,%
+fillcolor=\color{grassy},
+frame=l,
+framexleftmargin=1em,
+framexrightmargin=0em,
+framextopmargin=1em,
+framexbottommargin=1em,
+framerule=0em,%
+language=grassgis,
+literate={{=}{{{\color{red}=}}}1},
+commentstyle={\itshape\color{lightgray}},
+stringstyle=\color{orange},
+keywordstyle=[1]\bfseries\color{grassy},
+keywordstyle=[2]\color{red},
+keywordstyle=[3]\color{darkgreen},
+keywordstyle=[4]\color{magenta},%
+numbers=left,
+numberstyle=\tiny\ttfamily,
+numbersep=3em,%
+keepspaces=true,
+showstringspaces=false,%
+tab=BADTAB,
+showtabs=true,%
+upquote=true
+}
+}% see: <http://tex.stackexchange.com/a/145868/8272>
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+scalebox
+todonotesalternate
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman GFS Neohellenic
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts true
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_title "i.fusion.hpf"
+\pdf_author "Nikos Alexandris"
+\pdf_subject "High Pass Filter Additive Image Fusion Technique for Pan-Sharpening"
+\pdf_keywords "hpfa, hpf, image fusion, pan-sharpening"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen true
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref section
+\pdf_pdfusetitle true
+\pdf_quoted_options "citecolor=oceanblue, urlcolor=blue, linkcolor=marineblue, anchorcolor=red, pdfstartview={FitH}, hyperfootnotes=false, unicode=true"
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\boxbgcolor #dcdcdc
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation skip
+\defskip bigskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle fancy
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+i.fusion.hpf, implementation of the High Pass Filter Additive (HPFA) Image
+ Fusion Technique
+\begin_inset Newline newline
+\end_inset
+
+Python script add-on for GRASS-GIS
+\end_layout
+
+\begin_layout Author
+Nikos Alexandris 
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Address
+
+\size small
+Remote Sensing Scientist, Dr
+\begin_inset Newline newline
+\end_inset
+
+Themidos 3, 42100, Trikala, Greece
+\begin_inset Newline newline
+\end_inset
+
+GPG Key Fingerprint 6F9D4506F3CA28380974D31A9053534B693C4FB3
+\begin_inset Newline newline
+\end_inset
+
+nik
+\series bold
+
+\begin_inset space \thinspace{}
+\end_inset
+
+@
+\begin_inset space \thinspace{}
+\end_inset
+
+nikosalexandris.net
+\end_layout
+
+\begin_layout Abstract
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf
+\end_layout
+
+\end_inset
+
+ is a GRASS-GIS module to combine high-resolution panchromatic data with
+ lower resolution multispectral data, resulting in an output with both excellent
+ detail and a realistic representation of original multispectral scene colors.
+\end_layout
+
+\begin_layout Abstract
+The process involves a convolution using a High Pass Filter (HPF) on the
+ high resolution data, then combining this with the lower resolution multispectr
+al data.
+\end_layout
+
+\begin_layout Abstract
+Optionally, a linear histogram matching technique is performed in a way
+ that matches the resulting Pan-Sharpened imaged to them statistical mean
+ and standard deviation of the original multi-spectral image.
+ 
+\begin_inset Flex Marginnote
+status open
+
+\begin_layout Plain Layout
+Thanks to Moritz Lennert on implementing the linear histogram matching technique
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+Source: 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gangkofner2008"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Algorithm description
+\end_layout
+
+\begin_layout Enumerate
+Computing ratio of low (Multi-Spectral, hereafter noted as MSx) to high
+ (Panchromatic) resolutions
+\end_layout
+
+\begin_layout Enumerate
+High Pass Filtering the Panchromatic Image
+\end_layout
+
+\begin_layout Enumerate
+Resampling MSx image to the higher resolution
+\end_layout
+
+\begin_layout Enumerate
+Adding weighted High-Pass-Filetred image to the upsampled MSx image
+\end_layout
+
+\begin_layout Enumerate
+Optionally, matching histogram of Pansharpened image to the one of the original
+ MSx image
+\end_layout
+
+\begin_layout Subsection
+From the original paper
+\end_layout
+
+\begin_layout Quote
+Step 1: HP Filtering of the High-resolution Image to Extract the Structural
+ Detail
+\end_layout
+
+\begin_layout Quote
+Step 2: Adding the HP Filtered Image to Each Band of the Multispectral Image
+ Using a Standard Deviation-based Injection Model
+\end_layout
+
+\begin_layout Quote
+Step 3: Linear Histogram Match to Adapt SD and Mean of the Merged Image
+ Bands to Those of the Original MS Image Bands
+\end_layout
+
+\begin_layout Quote
+Figure 1:
+\end_layout
+
+\begin_layout Quote
+.
+\end_layout
+
+\begin_layout Full Width
+\begin_inset listings
+lstparams "basicstyle={\ttfamily},keepspaces=true,showstringspaces=false,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
++----------------------------------------------------------------------------+
+\end_layout
+
+\begin_layout Full Width
+
+| Pan Img ->  High Pass Filter  ->  HP Img                             
+      |
+\end_layout
+
+\begin_layout Full Width
+
+|                                      |                               
+      |
+\end_layout
+
+\begin_layout Full Width
+
+|                                      v                               
+      |
+\end_layout
+
+\begin_layout Full Width
+
+| MSx Img ->  Weighting Factors ->  Weighted HP Img                    
+      |
+\end_layout
+
+\begin_layout Full Width
+
+|       |                              |                               
+      |
+\end_layout
+
+\begin_layout Full Width
+
+|       |                              v                               
+      |
+\end_layout
+
+\begin_layout Full Width
+
+|       +------------------------>  Addition to MSx Img  =>  Fused MSx Image
+ |
+\end_layout
+
+\begin_layout Full Width
+
++----------------------------------------------------------------------------+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Installation
+\end_layout
+
+\begin_layout Subsection
+Requirements
+\end_layout
+
+\begin_layout Standard
+see 
+\begin_inset CommandInset href
+LatexCommand href
+name "GRASS Addons SVN repository, README file, Installation - Code Compilation"
+target "https://svn.osgeo.org/grass/grass-addons/README"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Steps
+\end_layout
+
+\begin_layout Standard
+Making the script 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf
+\end_layout
+
+\end_inset
+
+ available from within any GRASS-GIS ver.
+ 7.x session, may be done via the following steps:
+\end_layout
+
+\begin_layout Enumerate
+launch a GRASS-GIS' ver.
+ 7.x session
+\end_layout
+
+\begin_layout Enumerate
+navigate into the script's source directory
+\end_layout
+
+\begin_layout Enumerate
+execute 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+make MODULE_TOPDIR=$GISBASE
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Usage
+\end_layout
+
+\begin_layout Standard
+After installation, from within a GRASS-GIS session, see help details via
+ i.fusion.hpf --help -- also provided here:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},breaklines=true,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Description:
+\end_layout
+
+\begin_layout Plain Layout
+
+ Fusing high resolution Panchromatic and low resolution Multi-Spectral data
+ based on the High-Pass Filter Addition technique (Gangkofner, 2008)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Keywords:
+\end_layout
+
+\begin_layout Plain Layout
+
+ imagery, fusion, HPF, HPFA
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Usage:
+\end_layout
+
+\begin_layout Plain Layout
+
+ i.fusion.hpf [-l2] pan=string msx=string[,string,...]
+\end_layout
+
+\begin_layout Plain Layout
+
+   outputprefix=string [ratio=value] [center=string] [center2=string]
+\end_layout
+
+\begin_layout Plain Layout
+
+   [modulation=string] [modulation2=string] [--help] [--verbose]
+\end_layout
+
+\begin_layout Plain Layout
+
+   [--quiet]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Flags:
+\end_layout
+
+\begin_layout Plain Layout
+
+  -l   Linearly match histogram of Pan-sharpened output to Multi-Spectral
+ input
+\end_layout
+
+\begin_layout Plain Layout
+
+  -2   2-Pass Processing (recommended) for large resolution ratio (>=5.5)
+\end_layout
+
+\begin_layout Plain Layout
+
+ --h   Print usage summary
+\end_layout
+
+\begin_layout Plain Layout
+
+ --v   Verbose module output
+\end_layout
+
+\begin_layout Plain Layout
+
+ --q   Quiet module output
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Parameters:
+\end_layout
+
+\begin_layout Plain Layout
+
+           pan   High resolution panchromatic image
+\end_layout
+
+\begin_layout Plain Layout
+
+           msx   Low resolution multi-spectral image(s)
+\end_layout
+
+\begin_layout Plain Layout
+
+  outputprefix   Prefix for the Pan-Sharpened Multi-Spectral image(s)
+\end_layout
+
+\begin_layout Plain Layout
+
+                 default: hpf
+\end_layout
+
+\begin_layout Plain Layout
+
+         ratio   Custom ratio overriding standard calculation
+\end_layout
+
+\begin_layout Plain Layout
+
+                 options: 1.0-10.0
+\end_layout
+
+\begin_layout Plain Layout
+
+        center   Center cell value of the High-Pass-Filter
+\end_layout
+
+\begin_layout Plain Layout
+
+                 options: low,mid,high
+\end_layout
+
+\begin_layout Plain Layout
+
+                 default: low
+\end_layout
+
+\begin_layout Plain Layout
+
+       center2   Center cell value for the second High-Pass-Filter (use
+ -2 flag)
+\end_layout
+
+\begin_layout Plain Layout
+
+                 options: low,mid,high
+\end_layout
+
+\begin_layout Plain Layout
+
+                 default: low
+\end_layout
+
+\begin_layout Plain Layout
+
+    modulation   Level of modulating factor weighting the HPF image to determine
+ crispness
+\end_layout
+
+\begin_layout Plain Layout
+
+                 options: min,mid,max
+\end_layout
+
+\begin_layout Plain Layout
+
+                 default: mid
+\end_layout
+
+\begin_layout Plain Layout
+
+   modulation2   Level of modulating factor weighting the second HPF image
+ to determine crispness (use -2 flag)
+\end_layout
+
+\begin_layout Plain Layout
+
+                 options: min,mid,max
+\end_layout
+
+\begin_layout Plain Layout
+
+                 default: mid
+\end_layout
+
+\begin_layout Plain Layout
+
+                  min: Minimum: 0.25
+\end_layout
+
+\begin_layout Plain Layout
+
+                  mid: Mid: 0.35
+\end_layout
+
+\begin_layout Plain Layout
+
+                  max: Maximum: 0.5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Remarks
+\end_layout
+
+\begin_layout Itemize
+requires (currently) manual color rebalancing (e.g.
+ by using i.colors.enhance)
+\end_layout
+
+\begin_layout Itemize
+easy to use, i.e.: for one band i.fusion.hpf pan=Panchromatic msx=${Band} for
+ multiple bands i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR
+\end_layout
+
+\begin_layout Itemize
+easy to test various parameters that define the High-Pass filter’s kernel
+ size and center value
+\end_layout
+
+\begin_layout Itemize
+should work with any kind of imagery (think of bitness)
+\end_layout
+
+\begin_layout Section
+Examples
+\end_layout
+
+\begin_layout Subsection
+Landsat
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+i.fusion.hpf -l -c --o pan=lsat7_2000_80 msx=lsat7_2000_10,lsat7_2000_20,lsat7_200
+0_30 center=high modulation=max
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above command calls 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf
+\end_layout
+
+\end_inset
+
+ to pan-sharpen the multispectral images 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+lsat7_2000_10, lsat7_2000_20, lsat7_2000_30
+\end_layout
+
+\end_inset
+
+ based on the panchromatic 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+lsat7_2000_80
+\end_layout
+
+\end_inset
+
+ with the parameters
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+center=high
+\end_layout
+
+\end_inset
+
+ to increase the impact of the high pass filter
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+modulation=max
+\end_layout
+
+\end_inset
+
+ to increase the crispness of the output images
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+-l
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+-c
+\end_layout
+
+\end_inset
+
+ to respectively match the histogram and color table of the sharpened output
+ images to their corresponding original multi-spectral
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+--o
+\end_layout
+
+\end_inset
+
+ to overwrite raster maps with the same name as the to-be-produced output,
+ which are essentially left-overs from previous sharpening attempts
+\end_layout
+
+\begin_layout Full Width
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Panchromatic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Pan-Sharpened RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/rgb_composite_based_on_lsat7_2000_10_20_30_imagery_in_nc_spm_08_grass7.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/lsat5_2000_80_imagery_in_nc_spm_08_grass7.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/i.fusion.hpf_center_high_modulation_max_example_using_lsat7_2000_10_20_30_and_80_imagery_in_nc_spm_08_grass7.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/detail_rgb_composite_based_on_lsat7_2000_10_20_30_imagery_in_nc_spm_08_grass7.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/detail_lsat5_2000_80_imagery_in_nc_spm_08_grass7.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/detail_i.fusion.hpf_center_high_modulation_max_example_using_lsat7_2000_10_20_30_and_80_imagery_in_nc_spm_08_grass7.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fragment from a Landsat7
+\begin_inset space \thinspace{}
+\end_inset
+
+ETM acquisition (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+p016r035_7p20000331_z17_nc_spm_wake.tif
+\end_layout
+
+\end_inset
+
+) over New Delhi, India (available at 
+\begin_inset CommandInset href
+LatexCommand href
+name "GRASS-GIS' Sample Data website section"
+target "http://grass.osgeo.org/sampledata/north_carolina/nc_spm_08_grass7.zip"
+
+\end_inset
+
+, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "CREDITS.txt"
+target "http://www.grassbook.org/grasslocations/CREDITS.txt"
+
+\end_inset
+
+ for details)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+IKONOS
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\emph on
+To add
+\end_layout
+
+\begin_layout Subsection
+QuickBird2
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\emph on
+To add (some samples already published in GRASS-Wiki: 
+\begin_inset CommandInset href
+LatexCommand href
+name "GRASS-Wiki, QuickBird, HPFA based sharpening"
+target "http://grasswiki.osgeo.org/wiki/QuickBird#HPFA_based_sharpening"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+WorldView(2, 3)
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\emph on
+To add
+\end_layout
+
+\begin_layout Subsection
+GeoEye
+\end_layout
+
+\begin_layout Full Width
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Panchromatic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Pan-Sharpened RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_rgb.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_panchromatic.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_hpf_rgb.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_rgb_detail.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_panchromatic_detail.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_hpf_rgb_detail.png
+	lyxscale 25
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fragment from a GeoEye aquisition (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+12DEC02053124
+\end_layout
+
+\end_inset
+
+) over New Delhi, India (available for demonstration purposes, see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Demonstration License, DG"
+
+\end_inset
+
+ for license details)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Implementation notes
+\end_layout
+
+\begin_layout Itemize
+First commit on Sat Oct 25 12:26:54 2014 +0300
+\end_layout
+
+\begin_layout Itemize
+Working state reached on Tue Nov 4 09:28:25 2014 +0200 
+\end_layout
+
+\begin_layout Subsection*
+Remarks
+\end_layout
+
+\begin_layout Itemize
+currently requires manual color rebalancing (e.g.
+ by using i.landsat.rgb)
+\end_layout
+
+\begin_layout Itemize
+easy to use, i.e.:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+for one band 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf pan=Panchromatic msx=${Band}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+for multiple bands 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+easy to test various parameters that define the High-Pass filter’s 
+\emph on
+kernel size
+\emph default
+ and 
+\emph on
+center value
+\end_layout
+
+\begin_layout Itemize
+should work with any kind of imagery (think of bitness)
+\end_layout
+
+\begin_layout Subsection*
+
+\color magenta
+To Do
+\end_layout
+
+\begin_layout Itemize
+Go through 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://trac.osgeo.org/grass/wiki/Submitting/Python"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Use 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+format()
+\end_layout
+
+\end_inset
+
+ instead of the 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+%
+\end_layout
+
+\end_inset
+
+ operator (?)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Sources: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+target "http://chimera.labs.oreilly.com/books/1230000000393/ch02.html#_solution_33"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+target "https://docs.python.org/3/library/string.html#formatspec"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Proper command history tracking.
+ Not all "r" modules do it...
+ ?
+\end_layout
+
+\begin_layout Itemize
+Add timestamps (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+r.timestamp
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Deduplicate code where applicable
+\end_layout
+
+\begin_layout Itemize
+Make 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+-v
+\end_layout
+
+\end_inset
+
+ messages shorter, yet more informative (i.e.
+ report center cell value)
+\end_layout
+
+\begin_layout Subsection*
+Questions
+\end_layout
+
+\begin_layout Itemize
+Will it compile in other systems?
+\end_layout
+
+\begin_layout Itemize
+Checking options to integrate in i.pansharpen.
+ Think of FFM methods vs.
+ Others?
+\end_layout
+
+\begin_layout Itemize
+Utilise the existing histogram matching code in 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.pansharpen
+\end_layout
+
+\end_inset
+
+? It performs histogram matching using the Standard Deviation and Mean of
+ the reference image.
+ 
+\begin_inset Marginal
+status open
+
+\begin_layout Plain Layout
+See discussion(s) in mailing list and trac.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintAll"
+bibfiles "references"
+options "apa"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+To Add
+\series default
+: replication of ERDAS Imagine's parameters.
+\end_layout
+
+\begin_layout Section
+Ευχαριστώ
+\end_layout
+
+\begin_layout Itemize
+Nikos
+\noun on
+ Ves
+\noun default
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Idea for a replication of the HPFA fusion technique in GRASS-GIS, as well
+ as a "filter creation" bash one-liner
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\noun on
+Ranjith
+\noun default
+, 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://class.coursera.org/interactivepython-005/forum/profile?user_id=9361576"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\noun on
+Anonymous
+\noun default
+ on coursera's discussion forums
+\end_layout
+
+\begin_layout Itemize
+Pietro 
+\noun on
+Zambelli
+\end_layout
+
+\begin_layout Itemize
+StackExchange contributors
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+target "http://stackoverflow.com/a/1140966/1172302"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+target "http://stackoverflow.com/a/275025/1172302 "
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Yann 
+\noun on
+Chemin
+\end_layout
+
+\begin_layout Itemize
+Participants in grass-user, grass-dev mailing lists
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Code
+\end_layout
+
+\begin_layout Full Width
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "/geo/scripts/pan_sharpening/i.fusion.hpf/i.fusion.hpf.py"
+lstparams "caption={i.fusion.hpf.py},label={i.fusion.hpf (Python script)}"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+License(s) of Data
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Demonstration License, DG"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+DIGITALGLOBE(r) PRODUCT
+\end_layout
+
+\begin_layout Standard
+
+\size small
+END USER LICENSE AGREEMENT
+\end_layout
+
+\begin_layout Standard
+
+\size small
+This END USER LICENSE AGREEMENT ("Agreement") is made between DigitalGlobe,
+ Inc.
+ ("DigitalGlobe") and you or, if you represent an entity or other organization,
+ that entity or organization (in either case, "You").
+  You have ordered or otherwise expressed an interest in obtaining a license
+ to certain products of DigitalGlobe, including, without limitation, aerial
+ or satellite photography, imagery or orthophotos, vector, attribute or
+ other data, or other related documentation, information or content.
+  DigitalGlobe is willing to provide You with a license to those products
+ of DigitalGlobe described in the confirmation of Your order provided by
+ DigitalGlobe (Your "Confirmation") or otherwise provided to You in connection
+ with this Agreement (collectively, the "Product") if You agree to be bound
+ by the terms and conditions of this Agreement.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+PLEASE READ THE TERMS AND CONDITIONS OF THIS AGREEMENT PROVIDED BELOW CAREFULLY.
+  BY ACCESSING OR USING THE PRODUCT, YOU ACKNOWLEDGE THAT YOU HAVE READ,
+ AND AGREE TO BE BOUND BY THE TERMS AND CONDITIONS OF, THIS AGREEMENT.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+IF YOU DO NOT AGREE TO THE TERMS AND CONDITIONS OF THIS AGREEMENT, DIGITALGLOBE
+ IS NOT WILLING TO LICENSE THE PRODUCT TO YOU.
+  IF THE PRODUCT WAS DELIVERED TO YOU ON A TANGIBLE MEDIUM SUCH AS A CD,
+ THEN YOU MUST RETURN THE PRODUCT IN ITS ORIGINAL PACKAGING, WITHOUT BREAKING
+ THE SEAL.
+  IF THE PRODUCT WAS MADE AVAILABLE TO YOU IN AN ELECTRONIC FORMAT, THEN
+ YOU MUST NOT DOWNLOAD, ACCESS OR USE THE PRODUCT.
+  IF YOU DO NOT RETURN THE PRODUCT OR IF YOU DOWNLOAD, ACCESS OR USE THE
+ PRODUCT, AS SPECIFIED ABOVE, YOU ACKNOWLEDGE AND AGREE TO BE BOUND BY THE
+ TERMS AND CONDITIONS OF THIS AGREEMENT.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+This Agreement will be entered into as of the date You first download, access
+ or use the Product (the "Effective Date").
+  This Agreement consists of these terms and conditions and Your  Confirmation
+ (which is incorporated herein and made a part hereof).
+  Unless otherwise amended as set forth herein, this Agreement represents
+ the entire agreement and understanding between You and DigitalGlobe as
+ to the matters set forth herein and will exclusively govern Your access
+ to and use of the Product and will supersede any oral or written proposal,
+ agreement or other communication between You and DigitalGlobe regarding
+ the Product.
+  Your acceptance of this Agreement is expressly limited to the terms and
+ conditions set forth herein.
+  Any additional or inconsistent terms provided by You in any other documents
+ such as a purchase order will not have any legally binding effect on DigitalGlo
+be.
+  This Agreement may be modified only by a binding written instrument entered
+ into by You and DigitalGlobe.
+  All waivers under this Agreement must be in writing.
+  Any waiver or failure to enforce any provision of this Agreement on one
+ occasion will not be deemed a waiver of any other provision or of such
+ provision on any other occasion.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Definitions.
+  For purposes of this Agreement, the following definitions apply.
+  Any capitalized terms in this Agreement not listed below will have the
+ meanings given to them in this Agreement or, if not defined in this Agreement,
+ will have their plain English (US) meanings.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\size small
+a.
+ Commercial Purpose.
+  Redistribution, retransmission or publication in exchange for a fee or
+ other consideration, which may include, without limitation: (i) advertising;
+ (ii) use in marketing and promotional materials and services on behalf
+ of a customer, client, employer, employee or for Your own benefit; (iii)
+ use in any materials or services for sale or for which fees or charges
+ are paid or received (e.g., textbook supplemental materials, books, syllabi,
+ course packs); and (iv) use in any books, news publication or journal without
+ an Educational Purpose.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+b.
+ Customer Group.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+i.
+ one individual;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+ii.
+ one company, corporation, or similar legal entity (excluding affiliates
+ or subsidiaries which will be treated as a separate Customer Group);
+\end_layout
+
+\begin_layout Standard
+
+\size small
+iii.
+ one subsidiary or affiliate of an entity;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+iv.
+ one department of a federal agency at the U.S.
+ Cabinet level (e.g., office of the U.S.
+ Dept.
+ of Agriculture of U.S.
+ Dept.
+ of Interior, but excluding sub-agencies);
+\end_layout
+
+\begin_layout Standard
+
+\size small
+v.
+ one civilian federal agency below the U.S.
+ Cabinet level;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+vi.
+ one department of the four branches of the military, a defense agency,
+ one of the unified commands, one of the non-Dept.
+ of Defense entities identified in 50 U.S.C.
+ Section 401a or the State Department;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+vii.
+ one department of a foreign military or an international defense or intelligenc
+e agency;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+viii.
+ one state or provincial agency;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+ix.
+ one county or local government;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+x.
+ one non-governmental organization or non-profit organization;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+xi.
+ one department within a single educational organization within a single
+ country;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+xii.
+ one international agency such as NATO, but excluding the United Nations
+ and the European Union;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+xiii.
+ one office or department within the United Nations or the European Union;
+ or
+\end_layout
+
+\begin_layout Standard
+
+\size small
+xiv.
+ any one entity equivalent to any of the entities listed above, located
+ outside the United States.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+c.
+ Demonstration Purpose.
+  Any non-Commercial Purpose for demonstration, promotional or training
+ purposes for a period of no more than 90 days from Product shipment.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+d.
+ Derivative.
+  Any addition, improvement, update, modification, translation, transformation,
+ adaptation or derivative work of or to the Product, authored, created or
+ developed by or on behalf of You, including, without limitation, any reformatti
+ng of the Product into a different format or media from which it is delivered
+ to You, any addition of data, information or other content to the Product,
+ or any copy or reproduction of the Product.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+e.
+ Educational Purpose.
+  Any non-Commercial Purpose undertaken for study or research solely in
+ furtherance of education.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+f.
+ Federal Civil Government Agency.
+  Any government agency at the federal level, EXCLUDING all U.S.
+ Department of Defense agencies and those agencies defined under U.S.
+ Code Title 50.
+  The U.S.
+ Army Corp of Engineers is included in the definition of Federal Civil Governmen
+t Agency under this Agreement.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+g.
+ Fees.
+  The fees set forth in Your  Confirmation.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+h.
+ Joint Project.
+  An undertaking between You and one or more other Customer Groups based
+ on a contractual relationship existing as of the Effective Date.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+i.
+ Purpose.
+  As may be indicated in Your  Confirmation, Demonstration Purposes or Education
+al Purposes.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+j.
+ State and Local Government Agency.
+  Any government agency at the state and local level.
+  With regard to the United States, the term "state" includes the 50 United
+ States and the United States' territories and possessions.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+k.
+ User.
+  Employees or contractors of You or, as applicable, a Customer Group.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\size small
+Grant of License.
+  Subject to Your compliance with the terms and conditions of this Agreement,
+ including, without limitation, payment of all applicable Fees, DigitalGlobe
+ grants to You a non-exclusive, non-transferable, limited license to allow
+ the number of Users identified on Your  Confirmation to access, reproduce,
+ store, display and create Derivatives of the Product, solely for the Purpose
+ indicated in Your  Confirmation or, if no Purpose is indicated in Your
+  Confirmation, solely for Your own internal business purposes.
+  
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\size small
+a.
+ If You are not a Federal Civil Government Agency or a State and Local Governmen
+t Agency, You may post the Product and Derivative on Your website at a resolutio
+n no better than 10 meters in a static, non-downloadable, non-distributable,
+ non-interactive fashion and in a manner that does not allow a third party
+ to extract or access the Product as a standalone file;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+b.
+ If You are a Federal Civil Government Agency, You may post the Product
+ and Derivative to publicly accessible Internet web sites provided that:
+ (a) the quality of the image data available for download is presented in
+ a color composite jpeg or a 50:1 compressed file format without associated
+ geospatial information; and (b) the Product or Derivative posted to publicly
+ accessible websites is in a secure format that allows printing and viewing
+ at no better than ten meter resolution.
+  The Product and any Derivatives may be posted to secure Intranet websites
+ and may be used only for the purposes of a Joint Project and subject to
+ Section 3;
+\end_layout
+
+\begin_layout Standard
+
+\size small
+c.
+ If You are a State and Local Government Agency, You may post the Product
+ and any Derivatives on Your website at full resolution for non-Commercial
+ Purposes, in a non-downloadable, non-distributable fashion, and in a manner
+ that does not allow a third party to extract or access the Product as a
+ standalone file;
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\size small
+Sublicense.
+  Subject to Your compliance with the terms and conditions of this Agreement,
+ including, without limitation, payment of all applicable Fees, You may
+ grant sublicenses of the rights granted to You under Section 2 to access,
+ reproduce, store, and display the Product to Customer Groups engaged in
+ a Joint Project with You solely for the internal business purposes of the
+ Customer Group in completing the Joint Project with You.
+  All Customer Groups will be identified by You and confirmed by DigitalGlobe
+ (on Your  Confirmation or otherwise) in advance of any sublicense by You.
+  The number of permitted Users within each Customer Group sublicensed hereunder
+ will be limited to the type of license You have purchased as follows:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\size small
+Type of License Purchased
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Number of Permitted Users Within Sublicensed Customer Group
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Base
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Up to 5
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Group
+\end_layout
+
+\begin_layout Standard
+
+\size small
+From 6 to 10
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Enterprise
+\end_layout
+
+\begin_layout Standard
+
+\size small
+From 11 to 25
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Enterprise Premium
+\end_layout
+
+\begin_layout Standard
+
+\size small
+More than 25
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Educational
+\end_layout
+
+\begin_layout Standard
+
+\size small
+1
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Demonstration
+\end_layout
+
+\begin_layout Standard
+
+\size small
+1
+\end_layout
+
+\begin_layout Standard
+
+\size small
+If the number of individuals of a sublicensed Customer Group using or accessing
+ the Product exceeds the number of Users permitted under this Section 3,
+ the Customer Group will be counted as multiple sublicensees based on the
+ number of individuals using the Product, for purposes of determining compliance
+ with the table above.
+  If a sublicensed Customer Group is involved in multiple Joint Projects
+ with You, the Customer Group will be counted as multiple sublicensees based
+ on the number of Joint Projects involved for purposes of determining compliance
+ with the table above.
+   Each sublicense must require  the sublicensee to agree to be bound by
+ this Agreement.
+  You will remain responsible for any noncompliance by any sublicensee and
+ sublicensee's breach of this Agreement shall be deemed to be Your breach
+ of this Agreement.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\size small
+Restrictions.
+  You recognize and agree that the Product is the property of DigitalGlobe
+ and contains valuable assets and proprietary information of DigitalGlobe.
+  Accordingly, except as expressly permitted in Sections 2 or 3, You will
+ not, and will not permit any User or third party to: (a) publish, transmit,
+ reproduce, create Derivatives of or otherwise utilize the Product in any
+ form, format or media; (b) merge the Product with any other data, information
+ or content; (c) reverse engineer or otherwise attempt to derive the algorithms,
+ databases or data structures upon which the Product is based; (d) distribute,
+ sublicense, rent, lease or loan the Product; (e) use the Product for the
+ business needs of any third person or entity, including without limitation,
+ providing any services to any third parties; (f) remove, bypass or circumvent
+ any electronic or other forms of protection measure included on or with
+ the Product; (g) alter, obscure or remove any copyright notice, copyright
+ management information or proprietary legend contained in or on the Product;
+ or (h) otherwise use or access the Product or any Derivatives for any purpose
+ not expressly permitted under this Agreement, including, without limitation,
+ for Commercial Purposes.
+ Excepting Advanced Ortho Aerial Products or other Products consisting of
+ Microsoft Aerial Imagery or Derivatives consisting of Microsoft Aerial
+ Imagery, all Products and Derivatives must contain the following copyright
+ notice conspicuously displayed in connection with the Product or Derivative
+ Work: "(c) DigitalGlobe, Inc.
+ All Rights Reserved" for the Product, and "Includes copyrighted material
+ of DigitalGlobe, Inc., All Rights Reserved" for Derivatives.
+  All Advanced Ortho Aerial Products and Derivatives containing Microsoft
+ Aerial Imagery must include, on or near the Licensed Image,  the attribution,
+ "Available Exclusively by DigitalGlobe" as well as the following copyright
+ notice in an "About" page, "Terms of Use", End User License Agreement,
+ or similar medium: "Image (c) 20xx Microsoft Corporation" annotating the
+ applicable year.
+ You acknowledge that You need to obtain a separate distribution license
+ from DigitalGlobe in order to distribute or publish the Product or any
+ Derivative Work in any form not expressly permitted under Section 2 or
+ 3.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Ownership.
+  The Product, and all worldwide intellectual property and proprietary rights
+ therein and related thereto, including, without limitation, all patents,
+ copyrights, trademarks, trade secrets, moral rights, sui generis rights
+ and other right in databases, and all rights arising from or pertaining
+ to the foregoing rights, are and will remain the exclusive property of
+ DigitalGlobe and its suppliers.
+  All rights in and to the Product not expressly granted to You are reserved
+ by DigitalGlobe and its suppliers.
+  This Agreement does not grant You title to the Product or any copies of
+ the Product.
+  Any rights of Customer in any Derivative do not provide Customer with
+ any rights in or to any Product used or incorporated in that Derivative
+ except as granted under this Agreement.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Confidentiality.
+  The Product includes metadata and other confidential and proprietary informati
+on of DigitalGlobe ("Confidential Information").
+  You will not use any Confidential Information for any purpose not expressly
+ permitted hereunder and will disclose Confidential Information only to
+ Your employees and permitted sublicensees who have a need to know for purposes
+ of this Agreement and who are under a duty of confidentiality no less restricti
+ve than Your duty hereunder.
+  You will protect the Confidential Information from unauthorized use, access,
+ or disclosure in the same manner as You protect Your own confidential or
+ proprietary information of similar nature and with no less than reasonable
+ care.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Audit.
+  At DigitalGlobe's request, You will provide assurances acceptable to DigitalGl
+obe that You are using the Product consistent with the terms of this Agreement.
+  Upon notice, DigitalGlobe may inspect Your records, accounts and books
+ relating to the use of the Product to ensure that the Product is being
+ used in accordance with this Agreement.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Term and Termination.
+  This Agreement remains in full force until terminated as provided below.
+  DigitalGlobe has the right to terminate this Agreement, effective immediately
+ upon notice to You, if You breach any provision of this Agreement.
+  Upon termination of this Agreement, all rights granted to You hereunder
+ shall immediately cease and You and Your sublicensees will: (a) discontinue
+ all use of the Product; (b) if the Product was delivered on a tangible
+ medium, return to DigitalGlobe the Product and all copies thereof; (c)
+ purge all copies of the Product or any portion thereof from all computer
+ storage devices or medium on which You have placed or permitted others
+ to place the Product; and (d) give DigitalGlobe a written certification
+ that You have complied with all of Your obligations hereunder.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Limited Warranty; Disclaimer.
+  DigitalGlobe warrants that, for a period of 30 days after Your receipt
+ of the Product, the Product will perform substantially in accordance with
+ its applicable specifications.
+  DigitalGlobe's sole obligation and Your entire remedy for breach of the
+ above warranty is for DigitalGlobe, at its sole option and expense, to:
+ (a) repair or replace the non-conforming Product returned during the warranty
+ period; or (b) refund all fees paid by You for the non-conforming Product
+ returned during the warranty period.
+  This limited warranty is void if any non-conformity has resulted from
+ any accident, abuse, misuse, misapplication, or modification of or to the
+ Product or any breach of this Agreement.
+  EXCEPT AS EXPRESSLY PROVIDED IN THIS SECTION 9, ALL PRODUCT IS PROVIDED
+ "AS IS" WITHOUT ANY REPRESENTATIONS OR WARRANTIES OF ANY KIND AND ALL WARRANTIE
+S, WHETHER EXPRESS OR IMPLIED, ORAL OR WRITTEN, ARISING BY LAW OR OTHERWISE,
+ ARE EXPRESSLY DISCLAIMED AND EXCLUDED BY DIGITALGLOBE, INCLUDING, WITHOUT
+ LIMITATION ALL IMPLIED WARRANTIES OF MERCHANTABILITY, TITLE, NON-INFRINGEMENT,
+ AND FITNESS FOR A PARTICULAR PURPOSE.
+  DIGITALGLOBE DOES NOT WARRANT THAT THE PRODUCT WILL BE ACCURATE, CURRENT
+ OR COMPLETE, THAT THE PRODUCT WILL MEET YOUR NEEDS OR EXPECTATIONS, OR
+ THAT THE OPERATION OF THE PRODUCT WILL BE ERROR FREE OR UNINTERRUPTED.
+  DIGITALGLOBE PROVIDES ALL CONTENT AS A SERVICE TO YOU.
+  SPATIAL, SPECTRAL, AND TEMPORAL ACCURACY CANNOT BE GUARANTEED.
+  DIGITALGLOBE RESERVES THE RIGHT, AT ITS SOLE DISCRETION, TO MODIFY CERTAIN
+ IMAGE CHARACTERISTICS OF THE CONTENT INCLUDING, BUT NOT LIMITED TO, WATERMARKIN
+G AND DIMENSIONS.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Limitation of Liability.
+  IN NO EVENT WILL DIGITALGLOBE OR ITS SUPPLIERS BE LIABLE FOR ANY INCIDENTAL,
+ CONSEQUENTIAL, SPECIAL, EXEMPLARY, OR INDIRECT DAMAGES (INCLUDING LOST
+ PROFITS OR LOST DATA) ARISING FROM, OR RELATING TO, THIS AGREEMENT OR THE
+ PRODUCT, EVEN IF DIGITALGLOBE OR ITS SUPPLIERS HAVE BEEN ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGES.
+  DIGITALGLOBE AND ITS SUPPLIERS' TOTAL CUMULATIVE LIABILITY IN CONNECTION
+ WITH THIS AGREEMENT AND THE PRODUCT, WHETHER IN CONTRACT OR TORT OR OTHERWISE,
+ WILL NOT EXCEED THE AMOUNT OF FEES PAID TO DIGITALGLOBE FOR THE PRODUCT.
+  THIS SECTION 10 SHALL BE GIVEN FULL EFFECT EVEN IF THE WARRANTY PROVIDED
+ IN SECTION 9 IS DEEMED TO HAVE FAILED OF ITS ESSENTIAL PURPOSE.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Indemnification.
+  You will indemnify, defend, and hold harmless DigitalGlobe and its subsidiarie
+s, affiliates and subcontractors, and their respective owners, officers,
+ directors, employees and agents, from and against any and all direct or
+ indirect claims, damages, losses, damages, liabilities, expenses, and costs
+ (including reasonable attorneys' fees) arising from or out of: (1) Your
+ use of the Product for any purpose; (2) Your actual or alleged breach of
+ any provision of this Agreement; or (3) damage to property or injury to
+ or death of any person directly or indirectly caused by You.
+ DigitalGlobe will provide You with notice of any such claim or allegation,
+ and DigitalGlobe has the right to participate in the defense of any such
+ claim at its expense.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Export Control.
+  You will not export or re-export any Software in violation of the U.S.
+ Export Administration regulations or other applicable laws and regulations.
+  You will defend, indemnify, and hold harmless DigitalGlobe from and against
+ all fines, penalties, liabilities, damages, costs, and expenses incurred
+ by DigitalGlobe as a result of any violation of such laws and regulations
+ by You or any of Your agents or employees.
+\end_layout
+
+\begin_layout Enumerate
+
+\size small
+Additional Terms.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\size small
+a.
+ You acknowledge that any actual or threatened breach of Section 2, 3, 4,
+ or 6 will constitute immediate and irreparable harm to DigitalGlobe for
+ which monetary damages would be an inadequate remedy.
+  Therefore, without limiting any other remedy available at law or in equity,
+ upon any such breach or any threat thereof, DigitalGlobe will be entitled
+ to seek injunctive relief against You as remedy for such breach.
+  To the fullest extent not prohibited by applicable law, any action brought
+ for such relief may be brought by DigitalGlobe upon ex parte application
+ and without notice or posting of any bond, and You expressly waive any
+ requirement for notice or the posting of any bond.
+  If any action is brought to enforce this Agreement, the prevailing party
+ will be entitled to receive its reasonable attorney's fees, court costs,
+ and other collection expenses, in addition to any other relief it may receive.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+b.
+ Failure to require performance of any provision of this Agreement does
+ not waive DigitalGlobe's right to subsequently require full and proper
+ performance of such provision.
+  If any provision of this Agreement is determined to be invalid or unenforceabl
+e, such provision will to the extent possible be deemed amended by limiting
+ and reducing it to the minimum extent necessary to make such provision
+ valid and enforceable and the remaining provisions of this Agreement shall
+ continue to be valid and enforceable and will be liberally construed to
+ carry out the provisions and intent hereof.
+  The invalidity or unenforceability of any provision of this Agreement
+ in any jurisdiction will not affect the validity or enforceability of such
+ provision in any other jurisdiction, nor will the invalidity or unenforceabilit
+y of any provision of this Agreement with respect to any person affect the
+ validity or enforceability of such provision with respect to any other
+ person.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+c.
+ Neither this Agreement nor any of the rights or obligations hereunder may
+ be assigned or transferred by You (by operation of law or otherwise) without
+ the prior written consent of DigitalGlobe.
+  This restriction on assignment or transfer shall apply to assignments
+ or transfers by operation of law, as well as by contract, merger or consolidati
+on.
+  Any attempted assignment or transfer in violation of the foregoing will
+ be null and void.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+d.
+ This Agreement shall be governed by the laws of the State of Colorado,
+ U.S.A., without regard to conflicts of law principles that would require the
+ application of the laws of any other state or jurisdiction.
+  The United Nations Convention on Contracts for the International Sale
+ of Goods does not apply to this Agreement.
+  Any action or proceeding arising from or relating to this Agreement must
+ be brought in the federal courts or state courts for Boulder County, Colorado,
+ and each party irrevocably submits to the jurisdiction and venue of any
+ such court in any such action or proceeding.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+e.
+ Any notices to DigitalGlobe relating to this Agreement shall be in writing
+ and delivered by personal delivery or U.S.
+ certified mail (return receipt requested) to the address provided below
+ and will be effective upon receipt by DigitalGlobe:
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\size small
+DIGITALGLOBE, INC.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+ATTN: LEGAL DEPT.
+\end_layout
+
+\begin_layout Standard
+
+\size small
+1601 Dry Creek Dr., Suite 260
+\end_layout
+
+\begin_layout Standard
+
+\size small
+Longmont, CO  80503, USA
+\end_layout
+
+\begin_layout Standard
+
+\size small
+All notices to You relating to this Agreement shall be delivered by personal
+ delivery, electronic mail, facsimile transmission or by U.S.
+ certified mail (return receipt requested) to the address DigitalGlobe has
+ on file for You, and will be deemed given upon personal delivery, 5 days
+ after deposit in the mail, or upon acknowledgment of receipt of electronic
+ transmission.
+\end_layout
+
+\end_body
+\end_document
