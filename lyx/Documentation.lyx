@@ -9,7 +9,7 @@
 
 % gray
 \definecolor{lightgray3}{gray}{0.95}
-
+\definecolor{lightgray4}{gray}{0.8}
 % red
 \definecolor{darkred}{rgb}{0.5,0.3,0.3}
 
@@ -21,6 +21,7 @@
 \definecolor{darkblue}{rgb}{0.3,0.3,0.5}
 \definecolor{marineblue}{RGB}{0,73,117}%old definition: {rgb}{0.05,0.1,0.4}
 \definecolor{oceanblue}{RGB}{0,58,93}% old definition: {rgb}{0.05,0.1,0.5}
+\definecolor{greenblue}{RGB}{0,97,97}
 \definecolor{cyan}{rgb}{0.0,0.6,0.6}
 \definecolor{darkcyan}{rgb}{0.3,0.5,0.5}
 
@@ -62,7 +63,7 @@ framextopmargin=1em,
 framexbottommargin=1em,
 framerule=0em,%
 language=grassgis,
-literate={{=}{{{\color{red}=}}}1},
+literate={{=}{{{\bfseries\color{greenblue}=}}}1},
 commentstyle={\itshape\color{lightgray}},
 stringstyle=\color{orange},
 keywordstyle=[1]\bfseries\color{grassy},
@@ -682,14 +683,53 @@ Remarks
 
 \begin_layout Itemize
 requires (currently) manual color rebalancing (e.g.
- by using i.colors.enhance)
+ by using 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.colors.enhance
+\end_layout
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Itemize
-easy to use, i.e.: for one band i.fusion.hpf pan=Panchromatic msx=${Band} for
- multiple bands i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR
+easy to use, i.e.:
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+for one band 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf pan=Panchromatic msx=MS_BandName
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+for multiple bands 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 easy to test various parameters that define the High-Pass filter’s kernel
  size and center value
@@ -825,7 +865,7 @@ status open
 \begin_inset Float figure
 wide true
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -877,8 +917,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/rgb_composite_based_on_lsat7_2000_10_20_30_imagery_in_nc_spm_08_grass7.png
-	lyxscale 25
+	filename landsat_rgb_composite_based_on_lsat7_2000_10_20_30_imagery_in_nc_spm_08_grass7_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -894,8 +934,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/lsat5_2000_80_imagery_in_nc_spm_08_grass7.png
-	lyxscale 25
+	filename landsat_lsat7_2000_80_imagery_in_nc_spm_08_grass7_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -911,8 +951,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/i.fusion.hpf_center_high_modulation_max_example_using_lsat7_2000_10_20_30_and_80_imagery_in_nc_spm_08_grass7.png
-	lyxscale 25
+	filename landsat_i.fusion.hpf_center_high_modulation_max_example_using_lsat7_2000_10_20_30_and_80_imagery_in_nc_spm_08_grass7_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -930,8 +970,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/detail_rgb_composite_based_on_lsat7_2000_10_20_30_imagery_in_nc_spm_08_grass7.png
-	lyxscale 25
+	filename landsat_rgb_composite_based_on_lsat7_2000_10_20_30_imagery_in_nc_spm_08_grass7_detail_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -947,8 +987,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/detail_lsat5_2000_80_imagery_in_nc_spm_08_grass7.png
-	lyxscale 25
+	filename landsat_lsat7_2000_80_imagery_in_nc_spm_08_grass7_detail_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -964,8 +1004,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/landsat/detail_i.fusion.hpf_center_high_modulation_max_example_using_lsat7_2000_10_20_30_and_80_imagery_in_nc_spm_08_grass7.png
-	lyxscale 25
+	filename landsat_i.fusion.hpf_center_high_modulation_max_example_using_lsat7_2000_10_20_30_and_80_imagery_in_nc_spm_08_grass7_detail_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1035,52 +1075,11 @@ target "http://www.grassbook.org/grasslocations/CREDITS.txt"
 IKONOS
 \end_layout
 
-\begin_layout Standard
-
-\series bold
-\emph on
-To add
-\end_layout
-
-\begin_layout Subsection
-QuickBird2
-\end_layout
-
-\begin_layout Standard
-
-\series bold
-\emph on
-To add (some samples already published in GRASS-Wiki: 
-\begin_inset CommandInset href
-LatexCommand href
-name "GRASS-Wiki, QuickBird, HPFA based sharpening"
-target "http://grasswiki.osgeo.org/wiki/QuickBird#HPFA_based_sharpening"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-WorldView(2, 3)
-\end_layout
-
-\begin_layout Standard
-
-\series bold
-\emph on
-To add
-\end_layout
-
-\begin_layout Subsection
-GeoEye
-\end_layout
-
 \begin_layout Full Width
 \begin_inset Float figure
 wide true
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -1132,8 +1131,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_rgb.png
-	lyxscale 25
+	filename ikonos_po_58208_Sichuan_China_rgb_composite_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1149,8 +1148,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_panchromatic.png
-	lyxscale 25
+	filename ikonos_po_58208_Sichuan_China_panchromatic_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1166,8 +1165,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_hpf_rgb.png
-	lyxscale 25
+	filename ikonos_po_58208_Sichuan_China_i.fusion.hpf_2pass_chigh_mmax_c2low_m2min_linear_histogram_match_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1185,8 +1184,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_rgb_detail.png
-	lyxscale 25
+	filename ikonos_po_58208_Sichuan_China_rgb_composite_detail_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1202,8 +1201,8 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_panchromatic_detail.png
-	lyxscale 25
+	filename ikonos_po_58208_Sichuan_China_panchromatic_detail_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1219,8 +1218,436 @@ Pan-Sharpened RGB Composite
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /geo/scripts/pan_sharpening/Ancillary_data_for_i.fusion.hpf/sample_data/geoeye/geoeye_12DEC02053035_new_delhi_airport_composite_hpf_rgb_detail.png
-	lyxscale 25
+	filename ikonos_po_58208_Sichuan_China_i.fusion.hpf_2pass_chigh_mmax_c2low_m2min_linear_histogram_match_detail_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fragment from an IKONOS acquisition (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+po_xxxxxx
+\end_layout
+
+\end_inset
+
+) over Sichuan, China (available ...)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+QuickBird2
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Marginnote
+status open
+
+\begin_layout Plain Layout
+some samples already published in 
+\begin_inset CommandInset href
+LatexCommand href
+name "GRASS-Wiki, QuickBird, HPFA based sharpening"
+target "http://grasswiki.osgeo.org/wiki/QuickBird#HPFA_based_sharpening"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Full Width
+\begin_inset Float figure
+wide true
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Panchromatic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Pan-Sharpened RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename quickbird2_rgb_composite_04APR05050541_Sri_Lanka-Kokilai_Lagoon_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename quickbird2_panchromatic_04APR05050541_Sri_Lanka-Kokilai_Lagoon_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename quickbird2_i.fusion.hpf_04APR05050541_Sri_Lanka-Kokilai_Lagoon_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename quickbird2_rgb_composite_04APR05050541_Sri_Lanka-Kokilai_Lagoon_detail_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename quickbird2_panchromatic_04APR05050541_Sri_Lanka-Kokilai_Lagoon_detail_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename quickbird2_i.fusion.hpf_04APR05050541_Sri_Lanka-Kokilai_Lagoon_detail_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fragment from a QuickBird2 acquisition (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+04APR05050541
+\end_layout
+
+\end_inset
+
+) near Kokilai Lagoon, Sri Lanka (available for demonstration purposes,
+ see 
+\begin_inset CommandInset ref
+LatexCommand formatted
+reference "sec:Demonstration License, DG"
+
+\end_inset
+
+ for license details))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+WorldView(2, 3)
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\emph on
+To add
+\end_layout
+
+\begin_layout Subsection
+GeoEye
+\end_layout
+
+\begin_layout Full Width
+\begin_inset Float figure
+wide true
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Panchromatic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Pan-Sharpened RGB Composite
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename geoeye_12DEC02053035_new_delhi_airport_composite_rgb_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename geoeye_12DEC02053035_new_delhi_airport_panchromatic_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename geoeye_12DEC02053035_new_delhi_airport_composite_hpf_rgb_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename geoeye_12DEC02053035_new_delhi_airport_composite_rgb_detail_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename geoeye_12DEC02053035_new_delhi_airport_panchromatic_detail_8hpx.jpg
+	lyxscale 40
+	width 25col%
+	groupId GeoEye
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename geoeye_12DEC02053035_new_delhi_airport_composite_hpf_rgb_detail_8hpx.jpg
+	lyxscale 40
 	width 25col%
 	groupId GeoEye
 
@@ -1619,6 +2046,17 @@ License(s) of Data
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Demonstration License, DG"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+GeoEye
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:License, GeoEye"
 
 \end_inset
 
@@ -2301,11 +2739,10 @@ Additional Terms.
 \end_layout
 
 \begin_deeper
-\begin_layout Standard
+\begin_layout Enumerate
 
 \size small
-a.
- You acknowledge that any actual or threatened breach of Section 2, 3, 4,
+You acknowledge that any actual or threatened breach of Section 2, 3, 4,
  or 6 will constitute immediate and irreparable harm to DigitalGlobe for
  which monetary damages would be an inadequate remedy.
   Therefore, without limiting any other remedy available at law or in equity,
@@ -2320,13 +2757,12 @@ a.
  and other collection expenses, in addition to any other relief it may receive.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Enumerate
 
 \size small
-b.
- Failure to require performance of any provision of this Agreement does
- not waive DigitalGlobe's right to subsequently require full and proper
- performance of such provision.
+Failure to require performance of any provision of this Agreement does not
+ waive DigitalGlobe's right to subsequently require full and proper performance
+ of such provision.
   If any provision of this Agreement is determined to be invalid or unenforceabl
 e, such provision will to the extent possible be deemed amended by limiting
  and reducing it to the minimum extent necessary to make such provision
@@ -2341,11 +2777,10 @@ y of any provision of this Agreement with respect to any person affect the
  person.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Enumerate
 
 \size small
-c.
- Neither this Agreement nor any of the rights or obligations hereunder may
+Neither this Agreement nor any of the rights or obligations hereunder may
  be assigned or transferred by You (by operation of law or otherwise) without
  the prior written consent of DigitalGlobe.
   This restriction on assignment or transfer shall apply to assignments
@@ -2355,13 +2790,12 @@ on.
  be null and void.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Enumerate
 
 \size small
-d.
- This Agreement shall be governed by the laws of the State of Colorado,
- U.S.A., without regard to conflicts of law principles that would require the
- application of the laws of any other state or jurisdiction.
+This Agreement shall be governed by the laws of the State of Colorado, U.S.A.,
+ without regard to conflicts of law principles that would require the applicatio
+n of the laws of any other state or jurisdiction.
   The United Nations Convention on Contracts for the International Sale
  of Goods does not apply to this Agreement.
   Any action or proceeding arising from or relating to this Agreement must
@@ -2370,11 +2804,10 @@ d.
  such court in any such action or proceeding.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Enumerate
 
 \size small
-e.
- Any notices to DigitalGlobe relating to this Agreement shall be in writing
+Any notices to DigitalGlobe relating to this Agreement shall be in writing
  and delivered by personal delivery or U.S.
  certified mail (return receipt requested) to the address provided below
  and will be effective upon receipt by DigitalGlobe:
@@ -2416,5 +2849,193 @@ All notices to You relating to this Agreement shall be delivered by personal
  transmission.
 \end_layout
 
+\begin_layout Subsection
+QuickBird2
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:License, QuickBird2"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+DIGITALGLOBE, INC.
+ DEMONSTRATION END USER LICENSE AGREEMENT
+\end_layout
+
+\begin_layout Standard
+DigitalGlobe, Inc.
+ ("DigitalGlobe") for a period of 90 days grants the Demonstrator (the "End
+ User") a limited, non-transferable, non-exclusive license to use the DigitalGlo
+be® products and authorized third party products, collectively referred
+ to as "Product" or "Products", and a limited right to develop Derived Works
+ as defined below.
+ DigitalGlobe and End User may be referred to hereinafter individually as
+ a "Party" and collectively as "Parties." All rights not expressly granted
+ to End User are retained by DigitalGlobe.
+ In consideration for the rights granted under this End User License Agreement
+ ("License"), End User agrees to be bound to the terms herein and agrees
+ that this License shall govern the rights and obligations of the Parties.
+ In the event that this License is inconsistent with any license included
+ with the Products in electronic form or in any "shrink-wrap" form delivered
+ with the Products, this License shall govern.
+\end_layout
+
+\begin_layout Enumerate
+AUTHORIZED USERS.
+ The demonstration license applies to multiple users solely within the End
+ User's organization at multiple locations.
+\end_layout
+
+\begin_layout Enumerate
+LICENSE GRANTED AND PERMITTED USES.
+ By accepting the terms of this license, the End User is permitted the rights
+ to use the Products internally at its facilities within its country of
+ residence and to:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Make an unlimited number of copies for demonstration purposes.
+\end_layout
+
+\begin_layout Enumerate
+Modify the Products or use the Products to create Derived Works to support
+ the demonstration activities.
+\end_layout
+
+\begin_layout Enumerate
+Display the Products to users outside of the Authorized User group with
+ the DigitalGlobe logo conspicuously featured and provide appropriate copyright
+ attribution.
+ However, copies of the Products shall not be given to those outside the
+ Authorized User group.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+ATTRIBUTION.
+ End User agrees that any embodiment of the Products permitted under this
+ License or any Derived Works will contain the following notice: "Includes
+ material © DigitalGlobe, Inc.
+ All rights reserved."
+\end_layout
+
+\begin_layout Enumerate
+PROHIBITED USES.
+ The End User shall not:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Copy or reproduce the Products (even if merged with other materials), other
+ than as consistent with the Permitted Uses.
+\end_layout
+
+\begin_layout Enumerate
+Sell, license, transfer or disclose the Products or use them in any manner
+ not expressly authorized by this License.
+\end_layout
+
+\begin_layout Enumerate
+Alter or remove any copyright notice or proprietary legend contained in
+ or on the Products or Derived Work.
+\end_layout
+
+\begin_layout Enumerate
+Retain any Products beyond the term of the demonstration period or the term
+ of the license.
+ End User must discontinue use of the Products and certify in writing that
+ all copies of the Products have been destroyed or returned to DigitalGlobe.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+DERIVED WORKS.
+ Derived Works that End User may create containing any data from the Products
+ are subject to this license and End User acknowledges, and will cause its
+ employees and agents to acknowledge, that DigitalGlobe and its licensors
+ will own all rights in any copy, translation, modification, adaptation
+ of such Derived Work.
+\end_layout
+
+\begin_layout Enumerate
+TERMINATION.
+ Without prejudice to any other rights, DigitalGlobe may terminate this
+ License by written notice to the End User if the End User fails to comply
+ with the terms and conditions of this License.
+ Upon termination, End User must discontinue use of the Products and certify
+ in writing that all copies of the Products have been destroyed or returned
+ to DigitalGlobe.
+\end_layout
+
+\begin_layout Enumerate
+LIMITATIONS AND DISCLAIMER OF WARRANTY.
+ DigitalGlobe provides a limited warranty for 30 days that the data delivered
+ will be of the area of interest ordered and the media used to carry the
+ Products will be from physical or material defects.
+ DigitalGlobe's sole liability shall be to replace the media if the media
+ (not the data encoded thereon) is defective and the End User returns the
+ media to DigitalGlobe within 30 days of delivery.
+ WITH THE EXCEPTION OF THE PRECEDING WARRANTY, THE PRODUCTS ARE PROVIDED
+ WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, AND ALL WARRANTIES OF
+ MERCHANTABILITY, NON-INFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.
+ DIGITALGLOBE DOES NOT WARRANT THAT THE PRODUCTS WILL MEET THE END USER'S
+ NEEDS OR EXPECTATIONS, OR THAT OPERATIONS OF THE PRODUCTS WILL BE ERROR
+ FREE OR UNINTERRUPTED.
+ NO INFORMATION PROVIDED BY DIGITALGLOBE OR ITS AGENTS, EMPLOYEES, OR ITS
+ RESELLERS OR DISTRIBUTORS SHALL CREATE A WARRANTY, OR IN ANY WAY INCREASE
+ THE SCOPE OF THIS LIMITED WARRANTY, AND THE END USER IS NOT ENTITLED TO
+ RELY ON ANY SUCH INFORMATION.
+\end_layout
+
+\begin_layout Enumerate
+NO CONSEQUENTIAL DAMAGES.
+ IN NO EVENT SHALL DIGITALGLOBE BE LIABLE FOR ANY CLAIM OR LOSS INCURRED
+ BY THE END USER, INCLUDING WITHOUT LIMITATION, COMPENSATORY, INCIDENTAL,
+ INDIRECT, SPECIAL, CONSEQUENTIAL, EXEMPLARY OR OTHER NONCOMPENSATORY DAMAGES.
+\end_layout
+
+\begin_layout Enumerate
+MISCELLANEOUS.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+This License Agreement constitutes the complete and exclusive agreement
+ between DigitalGlobe and the End User relating to its subject matter.
+ This License Agreement supersedes all prior and contemporaneous representations
+, correspondence, proposals or agreements relating to its subject matter,
+ whether oral or written.
+ This License Agreement may be modified only by a written amendment signed
+ by both DigitalGlobe and the End User.
+ If any provision is determined to be invalid or unenforceable, the remaining
+ provisions of this License Agreement shall continue to be valid and enforceable.
+ Neither this License Agreement nor any of the rights granted by it may
+ be assigned or transferred by the End User without the prior written consent
+ of DigitalGlobe.
+ This restriction on assignments or transfers shall apply to assignments
+ or transfers by operation of law, as well as by contract, merger or consolidati
+on.
+ Any attempted assignment or transfer in derogation of this prohibition
+ is void.
+\end_layout
+
+\begin_layout Enumerate
+The End User shall be responsible for obtaining any and all required governmenta
+l authorizations, including but not limited to any export or import licenses,
+ and foreign exchange permits.
+ iii This Agreement shall be governed by the laws of the State of Colorado.
+ DigitalGlobe, Inc.
+ Demonstration EULA_4923 Rev.
+ 1.0 06/01/2004
+\end_layout
+
+\end_deeper
 \end_body
 \end_document
