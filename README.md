@@ -83,35 +83,43 @@ Keywords:
  imagery, fusion, HPF, HPFA
 
 Usage:
- i.fusion.hpf [-l2] pan=string msx=string[,string,...]
-   outputprefix=string [ratio=value] [center=string] [center2=string]
-   [modulation=string] [modulation2=string] [--help] [--verbose]
-   [--quiet]
+ i.fusion.hpf [-l2c] pan=filename msx=filename(s)[,filename(s),...]
+   outputsuffix=suffix string [ratio=rational number] [center=string]
+   [center2=string] [modulation=string] [modulation2=string] [--overwrite]
+   [--help] [--verbose] [--quiet]
 
 Flags:
   -l   Linearly match histogram of Pan-sharpened output to Multi-Spectral input
   -2   2-Pass Processing (recommended) for large resolution ratio (>=5.5)
+  -c   Match color table of Pan-Sharpened output to Multi-Spectral input
+ --o   Allow output files to overwrite existing files
  --h   Print usage summary
  --v   Verbose module output
  --q   Quiet module output
 
 Parameters:
-           pan   High resolution panchromatic image
-           msx   Low resolution multi-spectral image(s)
-  outputprefix   Prefix for the Pan-Sharpened Multi-Spectral image(s)
+           pan   High resolution Panchromatic image
+           msx   Low resolution Multi-Spectral image(s)
+  outputsuffix   Suffix for output image(s)
+                  Names of Pan-Sharpened image(s) will end with this suffix
                  default: hpf
-         ratio   Custom ratio overriding standard calculation
+         ratio   Custom ratio
+                  Custom ratio overriding standard calculation
                  options: 1.0-10.0
-        center   Center cell value of the High-Pass-Filter
+        center   Center cell value
+                  Center cell value of the High-Pass-Filter
                  options: low,mid,high
                  default: low
-       center2   Center cell value for the second High-Pass-Filter (use -2 flag)
+       center2   2nd Pass center cell value
+                  Center cell value for the second High-Pass-Filter (use -2 flag)
                  options: low,mid,high
                  default: low
-    modulation   Level of modulating factor weighting the HPF image to determine crispness
+    modulation   Modulation level
+                  Modulation level weighting the HPF image determining crispness
                  options: min,mid,max
                  default: mid
-   modulation2   Level of modulating factor weighting the second HPF image to determine crispness (use -2 flag)
+   modulation2   2nd Pass modulation level (use -2 flag)
+                  Modulation level weighting the second HPF image determining crispness (use -2 flag)
                  options: min,mid,max
                  default: mid
                   min: Minimum: 0.25
