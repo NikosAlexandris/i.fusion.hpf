@@ -183,6 +183,8 @@ PHOTOGRAMMETRIC ENGINEERING & REMOTE SENSING, 74(9):1107–1118.
 
 - To Add: replication of ERDAS Imagine's parameters.
 
+- Aniruddha Ghosh & P.K. Joshi (2013) Assessment of pan-sharpened very high-resolution WorldView-2 images, International Journal of Remote Sensing, 34:23, 8336-8359
+
 Ευχαριστώ
 =========
 
