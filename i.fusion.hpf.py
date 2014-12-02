@@ -166,7 +166,7 @@
 #% key_desc: rational number
 #% type: double
 #% label: Trimming factor
-#% description: Trimming factor to multiply 
+#% description: Trimming factor to multiply the pixel size of the low resolution image. A factor of 1.0 should suffice.
 #% guisection: High Pass Filter
 #% required: no
 #%end
@@ -283,7 +283,11 @@ def main():
     center2 = options['center2']
     modulation = options['modulation']
     modulation2 = options['modulation2']
-    trimming_factor = options['trim']
+
+    if options['trim']:
+        trimming_factor = float(options['trim'])
+    else:
+        trimming_factor=False
 
     histogram_match = flags['l']
     second_pass = flags['2']
@@ -299,11 +303,12 @@ def main():
 #                  "resolutions do not match!" % (nsr, ewr), flags='w')
 #    # ======================================================================
 
+    mapset = grass.gisenv()['MAPSET']  # Current Mapset?
+    region = grass.region()  # and region settings
+
     # -----------------------------------------------------------------------
     # List images and their properties
     # -----------------------------------------------------------------------
-
-    mapset = grass.gisenv()['MAPSET']  # Current Mapset?
 
     imglst = [pan]
     imglst.extend(msxlst)  # List of input imagery
@@ -497,7 +502,7 @@ def main():
                 % (msx_sd, hpf_2_sd, modulator_2)
 
         if color_match:
-            g.message("\n|* Matching output's to input's color table")
+            g.message("\n|* Matching output to input color table")
             run('r.colors',
                 map=tmp_msx_hpf, rast=msx)
 
@@ -529,27 +534,39 @@ def main():
             cmd_history += "Linear Histogram Matching: %s |" % lhm
 
         # -------------------------------------------------------------------
-        # End of Algorithm \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        # -------------------------------------------------------------------
-
-        # -------------------------------------------------------------------
-        # Trim to remove black border effect
+        # Optional. Trim to remove black border effect (rectangular only)
         # -------------------------------------------------------------------
         if trimming_factor:
 
-            g.message("\n|* Trimming defined pixels from output image")
-
             tf = trimming_factor
-            msx.north -= tf * msx.nsres
-            msx.south += tf * msx.nsres
-            msx.east -= tf * msx.ewres
-            msx.west += tf * msx.ewres
 
+            # communicate
+            msg = "\n|* Trimming output image border pixels by "
+            msg += "%s times the low resolution\n" % tf
+            msg += "   > Input extent: n: %s, s: %s, e: %s, w: %s" \
+                % (region.n, region.s, region.e, region.w)
+            g.message(msg)
+
+            # re-set borders
+            region.n -= tf * images[msx].nsres
+            region.s += tf * images[msx].nsres
+            region.e -= tf * images[msx].ewres
+            region.w += tf * images[msx].ewres
+
+            # communicate and act
+            msg = "   > Output extent: n: %s, s: %s, e: %s, w: %s" \
+                % (region.n, region.s, region.e, region.w)
+            g.message(msg)
+
+            # modify only the extent
             run('g.region',
-                n=n-t,
-                s=s+t,
-                e=e-t,
-                w=w+t)
+                n=region.n, s=region.s, e=region.e, w=region.w)
+            trim = "%s = %s" % (tmp_msx_hpf, tmp_msx_hpf)
+            grass.mapcalc(trim)
+
+        # -------------------------------------------------------------------
+        # End of Algorithm \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        # -------------------------------------------------------------------
 
         # history entry
         run("r.support", map=tmp_msx_hpf, history=cmd_history)
@@ -560,7 +577,7 @@ def main():
 
     # visualising-related information
     grass.del_temp_region()  # restoring previous region settings
-    g.message("\n|! Region's resolution restored!")
+    g.message("\n|! Original Region restored")
     g.message("\n>>> Rebalancing colors "
               "(i.colors.enhance) may improve appearance of RGB composites!",
               flags='i')
