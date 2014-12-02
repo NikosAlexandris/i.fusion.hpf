@@ -80,6 +80,9 @@ showtabs=true,%
 upquote=true
 }
 }% see: <http://tex.stackexchange.com/a/145868/8272>
+
+% Be less rigorous with line breaking
+\sloppy
 \end_preamble
 \use_default_options true
 \begin_modules

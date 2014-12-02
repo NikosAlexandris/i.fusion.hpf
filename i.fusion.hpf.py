@@ -161,6 +161,15 @@
 #% multiple : no
 #%end
 
+#%option
+#% key: trim
+#% key_desc: rational number
+#% type: double
+#% label: Trimming factor
+#% description: Trimming factor to multiply 
+#% guisection: High Pass Filter
+#% required: no
+#%end
 
 # required librairies -------------------------------------------------------
 
@@ -274,6 +283,8 @@ def main():
     center2 = options['center2']
     modulation = options['modulation']
     modulation2 = options['modulation2']
+    trimming_factor = options['trim']
+
     histogram_match = flags['l']
     second_pass = flags['2']
     color_match = flags['c']
@@ -487,7 +498,6 @@ def main():
 
         if color_match:
             g.message("\n|* Matching output's to input's color table")
-
             run('r.colors',
                 map=tmp_msx_hpf, rast=msx)
 
@@ -521,6 +531,25 @@ def main():
         # -------------------------------------------------------------------
         # End of Algorithm \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         # -------------------------------------------------------------------
+
+        # -------------------------------------------------------------------
+        # Trim to remove black border effect
+        # -------------------------------------------------------------------
+        if trimming_factor:
+
+            g.message("\n|* Trimming defined pixels from output image")
+
+            tf = trimming_factor
+            msx.north -= tf * msx.nsres
+            msx.south += tf * msx.nsres
+            msx.east -= tf * msx.ewres
+            msx.west += tf * msx.ewres
+
+            run('g.region',
+                n=n-t,
+                s=s+t,
+                e=e-t,
+                w=w+t)
 
         # history entry
         run("r.support", map=tmp_msx_hpf, history=cmd_history)

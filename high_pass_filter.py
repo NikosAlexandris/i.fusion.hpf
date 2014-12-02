@@ -27,7 +27,7 @@ def center_cell(level, ks):
 
 
 def modulator(modulation, modulation2, ks, second_pass):
-    """ """
+    """Returning a modulation factor determining image Cripsness"""
     ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
     if second_pass:
         modulation2 = modulation2.capitalize()
