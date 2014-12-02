@@ -126,7 +126,7 @@ Parameters:
                   mid: Mid: 0.35
                   max: Maximum: 0.5
           trim   Trimming factor
-                  Trimming factor to multiply the pixel size of the low resolution image. A factor of 1.0 should suffice.
+                  Trim output border pixels by a factor of the pixel size of the low resolution image. A factor of 1.0 may suffice.
 ```
 
 ## Remarks
