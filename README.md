@@ -125,19 +125,23 @@ Parameters:
                   min: Minimum: 0.25
                   mid: Mid: 0.35
                   max: Maximum: 0.5
+          trim   Trimming factor
+                  Trimming factor to multiply the pixel size of the low resolution image. A factor of 1.0 should suffice.
 ```
-## Remarks
 
--   requires (currently) manual color rebalancing (e.g. by using i.colors.enhance)
+## Remarks
 
 -   easy to use, i.e.:
  * for one band `i.fusion.hpf pan=Panchromatic msx=${Band}`
  * for multiple bands `i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR`
 
--   easy to test various parameters that define the High-Pass filter’s *kernel 
-size* and *center value*
+-   easy to test various parameters that define the High-Pass filter’s *kernel size* and *center value*
 
 -   should work with **any** kind of imagery (think of bitness)
+
+-   the "black border" effect, possibly caused due to a non-perfect match of the high vs. the low resolution 
+of the input images, can be trimmed out by using the `trim` option --a floating point "trimming factor" 
+with which to multiply the pixel size of the low resolution image-- and shrink the extent of the output image
 
 Implementation notes
 ====================
@@ -195,3 +199,4 @@ PHOTOGRAMMETRIC ENGINEERING & REMOTE SENSING, 74(9):1107–1118.
   - <http://stackoverflow.com/a/1140966/1172302>
   - <http://stackoverflow.com/a/275025/1172302>
 - Yann Chemin
+- Aniruddha Ghosh
