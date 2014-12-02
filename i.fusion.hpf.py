@@ -166,7 +166,7 @@
 #% key_desc: rational number
 #% type: double
 #% label: Trimming factor
-#% description: Trimming factor to multiply the pixel size of the low resolution image. A factor of 1.0 should suffice.
+#% description: Trim output border pixels by a factor of the pixel size of the low resolution image. A factor of 1.0 may suffice.
 #% guisection: High Pass Filter
 #% required: no
 #%end
