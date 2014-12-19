@@ -66,7 +66,7 @@ class Kernel:
                 # prettier output for double-digit or larger center
                 self.kernel += "-1 " * midrow + str(self.center) + \
                     " " + "-1 " * midrow + "\n"
-        
+
         # remove trailing spaces
         self.kernel = os.linesep.join([s.rstrip()
                                        for s in self.kernel.splitlines()

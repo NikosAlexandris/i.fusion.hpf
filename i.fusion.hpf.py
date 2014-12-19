@@ -287,7 +287,7 @@ def main():
     if options['trim']:
         trimming_factor = float(options['trim'])
     else:
-        trimming_factor=False
+        trimming_factor = False
 
     histogram_match = flags['l']
     second_pass = flags['2']
