@@ -201,7 +201,7 @@ modulator_2 = float()
 # helper functions ----------------------------------------------------------
 def cleanup():
     """Clean up temporary maps"""
-    grass.run_command('g.remove', flags='f', type="rast",
+    grass.run_command('g.remove', flags='f', type="raster",
                       pattern='tmp.%s*' % os.getpid(), quiet=True)
 
 
