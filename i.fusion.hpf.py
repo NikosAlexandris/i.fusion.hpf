@@ -504,7 +504,7 @@ def main():
         if color_match:
             g.message("\n|* Matching output to input color table")
             run('r.colors',
-                map=tmp_msx_hpf, rast=msx)
+                map=tmp_msx_hpf, raster=msx)
 
         # -------------------------------------------------------------------
         # 6. Stretching linearly the HPF-Sharpened image(s) to match the Mean
@@ -573,7 +573,7 @@ def main():
 
         # add suffix to basename & rename end product
         msx_nam = ("%s.%s" % (msx.split('@')[0], outputsuffix))
-        run("g.rename", rast=(tmp_msx_hpf, msx_nam))
+        run("g.rename", raster=(tmp_msx_hpf, msx_nam))
 
     # visualising-related information
     grass.del_temp_region()  # restoring previous region settings
