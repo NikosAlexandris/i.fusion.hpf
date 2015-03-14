@@ -28,7 +28,7 @@ Algorithm description
 original MSX image
 
 ## From the original paper
------------------------
+--------------------------
 
 > Step 1: HP Filtering of the High-resolution Image to Extract the Structural
 > Detail
