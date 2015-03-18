@@ -464,6 +464,45 @@ After installation, from within a GRASS-GIS session, see help details via
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset include
+LatexCommand input
+filename "usage"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Flex Marginnote
+status open
+
+\begin_layout Plain Layout
+For 
+\emph on
+Usage
+\emph default
+, use input from an external file instead of...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset listings
 lstparams "basicstyle={\small\ttfamily},breaklines=true,tabsize=4"
 inline false
@@ -505,22 +544,27 @@ Usage:
 
 \begin_layout Plain Layout
 
- i.fusion.hpf [-l2] pan=string msx=string[,string,...]
+ i.fusion.hpf [-l2c] pan=filename msx=filename(s)[,filename(s),...]
 \end_layout
 
 \begin_layout Plain Layout
 
-   outputprefix=string [ratio=value] [center=string] [center2=string]
+   outputsuffix=suffix string [ratio=rational number] [center=string]
 \end_layout
 
 \begin_layout Plain Layout
 
-   [modulation=string] [modulation2=string] [--help] [--verbose]
+   [center2=string] [modulation=string] [modulation2=string]
 \end_layout
 
 \begin_layout Plain Layout
 
-   [--quiet]
+   [trim=rational number] [--overwrite] [--help] [--verbose] [--quiet]
+\end_layout
+
+\begin_layout Plain Layout
+
+   [--ui]
 \end_layout
 
 \begin_layout Plain Layout
@@ -545,6 +589,16 @@ Flags:
 
 \begin_layout Plain Layout
 
+  -c   Match color table of Pan-Sharpened output to Multi-Spectral input
+\end_layout
+
+\begin_layout Plain Layout
+
+ --o   Allow output files to overwrite existing files
+\end_layout
+
+\begin_layout Plain Layout
+
  --h   Print usage summary
 \end_layout
 
@@ -560,6 +614,11 @@ Flags:
 
 \begin_layout Plain Layout
 
+ --ui  Force launching GUI dialog
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \begin_layout Plain Layout
@@ -569,17 +628,22 @@ Parameters:
 
 \begin_layout Plain Layout
 
-           pan   High resolution panchromatic image
+           pan   High resolution Panchromatic image
 \end_layout
 
 \begin_layout Plain Layout
 
-           msx   Low resolution multi-spectral image(s)
+           msx   Low resolution Multi-Spectral image(s)
 \end_layout
 
 \begin_layout Plain Layout
 
-  outputprefix   Prefix for the Pan-Sharpened Multi-Spectral image(s)
+  outputsuffix   Suffix for output image(s)
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Names of Pan-Sharpened image(s) will end with this suffix
 \end_layout
 
 \begin_layout Plain Layout
@@ -589,7 +653,12 @@ Parameters:
 
 \begin_layout Plain Layout
 
-         ratio   Custom ratio overriding standard calculation
+         ratio   Custom ratio
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Custom ratio overriding standard calculation
 \end_layout
 
 \begin_layout Plain Layout
@@ -599,7 +668,12 @@ Parameters:
 
 \begin_layout Plain Layout
 
-        center   Center cell value of the High-Pass-Filter
+        center   Center cell value
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Center cell value of the High-Pass-Filter
 \end_layout
 
 \begin_layout Plain Layout
@@ -614,7 +688,12 @@ Parameters:
 
 \begin_layout Plain Layout
 
-       center2   Center cell value for the second High-Pass-Filter (use
+       center2   2nd Pass center cell value
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Center cell value for the second High-Pass-Filter (use
  -2 flag)
 \end_layout
 
@@ -630,8 +709,12 @@ Parameters:
 
 \begin_layout Plain Layout
 
-    modulation   Level of modulating factor weighting the HPF image to determine
- crispness
+    modulation   Modulation level
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Modulation level weighting the HPF image determining crispness
 \end_layout
 
 \begin_layout Plain Layout
@@ -646,8 +729,13 @@ Parameters:
 
 \begin_layout Plain Layout
 
-   modulation2   Level of modulating factor weighting the second HPF image
- to determine crispness (use -2 flag)
+   modulation2   2nd Pass modulation level (use -2 flag)
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Modulation level weighting the second HPF image determining
+ crispness (use -2 flag)
 \end_layout
 
 \begin_layout Plain Layout
@@ -673,6 +761,22 @@ Parameters:
 \begin_layout Plain Layout
 
                   max: Maximum: 0.5
+\end_layout
+
+\begin_layout Plain Layout
+
+          trim   Trimming factor
+\end_layout
+
+\begin_layout Plain Layout
+
+                  Trim output border pixels by a factor of the pixel size
+ of the low resolution image.
+ A factor of 1.0 may suffice.
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset

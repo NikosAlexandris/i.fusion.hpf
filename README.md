@@ -174,6 +174,10 @@ Implementation notes
 - Checking options to integrate in `i.pansharpen`. Think of FFM methods vs. 
 Others? 
 
+- Who else to thank?  Transfer from archive
+
+- Improve Documentation.lyx
+
 ## Questions
 
 - To Ask!
