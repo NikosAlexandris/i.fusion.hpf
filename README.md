@@ -155,6 +155,8 @@ Implementation notes
 
 - Go through <http://trac.osgeo.org/grass/wiki/Submitting/Python>
 
+- Access input raster by row I/O ?
+
 - Use format() instead of the % operator (?)
 
   Sources:
@@ -175,7 +177,7 @@ Implementation notes
 Others? 
 
 - Who else to thank?  Transfer from archive
-
+/
 - Improve Documentation.lyx
 
 ## Questions
