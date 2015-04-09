@@ -71,7 +71,8 @@ Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 7.x se
 
 3.  execute `make MODULE_TOPDIR=$GISBASE`
 
-## Usage
+Usage
+=====
 
 After installation, from within a GRASS-GIS session, see help details via `i.fusion.hpf --help` -- also provided here:
 
@@ -100,7 +101,7 @@ Flags:
 Parameters:
            pan   High resolution Panchromatic image
            msx   Low resolution Multi-Spectral image(s)
-  outputsuffix   Suffix for output image(s)
+        suffix   Suffix for output image(s)
                   Names of Pan-Sharpened image(s) will end with this suffix
                  default: hpf
          ratio   Custom ratio
