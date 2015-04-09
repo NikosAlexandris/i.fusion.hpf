@@ -157,12 +157,6 @@ Implementation notes
 
 - Access input raster by row I/O ?
 
-- Use format() instead of the % operator (?)
-
-  Sources:
-  - <http://chimera.labs.oreilly.com/books/1230000000393/ch02.html#_solution_33>
-  - <https://docs.python.org/3/library/string.html#formatspec>
-  
 - Proper command history tracking. Not all "r" modules do it... ?
 
 - Add timestamps (r.timestamp)
