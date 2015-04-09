@@ -51,7 +51,11 @@
 
 #%Module
 #%  description: Fusing high resolution Panchromatic and low resolution Multi-Spectral data based on the High-Pass Filter Addition technique (Gangkofner, 2008)
-#%  keywords: imagery, fusion, HPF, HPFA
+#%  keywords: imagery
+#%  keywords: fusion
+#%  keywords: sharpening
+#%  keywords: high pass filter
+#%  keywords: HPFA
 #%End
 
 #%flag
