@@ -88,7 +88,7 @@ upquote=true
 \begin_modules
 logicalmkup
 scalebox
-todonotesalternate
+todonotes
 \end_modules
 \maintain_unincluded_children false
 \language english
