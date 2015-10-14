@@ -175,27 +175,32 @@
 #% required: no
 #%end
 
-# required librairies
-
+# StdLib imports
 import os
 import sys
-sys.path.insert(1, os.path.join(os.path.dirname(sys.path[0]),
-                                'etc', 'i.fusion.hpf'))
 import atexit
 
-import grass.script as grass
-from grass.pygrass.modules.shortcuts import general as g
-from grass.pygrass.raster.abstract import Info
-
-from high_pass_filter import High_Pass_Filter
-
+# Make sure that we are within a GRASS context
 if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
+# GRASS imports
+import grass.script as grass
+from grass.pygrass.modules.shortcuts import general as g
+from grass.pygrass.raster.abstract import Info
+from grass.pygrass.utils import get_lib_path
+
+# Add the "etc" directory to the $PATH
+path = get_lib_path("i.fusion.hpf", "")
+if path is None:
+    raise ImportError("Not able to find the path %s directory." % path)
+sys.path.append(path)
+
+# We can now import the modules from "etc"
+from high_pass_filter import High_Pass_Filter
 
 # globals
-
 ratio = float()
 tmp = ''
 tmp_hpf_matrix = ''
