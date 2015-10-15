@@ -210,16 +210,16 @@ modulator_2 = float()
 
 # helper functions
 
-def cleanup():
-    """Clean up temporary maps"""
-    grass.run_command('g.remove', flags='f', type="raster",
-                      pattern='tmp.{pid}*'.format(pid=os.getpid(), quiet=True))
-
-
 def run(cmd, **kwargs):
     """Pass arbitrary number of key-word arguments to grass commands and the
     "quiet" flag by default."""
     grass.run_command(cmd, quiet=True, **kwargs)
+
+
+def cleanup():
+    """Clean up temporary maps"""
+    pattern = 'tmp.{pid}*'.format(pid=os.getpid())
+    run('g.remove', flags="f", type="raster", pattern=pattern)
 
 
 def avg(img):
