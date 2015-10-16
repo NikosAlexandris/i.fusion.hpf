@@ -587,6 +587,9 @@ def main():
         msx_name = msx_name.format(base=msx.split('@')[0], suffix=outputsuffix)
         run("g.rename", raster=(tmp_msx_hpf, msx_name))
 
+        # remove temporary files
+        cleanup()
+
     # visualising-related information
     grass.del_temp_region()  # restoring previous region settings
     g.message("\n|! Original Region restored")
