@@ -7,6 +7,8 @@
  AUTHOR(S):    Nikos Alexandris <nik@nikosalexandris.net>
                Converted from a bash shell script | Trikala, Nov. 2014
 
+               Panagiotis Mavrogiorgos <pmav99@gmail.com>
+               Some refactoring | Oct 2015
 
  PURPOSE:      HPF Resolution Merge -- Algorithm Replication in GRASS GIS
 
@@ -175,29 +177,29 @@
 #% required: no
 #%end
 
-# StdLib imports
+# StdLib
 import os
 import sys
 import atexit
 
-# Make sure that we are within a GRASS context
+# check if within a GRASS session?
 if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
-# GRASS imports
+# PyGRASS 
 import grass.script as grass
 from grass.pygrass.modules.shortcuts import general as g
 from grass.pygrass.raster.abstract import Info
 from grass.pygrass.utils import get_lib_path
 
-# Add the "etc" directory to the $PATH
+# add "etc" directory to $PATH
 path = get_lib_path("i.fusion.hpf", "")
 if path is None:
     raise ImportError("Not able to find the path %s directory." % path)
 sys.path.append(path)
 
-# We can now import the modules from "etc"
+# import modules from "etc"
 from high_pass_filter import High_Pass_Filter
 
 # globals
