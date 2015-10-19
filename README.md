@@ -56,7 +56,7 @@ original MSX image
 Installation
 ============
 
-##Requirements
+## Requirements
 ------------
 
 see [GRASS Addons SVN repository, README file, Installation - Code Compilation](https://svn.osgeo.org/grass/grass-addons/README)
@@ -74,61 +74,7 @@ Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 7.x se
 Usage
 =====
 
-After installation, from within a GRASS-GIS session, see help details via `i.fusion.hpf --help` -- also provided here:
-
-```
-Description:
- Fusing high resolution Panchromatic and low resolution Multi-Spectral data based on the High-Pass Filter Addition technique (Gangkofner, 2008)
-
-Keywords:
- imagery, fusion, HPF, HPFA
-
-Usage:
- i.fusion.hpf [-l2c] pan=filename msx=filename(s)[,filename(s),...]
-   outputsuffix=suffix string [ratio=rational number] [center=string]
-   [center2=string] [modulation=string] [modulation2=string] [--overwrite]
-   [--help] [--verbose] [--quiet]
-
-Flags:
-  -l   Linearly match histogram of Pan-sharpened output to Multi-Spectral input
-  -2   2-Pass Processing (recommended) for large resolution ratio (>=5.5)
-  -c   Match color table of Pan-Sharpened output to Multi-Spectral input
- --o   Allow output files to overwrite existing files
- --h   Print usage summary
- --v   Verbose module output
- --q   Quiet module output
-
-Parameters:
-           pan   High resolution Panchromatic image
-           msx   Low resolution Multi-Spectral image(s)
-        suffix   Suffix for output image(s)
-                  Names of Pan-Sharpened image(s) will end with this suffix
-                 default: hpf
-         ratio   Custom ratio
-                  Custom ratio overriding standard calculation
-                 options: 1.0-10.0
-        center   Center cell value
-                  Center cell value of the High-Pass-Filter
-                 options: low,mid,high
-                 default: low
-       center2   2nd Pass center cell value
-                  Center cell value for the second High-Pass-Filter (use -2 flag)
-                 options: low,mid,high
-                 default: low
-    modulation   Modulation level
-                  Modulation level weighting the HPF image determining crispness
-                 options: min,mid,max
-                 default: mid
-   modulation2   2nd Pass modulation level (use -2 flag)
-                  Modulation level weighting the second HPF image determining crispness (use -2 flag)
-                 options: min,mid,max
-                 default: mid
-                  min: Minimum: 0.25
-                  mid: Mid: 0.35
-                  max: Maximum: 0.5
-          trim   Trimming factor
-                  Trim output border pixels by a factor of the pixel size of the low resolution image. A factor of 1.0 may suffice.
-```
+After installation, from within a GRASS-GIS session, see help details via `i.fusion.hpf --help`
 
 ## Remarks
 

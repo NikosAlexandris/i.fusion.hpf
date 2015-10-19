@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-@author: Nikos Alexandris | Created on Mon Nov  3 13:02:59 2014
+@author: Nikos Alexandris | Created on 13:02:59, Nov 3 2014
 """
 
 import os
@@ -10,16 +10,20 @@ from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2
 
 
 def kernel_size(ratio):
-    """High Pass Filter Additive image fusion compatible kernel size.
+    """
+    High Pass Filter Additive image fusion compatible kernel size.
     Based on a float ratio, ranging in (1.0, 10.0).
-    Returns a single integer"""
+    Returns a single integer
+    """
     ks = [k for ((lo, hi), k) in MATRIX_PROPERTIES if lo <= ratio < hi]
     return ks[0]  # ks: kernel size, as integer?
 
 
 def center_cell(level, ks):
-    """High Pass Filter Additive image fusion compatible kernel center
-    cell value."""
+    """
+    High Pass Filter Additive image fusion compatible kernel center
+    cell value.
+    """
     level = level.capitalize()
     ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
     center = [cc for cc in CENTER_CELL[level]][ks_idx]
@@ -27,7 +31,9 @@ def center_cell(level, ks):
 
 
 def modulator(modulation, modulation2, ks, second_pass):
-    """Returning a modulation factor determining image Cripsness"""
+    """
+    Returning a modulation factor determining image Cripsness
+    """
     ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
     if second_pass:
         modulation2 = modulation2.capitalize()
@@ -39,8 +45,9 @@ def modulator(modulation, modulation2, ks, second_pass):
 
 
 class Kernel:
-    """HPF compatible Kernel (size),
-    where size is odd | Returns multi-line string"""
+    """
+    HPF compatible Kernel (size), where size is odd | Returns multi-line string
+    """
     def __init__(self, size, level):
         self.size = int(size)
         self.center = center_cell(level, self.size)
@@ -83,12 +90,14 @@ class Kernel:
 
 
 class High_Pass_Filter:
-    """Based on a suitable Kernel string, this class creates a
+    """
+    Based on a suitable Kernel string, this class creates a
     filter suitable for GRASS-GIS' r.mfilter module.
     Returns a *NIX ASCII multi-line string whose contents is
     a matrix defining the way in which raster data will be filtered
     by r.mfilter. The format of this file is described in r.mfilter's
-    manual."""
+    manual.
+    """
     def __init__(self,
                  ratio,
                  level='Low',
