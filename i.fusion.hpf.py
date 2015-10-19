@@ -7,6 +7,8 @@
  AUTHOR(S):    Nikos Alexandris <nik@nikosalexandris.net>
                Converted from a bash shell script | Trikala, Nov. 2014
 
+               Panagiotis Mavrogiorgos <pmav99@gmail.com>
+               Some refactoring | Oct 2015
 
  PURPOSE:      HPF Resolution Merge -- Algorithm Replication in GRASS GIS
 
@@ -175,27 +177,32 @@
 #% required: no
 #%end
 
-# required librairies
-
+# StdLib
 import os
 import sys
-sys.path.insert(1, os.path.join(os.path.dirname(sys.path[0]),
-                                'etc', 'i.fusion.hpf'))
 import atexit
 
-import grass.script as grass
-from grass.pygrass.modules.shortcuts import general as g
-from grass.pygrass.raster.abstract import Info
-
-from high_pass_filter import High_Pass_Filter
-
+# check if within a GRASS session?
 if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
+# PyGRASS 
+import grass.script as grass
+from grass.pygrass.modules.shortcuts import general as g
+from grass.pygrass.raster.abstract import Info
+from grass.pygrass.utils import get_lib_path
+
+# add "etc" directory to $PATH
+path = get_lib_path("i.fusion.hpf", "")
+if path is None:
+    raise ImportError("Not able to find the path %s directory." % path)
+sys.path.append(path)
+
+# import modules from "etc"
+from high_pass_filter import High_Pass_Filter
 
 # globals
-
 ratio = float()
 tmp = ''
 tmp_hpf_matrix = ''
@@ -205,16 +212,16 @@ modulator_2 = float()
 
 # helper functions
 
-def cleanup():
-    """Clean up temporary maps"""
-    grass.run_command('g.remove', flags='f', type="raster",
-                      pattern='tmp.{pid}*'.format(pid=os.getpid(), quiet=True))
-
-
 def run(cmd, **kwargs):
     """Pass arbitrary number of key-word arguments to grass commands and the
     "quiet" flag by default."""
     grass.run_command(cmd, quiet=True, **kwargs)
+
+
+def cleanup():
+    """Clean up temporary maps"""
+    pattern = 'tmp.{pid}*'.format(pid=os.getpid())
+    run('g.remove', flags="f", type="raster", pattern=pattern)
 
 
 def avg(img):
@@ -581,6 +588,9 @@ def main():
         msx_name = "{base}.{suffix}"
         msx_name = msx_name.format(base=msx.split('@')[0], suffix=outputsuffix)
         run("g.rename", raster=(tmp_msx_hpf, msx_name))
+
+        # remove temporary files
+        cleanup()
 
     # visualising-related information
     grass.del_temp_region()  # restoring previous region settings
