@@ -53,11 +53,11 @@ class Kernel(object):
         self.center = center_cell(level, self.size)
         self.kernel = ''
 
+        # middle row
+        midrow = (self.size/2)
+
         # loop over columns, return value for column, row
         for row in range(self.size):
-
-            # middle row
-            midrow = (self.size/2)
 
             # fill rows
             if row != self.size/2:
