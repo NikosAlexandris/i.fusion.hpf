@@ -30,7 +30,7 @@ def center_cell(level, ks):
     return center
 
 
-def modulator(modulation, modulation2, ks, second_pass):
+def get_modulator_factor(modulation, modulation2, ks, second_pass):
     """
     Returning a modulation factor determining image Cripsness
     """
@@ -106,9 +106,9 @@ class High_Pass_Filter(object):
         self.size = kernel_size(self.ratio)
 
         if second_pass:
-            self.modulator_2 = modulator(None, modulation2, self.size, True)
+            self.modulator_2 = get_modulator_factor(None, modulation2, self.size, True)
         else:
-            self.modulator = modulator(modulation, None, self.size, False)
+            self.modulator = get_modulator_factor(modulation, None, self.size, False)
 
         # build kernel
         self.kernel = Kernel(self.size, level).kernel
