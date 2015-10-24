@@ -204,7 +204,6 @@ from high_pass_filter import High_Pass_Filter
 
 # globals
 tmp = ''
-tmp_hpf_matrix = ''
 modulator = float()
 modulator_2 = float()
 
@@ -279,8 +278,6 @@ def hpf_ascii(center, filter, tmpfile, pss):
 # main program
 
 def main():
-
-    global tmp_hpf_matrix
 
     pan = options['pan']
     msxlst = options['msx'].split(',')
