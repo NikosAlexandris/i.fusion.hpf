@@ -79,12 +79,6 @@ class Kernel:
                                        for s in self.kernel.splitlines()
                                        if s])
 
-    def size(self):
-        return self.size
-
-    def center(self):
-        return self.center
-
     def __str__(self):
         return "Kernel:\n" + self.kernel
 
