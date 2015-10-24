@@ -387,37 +387,32 @@ def main():
 
         g.message('\n|2 High Pass Filtering the Panchromatic Image')
 
-        # Temporary files
         tmpfile = grass.tempfile()  # Temporary file - replace with os.getpid?
         tmp = 'tmp.' + grass.basename(tmpfile)  # use its basenam
         tmp_pan_hpf = '{tmp}_pan_hpf'.format(tmp=tmp)  # HPF image
         tmp_msx_blnr = '{tmp}_msx_blnr'.format(tmp=tmp)  # Upsampled MSx
         tmp_msx_hpf = '{tmp}_msx_hpf'.format(tmp=tmp)  # Fused image
-
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
 
-        if second_pass and ratio > 5.5:  # 2nd Pass?
-            tmp_pan_hpf_2 = '{tmp}_pan_hpf_2'.format(tmp=tmp)  # 2nd Pass HPF image
-            tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
-
-        # Construct Filter
+        # Construct and apply Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
         hpf_ascii(center, hpf, tmp_hpf_matrix, 1)
-
-        # Construct 2nd Filter
-        if second_pass and ratio > 5.5:
-            hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
-            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, 2)
-
-        # Filtering
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
             output=tmp_pan_hpf,
             title='High Pass Filtered Panchromatic image',
             overwrite=True)
 
-        # 2nd Filtering
+        # 2nd pass
         if second_pass and ratio > 5.5:
-            run('r.mfilter', input=pan, filter=tmp_hpf_matrix_2,
+            # Temporary files
+            tmp_pan_hpf_2 = '{tmp}_pan_hpf_2'.format(tmp=tmp)  # 2nd Pass HPF image
+            tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
+            # Construct and apply 2nd Filter
+            hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
+            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, 2)
+            run('r.mfilter',
+                input=pan,
+                filter=tmp_hpf_matrix_2,
                 output=tmp_pan_hpf_2,
                 title='2-High-Pass Filtered Panchromatic Image',
                 overwrite=True)
