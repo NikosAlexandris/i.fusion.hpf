@@ -9,7 +9,7 @@ import os
 from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2
 
 
-def kernel_size(ratio):
+def get_kernel_size(ratio):
     """
     High Pass Filter Additive image fusion compatible kernel size.
     Based on a float ratio, ranging in (1.0, 10.0).
@@ -103,7 +103,7 @@ class High_Pass_Filter(object):
 
         # parameters
         self.ratio = ratio
-        self.size = kernel_size(self.ratio)
+        self.size = get_kernel_size(self.ratio)
 
         if second_pass:
             self.modulator_2 = get_modulator_factor(None, modulation2, self.size, True)
