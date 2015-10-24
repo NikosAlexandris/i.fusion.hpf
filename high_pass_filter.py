@@ -19,7 +19,7 @@ def kernel_size(ratio):
     return ks[0]  # ks: kernel size, as integer?
 
 
-def center_cell(level, ks):
+def get_center_cell(level, ks):
     """
     High Pass Filter Additive image fusion compatible kernel center
     cell value.
@@ -50,7 +50,7 @@ class Kernel(object):
     """
     def __init__(self, size, level):
         self.size = int(size)
-        self.center = center_cell(level, self.size)
+        self.center = get_center_cell(level, self.size)
         self.kernel = ''
 
         # middle row
