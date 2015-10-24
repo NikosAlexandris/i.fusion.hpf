@@ -337,7 +337,7 @@ def main():
         g.message("\nProcessing image: {m}".format(m=msx))
 
         # Tracking command history -- Why don't do this all r.* modules?
-        cmd_history = ''
+        cmd_history = []
 
         #
         # 1. Compute Ratio
@@ -463,8 +463,8 @@ def main():
         grass.mapcalc(fusion)
 
         # command history
-        hst = 'Weigthing applied: {msd:.3f} / {hsd:.3f} * {mod:.3f} | '
-        cmd_history += hst.format(msd=msx_sd, hsd=hpf_sd, mod=modulator)
+        hst = 'Weigthing applied: {msd:.3f} / {hsd:.3f} * {mod:.3f}'
+        cmd_history.append(hst.format(msd=msx_sd, hsd=hpf_sd, mod=modulator))
 
         if second_pass and ratio > 5.5:
 
@@ -498,8 +498,8 @@ def main():
             grass.mapcalc(add_back)
 
             # 2nd Pass history entry
-            hst = "2nd Pass Weighting: {m:.3f} / {h:.3f} * {mod:.3f} | "
-            cmd_history += hst.format(m=msx_sd, h=hpf_2_sd, mod=modulator_2)
+            hst = "2nd Pass Weighting: {m:.3f} / {h:.3f} * {mod:.3f}"
+            cmd_history.append(hst.format(m=msx_sd, h=hpf_2_sd, mod=modulator_2))
 
         if color_match:
             g.message("\n|* Matching output to input color table")
@@ -530,7 +530,7 @@ def main():
             grass.mapcalc(lhm, quiet=True, overwrite=True)
 
             # update history string
-            cmd_history += "Linear Histogram Matching: %s |" % lhm
+            cmd_history.append("Linear Histogram Matching: %s" % lhm)
 
         #
         # Optional. Trim to remove black border effect (rectangular only)
@@ -570,7 +570,7 @@ def main():
         # End of Algorithm
 
         # history entry
-        run("r.support", map=tmp_msx_hpf, history=cmd_history)
+        run("r.support", map=tmp_msx_hpf, history="\n".join(cmd_history))
 
         # add suffix to basename & rename end product
         msx_name = "{base}.{suffix}"
