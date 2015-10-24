@@ -129,12 +129,6 @@ class High_Pass_Filter:
         self.filter += self.kernel + '\n'
         self.filter += self.footer
 
-    def set_divisor(self, divisor):
-        self.divisor = divisor
-
-    def set_type_(self, type):
-        self.type = type
-        
     def __str__(self):
         return "Filter:\n" + self.filter
 
