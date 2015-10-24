@@ -187,7 +187,7 @@ if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
-# PyGRASS 
+# PyGRASS
 import grass.script as grass
 from grass.pygrass.modules.shortcuts import general as g
 from grass.pygrass.raster.abstract import Info
@@ -514,8 +514,7 @@ def main():
 
         if color_match:
             g.message("\n|* Matching output to input color table")
-            run('r.colors',
-                map=tmp_msx_hpf, raster=msx)
+            run('r.colors', map=tmp_msx_hpf, raster=msx)
 
         #
         # 6. Stretching linearly the HPF-Sharpened image(s) to match the Mean
