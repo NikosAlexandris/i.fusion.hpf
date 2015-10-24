@@ -203,7 +203,6 @@ sys.path.append(path)
 from high_pass_filter import High_Pass_Filter
 
 # globals
-ratio = float()
 tmp = ''
 tmp_hpf_matrix = ''
 modulator = float()
@@ -351,7 +350,6 @@ def main():
 
         # Custom Ratio? Skip standard computation method.
         if custom_ratio:
-            global ratio
             ratio = float(custom_ratio)
             g.message('Using custom ratio, overriding standard method!',
                       flags='w')
