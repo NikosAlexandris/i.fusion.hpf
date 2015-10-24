@@ -44,7 +44,7 @@ def modulator(modulation, modulation2, ks, second_pass):
     return modfac
 
 
-class Kernel:
+class Kernel(object):
     """
     HPF compatible Kernel (size), where size is odd | Returns multi-line string
     """
@@ -83,7 +83,7 @@ class Kernel:
         return "Kernel:\n" + self.kernel
 
 
-class High_Pass_Filter:
+class High_Pass_Filter(object):
     """
     Based on a suitable Kernel string, this class creates a
     filter suitable for GRASS-GIS' r.mfilter module.
