@@ -273,9 +273,8 @@ def hpf_ascii(center, filter, tmpfile, pss):
     g.message(msg, flags='v')
 
     # open, write and close file
-    asciif = open(tmpfile, 'w')
-    asciif.write(filter.filter)
-    asciif.close()
+    with open(tmpfile, 'w') as asciif:
+        asciif.write(filter.filter)
 
 
 # main program
