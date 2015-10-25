@@ -204,8 +204,6 @@ from high_pass_filter import High_Pass_Filter
 
 # globals
 tmp = ''
-modulator = float()
-modulator_2 = float()
 
 
 # helper functions
@@ -255,23 +253,17 @@ def hpf_weight(low_sd, hpf_sd, mod, pss):
 
 def hpf_ascii(center, filter, tmpfile, second_pass):
     """Exporting a High Pass Filter in a temporary ASCII file"""
-    if second_pass:
-        global modulator_2
-        modulator_2 = filter.modulator_2
-        msg_pass2 = '2nd Pass '
-    else:
-        global modulator
-        modulator = filter.modulator
-        msg_pass2 = ''
+
 
     # structure informative message
-    msg = "   > {m}Filter Properties: size: {f}, center: {c}"
-    msg = msg.format(m=msg_pass2, f=filter.size, c=center)
+    msg = "   > {m}Filter Properties: center: {c}"
+    msg_pass = '2nd Pass ' if second_pass else ''
+    msg = msg.format(m=msg_pass, c=center)
     g.message(msg, flags='v')
 
     # open, write and close file
     with open(tmpfile, 'w') as asciif:
-        asciif.write(filter.filter)
+        asciif.write(filter)
 
 
 # main program
@@ -394,7 +386,7 @@ def main():
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
 
         # Construct and apply Filter
-        hpf = High_Pass_Filter(ratio, center, modulation, False, None)
+        hpf = High_Pass_Filter(ratio, center)
         hpf_ascii(center, hpf, tmp_hpf_matrix, second_pass)
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
             output=tmp_pan_hpf,
@@ -407,7 +399,7 @@ def main():
             tmp_pan_hpf_2 = '{tmp}_pan_hpf_2'.format(tmp=tmp)  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
             # Construct and apply 2nd Filter
-            hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
+            hpf_2 = High_Pass_Filter(ratio, center2)
             hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, second_pass)
             run('r.mfilter',
                 input=pan,
@@ -446,6 +438,7 @@ def main():
         g.message("   >> StdDev of HPFi: {sd:.3f}".format(sd=hpf_sd))
 
         # Modulating factor
+        modulator = get_modulator_factor(modulation, ratio)
         g.message("   >> Modulating Factor: {m:.2f}".format(m=modulator))
 
         # weighting HPFi
@@ -478,6 +471,7 @@ def main():
             g.message("   >> StdDev of 2nd HPFi: {h:.3f}".format(h=hpf_2_sd))
 
             # Modulating factor #2
+            modulator_2 = get_modulator_factor2(modulation2)
             msg = '   >> 2nd Pass Modulating Factor: {m:.2f}'
             g.message(msg.format(m=modulator_2))
 

@@ -30,18 +30,53 @@ def get_center_cell(level, kernel_size):
     return center
 
 
-def get_modulator_factor(modulation, modulation2, kernel_size, second_pass):
+def get_modulator_factor(modulation, ratio):
     """
-    Returning a modulation factor determining image Cripsness
+    Return the modulation factor for the first pass of the
+    HPFA Image Fusion Technique.
+
+    The modulation factor determines the image's Cripsness.
+
+    Parameters
+    ----------
+    modulation: str
+        Possible values are: `"min", "mid", max"`.
+    ratio: int
+        The resolution ratio between the high resolution pancrhomatic data
+        and the lower resolution spectral data.
+
+    Returns
+    -------
+    modulation_factor: float
+
     """
-    if second_pass:
-        modulation2 = modulation2.capitalize()
-        modulation_factor = MODULATOR_2[modulation2]
-    else:
-        kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
-        modulation = modulation.capitalize()
-        modulation_factor = [mf for mf in MODULATOR[modulation]][kernel_size_idx]
+    kernel_size = get_kernel_size(ratio)
+    kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
+    modulation = modulation.capitalize()
+    modulation_factor = [mf for mf in MODULATOR[modulation]][kernel_size_idx]
     return modulation_factor
+
+
+def get_modulator_factor2(modulation):
+    """
+    Return the modulation factor for the second pass of the HPFA Image Fusion Technique.
+
+    The modulation factor determines the image's Cripsness.
+
+    Parameters
+    ----------
+    modulation: str
+        Possible values are: `"min", "mid", max"`.
+
+    Returns
+    -------
+    modulation_factor: float
+
+    """
+    modulation = modulation.capitalize()
+    modulation_factor = MODULATOR_2[modulation]
+    return modulation_factor
+
 
 
 class Kernel(object):
@@ -92,23 +127,11 @@ class High_Pass_Filter(object):
     by r.mfilter. The format of this file is described in r.mfilter's
     manual.
     """
-    def __init__(self,
-                 ratio,
-                 level='Low',
-                 modulation='Mid',
-                 second_pass=False,
-                 modulation2='Min',
-                 divisor=1,
-                 type='P'):
+    def __init__(self, ratio, level='Low', divisor=1, type='P'):
 
         # parameters
         self.ratio = ratio
         self.size = get_kernel_size(self.ratio)
-
-        if second_pass:
-            self.modulator_2 = get_modulator_factor(None, modulation2, self.size, True)
-        else:
-            self.modulator = get_modulator_factor(modulation, None, self.size, False)
 
         # build kernel
         self.kernel = Kernel(self.size, level).kernel
