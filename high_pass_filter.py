@@ -33,7 +33,7 @@ def get_center_cell(level, kernel_size):
 def get_modulator_factor(modulation, ratio):
     """
     Return the modulation factor for the first pass of the
-    HPFA Image Fusion Technique.
+    High-Pass Filter Addition Technique for Image Fusion.
 
     The modulation factor determines the image's Cripsness.
 
@@ -59,7 +59,8 @@ def get_modulator_factor(modulation, ratio):
 
 def get_modulator_factor2(modulation):
     """
-    Return the modulation factor for the second pass of the HPFA Image Fusion Technique.
+    Return the modulation factor for the second pass of the
+    High-Pass Filter Addition Technique for Image Fusion.
 
     The modulation factor determines the image's Cripsness.
 
@@ -95,7 +96,8 @@ def get_mid_row(size, center):
 
 def get_kernel(size, level):
     """
-    Return a compatible Kernel (`size` x `size`) for the Image High Fusion Technique.
+    Return a compatible Kernel (`size` x `size`) for the
+    High-Pass Filter Addition Technique for Image Fusion.
 
     Parameters
     ----------
@@ -125,8 +127,8 @@ def matrix_to_string(matrix):
 
 def get_high_pass_filter(ratio, level='Low', divisor=1, type='P'):
     """
-    Return a filter suitable for applying the Image High Fusion Technique
-    using GRASS-GIS' `r.mfilter` module.
+    Return a filter suitable for applying the High-Pass Filter Addition
+    Technique for Image Fusion using GRASS-GIS' `r.mfilter` module.
 
     Returns a *NIX ASCII multi-line string whose contents is
     a matrix defining the way in which raster data will be filtered
