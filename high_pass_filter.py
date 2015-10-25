@@ -6,7 +6,7 @@
 """
 
 import os
-from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2
+from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2, FILTER_TEMPLATE
 
 
 def get_kernel_size(ratio):
@@ -78,78 +78,68 @@ def get_modulator_factor2(modulation):
     return modulation_factor
 
 
+def get_row(size):
+    """ Return a matrix row consisting of -1. """
+    row = [-1] * size
+    return row
 
-class Kernel(object):
+
+def get_mid_row(size, center):
     """
-    HPF compatible Kernel (size), where size is odd | Returns multi-line string
+    Return a matrix row consisting of -1 except of the center value which equals `center`.
     """
-    def __init__(self, size, level):
-        self.size = int(size)
-        self.center = get_center_cell(level, self.size)
-        self.kernel = ''
-
-        # middle row
-        midrow = (self.size/2)
-
-        # loop over columns, return value for column, row
-        for row in range(self.size):
-
-            # fill rows
-            if row != self.size/2:
-                self.kernel += "-1 " * self.size + "\n"
-
-            # fill mid row
-            else:
-
-                # single-digit center?
-                if len(str(self.center)) == 1:
-                    self.center = " " + str(self.center)
-
-                # prettier output for double-digit or larger center
-                self.kernel += "-1 " * midrow + str(self.center) + \
-                    " " + "-1 " * midrow + "\n"
-
-        # remove trailing spaces
-        self.kernel = os.linesep.join([s.rstrip()
-                                       for s in self.kernel.splitlines()
-                                       if s])
-
-    def __str__(self):
-        return "Kernel:\n" + self.kernel
+    row = get_row(size)
+    row[size // 2] = center
+    return row
 
 
-class High_Pass_Filter(object):
+def get_kernel(size, level):
     """
-    Based on a suitable Kernel string, this class creates a
-    filter suitable for GRASS-GIS' r.mfilter module.
+    Return a compatible Kernel (`size` x `size`) for the Image High Fusion Technique.
+
+    Parameters
+    ----------
+    size: int
+        An odd integer specifying the size of the kernel (i.e. number or rows and columns).
+    level: str
+
+    Raises
+    ------
+    ValueError: If `size` is not an odd integer.
+
+    """
+
+    if size % 2 != 1:
+        raise ValueError("Size must be an odd integer, not <%r>" % size)
+    center = get_center_cell(level, size)
+    kernel = [get_row(size)] * size
+    kernel[size // 2] = get_mid_row(size, center)
+    return kernel
+
+
+def matrix_to_string(matrix):
+    lines = [" ".join(str(item) for item in row) for row in matrix]
+    string = os.linesep.join(lines)
+    return string
+
+
+def get_high_pass_filter(ratio, level='Low', divisor=1, type='P'):
+    """
+    Return a filter suitable for applying the Image High Fusion Technique
+    using GRASS-GIS' `r.mfilter` module.
+
     Returns a *NIX ASCII multi-line string whose contents is
     a matrix defining the way in which raster data will be filtered
     by r.mfilter. The format of this file is described in r.mfilter's
     manual.
+
     """
-    def __init__(self, ratio, level='Low', divisor=1, type='P'):
-
-        # parameters
-        self.ratio = ratio
-        self.size = get_kernel_size(self.ratio)
-
-        # build kernel
-        self.kernel = Kernel(self.size, level).kernel
-        self.header = 'MATRIX    ' + str(self.size)
-        self.divisor = 'DIVISOR   ' + str(divisor)
-        self.type = 'TYPE      ' + str(type)
-        self.footer = str(self.divisor) + '\n' + self.type
-
-        # build filter
-        self.filter = ''
-        self.filter += self.header + '\n'
-        self.filter += self.kernel + '\n'
-        self.filter += self.footer
-
-    def __str__(self):
-        return "Filter:\n" + self.filter
-
-# reusable & stand-alone
-if __name__ == "__main__":
-    print "Constructing a Filter for the HPFA Image Fusion Technique"
-    print "    (Running as stand-alone tool)\n"
+    size = get_kernel_size(ratio)
+    kernel = get_kernel(size, level)
+    filter = FILTER_TEMPLATE.format(
+        kernel=matrix_to_string(kernel),
+        divisor=divisor,
+        type=type,
+        size=size,
+    )
+    return filter

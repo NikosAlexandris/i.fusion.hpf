@@ -200,7 +200,7 @@ if path is None:
 sys.path.append(path)
 
 # import modules from "etc"
-from high_pass_filter import High_Pass_Filter
+from high_pass_filter import get_high_pass_filter, get_modulator_factor, get_modulator_factor2
 
 # globals
 tmp = ''
@@ -386,7 +386,7 @@ def main():
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
 
         # Construct and apply Filter
-        hpf = High_Pass_Filter(ratio, center)
+        hpf = get_high_pass_filter(ratio, center)
         hpf_ascii(center, hpf, tmp_hpf_matrix, second_pass)
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
             output=tmp_pan_hpf,
@@ -399,7 +399,7 @@ def main():
             tmp_pan_hpf_2 = '{tmp}_pan_hpf_2'.format(tmp=tmp)  # 2nd Pass HPF image
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
             # Construct and apply 2nd Filter
-            hpf_2 = High_Pass_Filter(ratio, center2)
+            hpf_2 = get_high_pass_filter(ratio, center2)
             hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, second_pass)
             run('r.mfilter',
                 input=pan,

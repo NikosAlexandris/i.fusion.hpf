@@ -57,3 +57,10 @@ MODULATOR = {
     'Max': [0.30, 0.65, 0.65, 1.00, 1.40, 2.00]}
 
 MODULATOR_2 = {'Min': 0.25, 'Mid': 0.35, 'Max': 0.50}
+
+FILTER_TEMPLATE = """\
+MATRIX    {size}
+{kernel}
+DIVISOR   {divisor}
+TYPE      {type}
+"""
