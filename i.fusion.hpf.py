@@ -202,11 +202,6 @@ sys.path.append(path)
 # import modules from "etc"
 from high_pass_filter import get_high_pass_filter, get_modulator_factor, get_modulator_factor2
 
-# globals
-tmp = ''
-
-
-# helper functions
 
 def run(cmd, **kwargs):
     """Pass arbitrary number of key-word arguments to grass commands and the
@@ -253,8 +248,6 @@ def hpf_weight(low_sd, hpf_sd, mod, pss):
 
 def hpf_ascii(center, filter, tmpfile, second_pass):
     """Exporting a High Pass Filter in a temporary ASCII file"""
-
-
     # structure informative message
     msg = "   > {m}Filter Properties: center: {c}"
     msg_pass = '2nd Pass ' if second_pass else ''
@@ -321,10 +314,6 @@ def main():
     # Loop Algorithm over Multi-Spectral images
 
     for msx in msxlst:
-
-        global tmp
-
-        # Inform
         g.message("\nProcessing image: {m}".format(m=msx))
 
         # Tracking command history -- Why don't do this all r.* modules?
