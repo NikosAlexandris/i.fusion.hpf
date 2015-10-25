@@ -253,17 +253,16 @@ def hpf_weight(low_sd, hpf_sd, mod, pss):
     return wgt
 
 
-def hpf_ascii(center, filter, tmpfile, pss):
+def hpf_ascii(center, filter, tmpfile, second_pass):
     """Exporting a High Pass Filter in a temporary ASCII file"""
-    if pss == 1:
-        global modulator
-        modulator = filter.modulator
-        msg_pass2 = ''
-
-    elif pss == 2:
+    if second_pass:
         global modulator_2
         modulator_2 = filter.modulator_2
         msg_pass2 = '2nd Pass '
+    else:
+        global modulator
+        modulator = filter.modulator
+        msg_pass2 = ''
 
     # structure informative message
     msg = "   > {m}Filter Properties: size: {f}, center: {c}"
@@ -396,7 +395,7 @@ def main():
 
         # Construct and apply Filter
         hpf = High_Pass_Filter(ratio, center, modulation, False, None)
-        hpf_ascii(center, hpf, tmp_hpf_matrix, 1)
+        hpf_ascii(center, hpf, tmp_hpf_matrix, second_pass)
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
             output=tmp_pan_hpf,
             title='High Pass Filtered Panchromatic image',
@@ -409,7 +408,7 @@ def main():
             tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
             # Construct and apply 2nd Filter
             hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
-            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, 2)
+            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, second_pass)
             run('r.mfilter',
                 input=pan,
                 filter=tmp_hpf_matrix_2,
