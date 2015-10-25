@@ -34,11 +34,11 @@ def get_modulator_factor(modulation, modulation2, kernel_size, second_pass):
     """
     Returning a modulation factor determining image Cripsness
     """
-    kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
     if second_pass:
         modulation2 = modulation2.capitalize()
         modulation_factor = MODULATOR_2[modulation2]
     else:
+        kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
         modulation = modulation.capitalize()
         modulation_factor = [mf for mf in MODULATOR[modulation]][kernel_size_idx]
     return modulation_factor
