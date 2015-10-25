@@ -15,33 +15,33 @@ def get_kernel_size(ratio):
     Based on a float ratio, ranging in (1.0, 10.0).
     Returns a single integer
     """
-    ks = [k for ((lo, hi), k) in MATRIX_PROPERTIES if lo <= ratio < hi]
-    return ks[0]  # ks: kernel size, as integer?
+    kernel_size = [k for ((lo, hi), k) in MATRIX_PROPERTIES if lo <= ratio < hi][0]
+    return kernel_size
 
 
-def get_center_cell(level, ks):
+def get_center_cell(level, kernel_size):
     """
     High Pass Filter Additive image fusion compatible kernel center
     cell value.
     """
     level = level.capitalize()
-    ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
-    center = [cc for cc in CENTER_CELL[level]][ks_idx]
+    kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
+    center = [cc for cc in CENTER_CELL[level]][kernel_size_idx]
     return center
 
 
-def get_modulator_factor(modulation, modulation2, ks, second_pass):
+def get_modulator_factor(modulation, modulation2, kernel_size, second_pass):
     """
     Returning a modulation factor determining image Cripsness
     """
-    ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
+    kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
     if second_pass:
         modulation2 = modulation2.capitalize()
-        modfac = MODULATOR_2[modulation2]
+        modulation_factor = MODULATOR_2[modulation2]
     else:
         modulation = modulation.capitalize()
-        modfac = [mf for mf in MODULATOR[modulation]][ks_idx]
-    return modfac
+        modulation_factor = [mf for mf in MODULATOR[modulation]][kernel_size_idx]
+    return modulation_factor
 
 
 class Kernel(object):
