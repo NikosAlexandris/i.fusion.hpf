@@ -148,3 +148,4 @@ PHOTOGRAMMETRIC ENGINEERING & REMOTE SENSING, 74(9):1107–1118.
   - <http://stackoverflow.com/a/275025/1172302>
 - Yann Chemin
 - Aniruddha Ghosh
+- Παναγιώτης Μαυρογιώργος (https://github.com/pmav99)
