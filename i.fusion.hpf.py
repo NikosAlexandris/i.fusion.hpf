@@ -187,7 +187,7 @@ if "GISBASE" not in os.environ:
     print "You must be in GRASS GIS to run this program."
     sys.exit(1)
 
-# PyGRASS 
+# PyGRASS
 import grass.script as grass
 from grass.pygrass.modules.shortcuts import general as g
 from grass.pygrass.raster.abstract import Info
@@ -200,17 +200,8 @@ if path is None:
 sys.path.append(path)
 
 # import modules from "etc"
-from high_pass_filter import High_Pass_Filter
+from high_pass_filter import get_high_pass_filter, get_modulator_factor, get_modulator_factor2
 
-# globals
-ratio = float()
-tmp = ''
-tmp_hpf_matrix = ''
-modulator = float()
-modulator_2 = float()
-
-
-# helper functions
 
 def run(cmd, **kwargs):
     """Pass arbitrary number of key-word arguments to grass commands and the
@@ -255,34 +246,22 @@ def hpf_weight(low_sd, hpf_sd, mod, pss):
     return wgt
 
 
-def hpf_ascii(center, filter, tmpfile, pss):
+def hpf_ascii(center, filter, tmpfile, second_pass):
     """Exporting a High Pass Filter in a temporary ASCII file"""
-    if pss == 1:
-        global modulator
-        modulator = filter.modulator
-        msg_pass2 = ''
-
-    elif pss == 2:
-        global modulator_2
-        modulator_2 = filter.modulator_2
-        msg_pass2 = '2nd Pass '
-
     # structure informative message
-    msg = "   > {m}Filter Properties: size: {f}, center: {c}"
-    msg = msg.format(m=msg_pass2, f=filter.size, c=center)
+    msg = "   > {m}Filter Properties: center: {c}"
+    msg_pass = '2nd Pass ' if second_pass else ''
+    msg = msg.format(m=msg_pass, c=center)
     g.message(msg, flags='v')
 
     # open, write and close file
-    asciif = open(tmpfile, 'w')
-    asciif.write(filter.filter)
-    asciif.close()
+    with open(tmpfile, 'w') as asciif:
+        asciif.write(filter)
 
 
 # main program
 
 def main():
-
-    global tmp_hpf_matrix
 
     pan = options['pan']
     msxlst = options['msx'].split(',')
@@ -335,14 +314,10 @@ def main():
     # Loop Algorithm over Multi-Spectral images
 
     for msx in msxlst:
-
-        global tmp
-
-        # Inform
         g.message("\nProcessing image: {m}".format(m=msx))
 
         # Tracking command history -- Why don't do this all r.* modules?
-        cmd_history = ''
+        cmd_history = []
 
         #
         # 1. Compute Ratio
@@ -352,7 +327,6 @@ def main():
 
         # Custom Ratio? Skip standard computation method.
         if custom_ratio:
-            global ratio
             ratio = float(custom_ratio)
             g.message('Using custom ratio, overriding standard method!',
                       flags='w')
@@ -393,37 +367,32 @@ def main():
 
         g.message('\n|2 High Pass Filtering the Panchromatic Image')
 
-        # Temporary files
         tmpfile = grass.tempfile()  # Temporary file - replace with os.getpid?
         tmp = 'tmp.' + grass.basename(tmpfile)  # use its basenam
         tmp_pan_hpf = '{tmp}_pan_hpf'.format(tmp=tmp)  # HPF image
         tmp_msx_blnr = '{tmp}_msx_blnr'.format(tmp=tmp)  # Upsampled MSx
         tmp_msx_hpf = '{tmp}_msx_hpf'.format(tmp=tmp)  # Fused image
-
         tmp_hpf_matrix = grass.tempfile()  # ASCII filter
 
-        if second_pass and ratio > 5.5:  # 2nd Pass?
-            tmp_pan_hpf_2 = '{tmp}_pan_hpf_2'.format(tmp=tmp)  # 2nd Pass HPF image
-            tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
-
-        # Construct Filter
-        hpf = High_Pass_Filter(ratio, center, modulation, False, None)
-        hpf_ascii(center, hpf, tmp_hpf_matrix, 1)
-
-        # Construct 2nd Filter
-        if second_pass and ratio > 5.5:
-            hpf_2 = High_Pass_Filter(ratio, center2, None, True, modulation2)
-            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, 2)
-
-        # Filtering
+        # Construct and apply Filter
+        hpf = get_high_pass_filter(ratio, center)
+        hpf_ascii(center, hpf, tmp_hpf_matrix, second_pass)
         run('r.mfilter', input=pan, filter=tmp_hpf_matrix,
             output=tmp_pan_hpf,
             title='High Pass Filtered Panchromatic image',
             overwrite=True)
 
-        # 2nd Filtering
+        # 2nd pass
         if second_pass and ratio > 5.5:
-            run('r.mfilter', input=pan, filter=tmp_hpf_matrix_2,
+            # Temporary files
+            tmp_pan_hpf_2 = '{tmp}_pan_hpf_2'.format(tmp=tmp)  # 2nd Pass HPF image
+            tmp_hpf_matrix_2 = grass.tempfile()  # 2nd Pass ASCII filter
+            # Construct and apply 2nd Filter
+            hpf_2 = get_high_pass_filter(ratio, center2)
+            hpf_ascii(center2, hpf_2, tmp_hpf_matrix_2, second_pass)
+            run('r.mfilter',
+                input=pan,
+                filter=tmp_hpf_matrix_2,
                 output=tmp_pan_hpf_2,
                 title='2-High-Pass Filtered Panchromatic Image',
                 overwrite=True)
@@ -458,6 +427,7 @@ def main():
         g.message("   >> StdDev of HPFi: {sd:.3f}".format(sd=hpf_sd))
 
         # Modulating factor
+        modulator = get_modulator_factor(modulation, ratio)
         g.message("   >> Modulating Factor: {m:.2f}".format(m=modulator))
 
         # weighting HPFi
@@ -474,8 +444,8 @@ def main():
         grass.mapcalc(fusion)
 
         # command history
-        hst = 'Weigthing applied: {msd:.3f} / {hsd:.3f} * {mod:.3f} | '
-        cmd_history += hst.format(msd=msx_sd, hsd=hpf_sd, mod=modulator)
+        hst = 'Weigthing applied: {msd:.3f} / {hsd:.3f} * {mod:.3f}'
+        cmd_history.append(hst.format(msd=msx_sd, hsd=hpf_sd, mod=modulator))
 
         if second_pass and ratio > 5.5:
 
@@ -490,6 +460,7 @@ def main():
             g.message("   >> StdDev of 2nd HPFi: {h:.3f}".format(h=hpf_2_sd))
 
             # Modulating factor #2
+            modulator_2 = get_modulator_factor2(modulation2)
             msg = '   >> 2nd Pass Modulating Factor: {m:.2f}'
             g.message(msg.format(m=modulator_2))
 
@@ -509,13 +480,12 @@ def main():
             grass.mapcalc(add_back)
 
             # 2nd Pass history entry
-            hst = "2nd Pass Weighting: {m:.3f} / {h:.3f} * {mod:.3f} | "
-            cmd_history += hst.format(m=msx_sd, h=hpf_2_sd, mod=modulator_2)
+            hst = "2nd Pass Weighting: {m:.3f} / {h:.3f} * {mod:.3f}"
+            cmd_history.append(hst.format(m=msx_sd, h=hpf_2_sd, mod=modulator_2))
 
         if color_match:
             g.message("\n|* Matching output to input color table")
-            run('r.colors',
-                map=tmp_msx_hpf, raster=msx)
+            run('r.colors', map=tmp_msx_hpf, raster=msx)
 
         #
         # 6. Stretching linearly the HPF-Sharpened image(s) to match the Mean
@@ -542,7 +512,7 @@ def main():
             grass.mapcalc(lhm, quiet=True, overwrite=True)
 
             # update history string
-            cmd_history += "Linear Histogram Matching: %s |" % lhm
+            cmd_history.append("Linear Histogram Matching: %s" % lhm)
 
         #
         # Optional. Trim to remove black border effect (rectangular only)
@@ -582,7 +552,7 @@ def main():
         # End of Algorithm
 
         # history entry
-        run("r.support", map=tmp_msx_hpf, history=cmd_history)
+        run("r.support", map=tmp_msx_hpf, history="\n".join(cmd_history))
 
         # add suffix to basename & rename end product
         msx_name = "{base}.{suffix}"

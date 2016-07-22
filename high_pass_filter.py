@@ -6,139 +6,142 @@
 """
 
 import os
-from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2
+from constants import MATRIX_PROPERTIES, CENTER_CELL, MODULATOR, MODULATOR_2, FILTER_TEMPLATE
 
 
-def kernel_size(ratio):
+def get_kernel_size(ratio):
     """
     High Pass Filter Additive image fusion compatible kernel size.
     Based on a float ratio, ranging in (1.0, 10.0).
     Returns a single integer
     """
-    ks = [k for ((lo, hi), k) in MATRIX_PROPERTIES if lo <= ratio < hi]
-    return ks[0]  # ks: kernel size, as integer?
+    kernel_size = [k for ((lo, hi), k) in MATRIX_PROPERTIES if lo <= ratio < hi][0]
+    return kernel_size
 
 
-def center_cell(level, ks):
+def get_center_cell(level, kernel_size):
     """
     High Pass Filter Additive image fusion compatible kernel center
     cell value.
     """
     level = level.capitalize()
-    ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
-    center = [cc for cc in CENTER_CELL[level]][ks_idx]
+    kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
+    center = [cc for cc in CENTER_CELL[level]][kernel_size_idx]
     return center
 
 
-def modulator(modulation, modulation2, ks, second_pass):
+def get_modulator_factor(modulation, ratio):
     """
-    Returning a modulation factor determining image Cripsness
+    Return the modulation factor for the first pass of the
+    High-Pass Filter Addition Technique for Image Fusion.
+
+    The modulation factor determines the image's Cripsness.
+
+    Parameters
+    ----------
+    modulation: str
+        Possible values are: `"min", "mid", max"`.
+    ratio: int
+        The resolution ratio between the high resolution pancrhomatic data
+        and the lower resolution spectral data.
+
+    Returns
+    -------
+    modulation_factor: float
+
     """
-    ks_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(ks)
-    if second_pass:
-        modulation2 = modulation2.capitalize()
-        modfac = MODULATOR_2[modulation2]
-    else:
-        modulation = modulation.capitalize()
-        modfac = [mf for mf in MODULATOR[modulation]][ks_idx]
-    return modfac
+    kernel_size = get_kernel_size(ratio)
+    kernel_size_idx = [k for ((lo, hi), k) in MATRIX_PROPERTIES].index(kernel_size)
+    modulation = modulation.capitalize()
+    modulation_factor = [mf for mf in MODULATOR[modulation]][kernel_size_idx]
+    return modulation_factor
 
 
-class Kernel:
+def get_modulator_factor2(modulation):
     """
-    HPF compatible Kernel (size), where size is odd | Returns multi-line string
+    Return the modulation factor for the second pass of the
+    High-Pass Filter Addition Technique for Image Fusion.
+
+    The modulation factor determines the image's Cripsness.
+
+    Parameters
+    ----------
+    modulation: str
+        Possible values are: `"min", "mid", max"`.
+
+    Returns
+    -------
+    modulation_factor: float
+
     """
-    def __init__(self, size, level):
-        self.size = int(size)
-        self.center = center_cell(level, self.size)
-        self.kernel = ''
-
-        # loop over columns, return value for column, row
-        for row in range(self.size):
-
-            # middle row
-            midrow = (self.size/2)
-
-            # fill rows
-            if row != self.size/2:
-                self.kernel += "-1 " * self.size + "\n"
-
-            # fill mid row
-            else:
-
-                # single-digit center?
-                if len(str(self.center)) == 1:
-                    self.center = " " + str(self.center)
-
-                # prettier output for double-digit or larger center
-                self.kernel += "-1 " * midrow + str(self.center) + \
-                    " " + "-1 " * midrow + "\n"
-
-        # remove trailing spaces
-        self.kernel = os.linesep.join([s.rstrip()
-                                       for s in self.kernel.splitlines()
-                                       if s])
-
-    def size(self):
-        return self.size
-
-    def center(self):
-        return self.center
-
-    def __str__(self):
-        return "Kernel:\n" + self.kernel
+    modulation = modulation.capitalize()
+    modulation_factor = MODULATOR_2[modulation]
+    return modulation_factor
 
 
-class High_Pass_Filter:
+def get_row(size):
+    """ Return a matrix row consisting of -1. """
+    row = [-1] * size
+    return row
+
+
+def get_mid_row(size, center):
     """
-    Based on a suitable Kernel string, this class creates a
-    filter suitable for GRASS-GIS' r.mfilter module.
+    Return a matrix row consisting of -1 except of the center value which equals `center`.
+    """
+    row = get_row(size)
+    row[size // 2] = center
+    return row
+
+
+def get_kernel(size, level):
+    """
+    Return a compatible Kernel (`size` x `size`) for the
+    High-Pass Filter Addition Technique for Image Fusion.
+
+    Parameters
+    ----------
+    size: int
+        An odd integer specifying the size of the kernel (i.e. number or rows and columns).
+    level: str
+
+    Raises
+    ------
+    ValueError: If `size` is not an odd integer.
+
+    """
+
+    if size % 2 != 1:
+        raise ValueError("Size must be an odd integer, not <%r>" % size)
+    center = get_center_cell(level, size)
+    kernel = [get_row(size)] * size
+    kernel[size // 2] = get_mid_row(size, center)
+    return kernel
+
+
+def matrix_to_string(matrix):
+    lines = [" ".join(str(item) for item in row) for row in matrix]
+    string = os.linesep.join(lines)
+    return string
+
+
+def get_high_pass_filter(ratio, level='Low', divisor=1, type='P'):
+    """
+    Return a filter suitable for applying the High-Pass Filter Addition
+    Technique for Image Fusion using GRASS-GIS' `r.mfilter` module.
+
     Returns a *NIX ASCII multi-line string whose contents is
     a matrix defining the way in which raster data will be filtered
     by r.mfilter. The format of this file is described in r.mfilter's
     manual.
+
     """
-    def __init__(self,
-                 ratio,
-                 level='Low',
-                 modulation='Mid',
-                 second_pass=False,
-                 modulation2='Min',
-                 divisor=1,
-                 type='P'):
-
-        # parameters
-        self.ratio = ratio
-        self.size = kernel_size(self.ratio)
-
-        if second_pass:
-            self.modulator_2 = modulator(None, modulation2, self.size, True)
-        else:
-            self.modulator = modulator(modulation, None, self.size, False)
-
-        # build kernel
-        self.kernel = Kernel(self.size, level).kernel
-        self.header = 'MATRIX    ' + str(self.size)
-        self.divisor = 'DIVISOR   ' + str(divisor)
-        self.type = 'TYPE      ' + str(type)
-        self.footer = str(self.divisor) + '\n' + self.type
-
-        # build filter
-        self.filter = ''
-        self.filter += self.header + '\n'
-        self.filter += self.kernel + '\n'
-        self.filter += self.footer
-
-    def set_divisor(self, divisor):
-        self.divisor = divisor
-
-    def set_type_(self, type):
-        self.type = type
-        
-    def __str__(self):
-        return "Filter:\n" + self.filter
-
-# reusable & stand-alone
-if __name__ == "__main__":
-    print "Constructing a Filter for the HPFA Image Fusion Technique"
-    print "    (Running as stand-alone tool)\n"
+    size = get_kernel_size(ratio)
+    kernel = get_kernel(size, level)
+    filter = FILTER_TEMPLATE.format(
+        kernel=matrix_to_string(kernel),
+        divisor=divisor,
+        type=type,
+        size=size,
+    )
+    return filter
