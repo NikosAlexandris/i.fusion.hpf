@@ -63,7 +63,14 @@ see [GRASS Addons SVN repository, README file, Installation - Code Compilation](
 
 ## Steps
 
-Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 7.x session, may be done via the following steps:
+A) Installation directly from github:
+
+1.  launch a GRASS-GIS’ ver. 7.x session
+
+2. g.extension i.fusion.hpf url=https://github.com/NikosAlexandris/i.fusion.hpf
+
+
+B) Installation from local source code directory: Making the script `i.fusion.hpf` available from within any GRASS-GIS ver. 7.x session, may be done via the following steps:
 
 1.  launch a GRASS-GIS’ ver. 7.x session
 
