@@ -89,14 +89,14 @@ After installation, from within a GRASS-GIS session, see help details via `i.fus
 ## Remarks
 
 -   easy to use, i.e.:
- * for one band `i.fusion.hpf pan=Panchromatic msx=${Band}`
- * for multiple bands `i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR`
+    -   for one band `i.fusion.hpf pan=Panchromatic msx=${Band}`
+    -   for multiple bands `i.fusion.hpf pan=Panchromatic msx=Red,Green,Blue,NIR`
 
 -   easy to test various parameters that define the High-Pass filter’s *kernel size* and *center value*
 
 -   should work with **any** kind of imagery (think of bitness)
 
--   the "black border" effect, possibly caused due to a non-perfect match of the high vs. the low resolution 
+-  the "black border" effect, possibly caused due to a non-perfect match of the high vs. the low resolution 
 of the input images, can be trimmed out by using the `trim` option --a floating point "trimming factor" 
 with which to multiply the pixel size of the low resolution image-- and shrink the extent of the output image
 
